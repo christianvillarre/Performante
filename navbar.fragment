@@ -30,45 +30,44 @@
   <aside class="full-menu__panel">
     <div class="full-menu__group is-active" data-menu-panel="wrap">
       <h2>Wrap</h2>
-
-      <a href="/wraps/commercial-fleet.html" data-img="/images/stock5.jpeg" class="is-active">Commerical Fleet Wraps</a>
-      <a href="/wraps/color-change.html" data-img="/images/stock6.jpeg">Color Change Wraps</a>
       <a href="/wraps/custom.html" data-img="/images/stock7.jpeg">Custom Wraps</a>
-      <a href="/wraps/watercraft.html" data-img="/images/stock8.jpeg">Watercraft</a>
-      <a href="/wraps/architectural.html" data-img="/images/stock8.jpeg">Architectural Wraps</a>
+      <a href="/wraps/color-change.html" data-img="/images/stock1.jpeg">Color Change Wraps</a>
+      <a href="/wraps/commercial-fleet.html" data-img="/images/stock8.jpeg" class="is-active">Commerical Fleet Wraps</a>
+      <a href="/wraps/watercraft.html" data-img="/images/stock9.jpeg">Watercraft</a>
+      <a href="/wraps/architectural.html" data-img="/images/stock10.jpeg">Architectural Wraps</a>
     </div>
 
     <div class="full-menu__group" data-menu-panel="protect">
       <h2>Protect</h2>
 
-      <a href="/paint-protection-film.html" data-img="/images/stock9.jpeg">Paint Protection Film</a>
-      <a href="/clear-bra.html" data-img="/images/stock10.jpeg">Clear Bra</a>
-      <a href="/full-front-ppf.html" data-img="/images/stock11.jpeg">Full Front PPF</a>
-      <a href="/ceramic-coating.html" data-img="/images/stock12.jpeg">Ceramic Coating</a>
+      <a href="/paint-protection-film.html" data-img="/images/stock6.jpeg">Paint Protection Film</a>
+      <a href="/clear-bra.html" data-img="/images/stock2.jpeg">Clear Bra</a>
+      <a href="/full-front-ppf.html" data-img="/images/stock1.jpeg">Full Front PPF</a>
+      <a href="/ceramic-coating.html" data-img="/images/stock3.jpeg">Ceramic Coating</a>
     </div>
 
     <div class="full-menu__group" data-menu-panel="tint">
       <h2>Tint</h2>
 
-      <a href="/window-tint.html" data-img="/images/stock13.jpeg">Window Tint</a>
-      <a href="/ceramic-tint.html" data-img="/images/stock14.jpeg">Ceramic Tint</a>
+      <a href="/window-tint.html" data-img="/images/stock11.jpeg">Window Tint</a>
+      <a href="/ceramic-tint.html" data-img="/images/stock12.jpeg">Ceramic Tint</a>
       <a href="/windshield-tint.html" data-img="/images/stock15.jpeg">Windshield Tint</a>
     </div>
 
     <div class="full-menu__group" data-menu-panel="about">
       <h2>About</h2>
 
-      <a href="/about.html" data-img="/images/stock16.jpeg">Our Shop</a>
-      <a href="/gallery.html" data-img="/images/stock17.jpeg">Gallery</a>
-      <a href="/reviews.html" data-img="/images/stock18.jpeg">Reviews</a>
+      <a href="/about.html" data-img="/images/stock14.jpeg">Our Shop</a>
+      <a href="/gallery.html" data-img="/images/stock13.jpeg">Gallery</a>
+      <a href="/reviews.html" data-img="/images/stock4.jpeg">Reviews</a>
     </div>
 
     <div class="full-menu__group" data-menu-panel="contact">
       <h2>Contact</h2>
 
-      <a href="/contact.html" data-img="/images/stock19.jpg">Request a Quote</a>
-      <a href="/appointment.html" data-img="/images/stock20.jpg">Book Appointment</a>
-      <a href="/location.html" data-img="/images/stock21.jpg">Location</a>
+      <a href="/contact.html" data-img="/images/stock16.jpeg">Request a Quote</a>
+      <a href="/appointment.html" data-img="/images/stock2.jpeg">Book Appointment</a>
+      <a href="/location.html" data-img="/images/stock3.jpeg">Location</a>
     </div>
   </aside>
 
