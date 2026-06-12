@@ -1,0 +1,6172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Performante Wraps</title>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+<!-- in <head> -->
+<link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
+
+<link rel="stylesheet" href="/navbar.css" />
+  
+</head>
+<style>
+  :root{
+    --bg: #ffffff;
+    --ink: #111111;
+
+    --square: 96;
+    --gap: 8;
+    --rectW: 254;
+    --rectH: 96;
+    --ovalW: 800;
+
+    --beamY: 0px; /* driven by JS */
+    --col-3: 2.15fr;
+    --stackflow-gap: clamp(20px, 1vw, 22px);
+    --stackflow-card-h: clamp(280px, 28vw, 450px);
+    --stackflow-stack-gap: 1rem;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,
+  body{
+    height: 100%;
+  }
+
+  html{
+    scroll-behavior: auto;
+    scroll-padding-top: var(--nav-offset);
+  }
+
+  html.lenis,
+  html.lenis body{
+    height: auto;
+  }
+
+  .lenis.lenis-smooth{
+    scroll-behavior: auto !important;
+  }
+
+  body{
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    background: #052330;
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  #site{
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* =========================
+     INTRO / HERO WRAP
+  ========================= */
+  .intro-wrap{
+    position: relative;
+    overflow: hidden;
+    background: #000;
+    padding-bottom: 0;
+  }
+
+  .intro-wrap::before{
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: 520vmax;
+    height: 520vmax;
+    z-index: 0;
+    pointer-events: none;
+    transform: translate(-45%, calc(-55% + var(--beamY))) rotate(-115deg);
+    transform-origin: center;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 44%,
+      rgb(25, 25, 25) 48%,
+      rgba(30, 30, 30, 0.911) 50%,
+      rgba(9, 9, 9, 0.91) 52%,
+      transparent 56%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 18%,
+      black 22%,
+      black 70%,
+      transparent 74%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 18%,
+      black 22%,
+      black 70%,
+      transparent 74%,
+      transparent 100%
+    );
+  }
+
+  .intro-wrap::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.302);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* =========================
+     HERO
+  ========================= */
+  .hero{
+    position: relative;
+    overflow: visible;
+    min-height: 100svh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .hero > *{
+    position: relative;
+    z-index: 3;
+    color: #fff;
+  }
+
+  .hero::before{
+    z-index: 2;
+  }
+
+  #heroGrid{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  #heroDropIcon{
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, -140%);
+    width: clamp(120px, 50vh, 480px);
+    height: auto;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  #heroBottomIcon{
+    position: absolute;
+    left: 50%;
+    bottom: -2rem;
+    transform: translateX(-50%);
+    width: 80vw;
+    max-width: 1600px;
+    height: auto;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 1;
+  }
+
+  #heroTitle,
+  .hero-scroll-indicator,
+  #criticalTitle{
+    display: none;
+  }
+
+  /* =========================
+     SIDE IMAGES
+  ========================= */
+  .side-img{
+    position: absolute;
+    top: 0;
+    height: clamp(70vh, 55vw, 90vh);
+    width: clamp(500px, 42vw, 650px);
+    object-fit: contain;
+    object-position: center;
+    opacity: 0.35;
+    z-index: 1;
+    pointer-events: none;
+    --edgeInset: clamp(0px, (900px - 100vw) * 0.18, 160px);
+  }
+
+  .side-img--left{
+    left: 0;
+    transform: translateX(-10%);
+  }
+
+  .side-img--right{
+    right: 0;
+    left: auto;
+    transform: translateX(10%);
+  }
+
+  /* =========================
+     WAVE / NEXT SECTION
+  ========================= */
+  .wave-divider{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 110px;
+    min-height: 0;
+    z-index: 3;
+    pointer-events: none;
+    display: block;
+    line-height: 0;
+  }
+
+  .wave-divider path{
+    fill: #fff;
+  }
+
+  .caps-intro-section{
+    position: relative;
+    background: #fff;
+    margin-top: -2px;
+    padding: clamp(32px, 0vw, 0px) 0 40px;
+    z-index: 4;
+  }
+
+  /* =========================
+     TYPE / MISC
+  ========================= */
+  .text-highlight{
+    background: linear-gradient(90deg, #F00303 0%, rgb(19, 75, 99) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    font-weight: 900;
+  }
+
+  .display-heading{
+    font-size: clamp(34px, 7vw, 56px);
+    line-height: 1.05;
+    margin: 0;
+    letter-spacing: -0.02em;
+    font-weight: 200;
+  }
+
+  .stackflow-sr{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .hero-scroll-indicator{
+    margin-top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: clamp(60px, 8vw, 120px);
+  }
+
+  .hero-chevron{
+    width: 116px;
+    height: 116px;
+  }
+
+  .hero-chevron path{
+    stroke: #ffffff;
+  }
+
+  /* =========================
+     STACKFLOW LAYOUT
+  ========================= */
+  .stackflow-shell{
+    position: relative;
+    z-index: 3;
+    width: min(1800px, calc(100% - 40px));
+    max-width: none;
+    padding: 0 20px;
+  }
+
+  .stackflow-main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stackflow-grid{
+    display: grid;
+    grid-template-columns: var(--col-3) 1fr 1fr;
+    grid-template-areas: "col3 col1 col2";
+    gap: var(--stackflow-gap);
+    align-items: start;
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: clamp(6vh, 12vw, 30vh);
+  }
+
+  .stackflow-col{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+    position: relative;
+    top: auto;
+    right: auto;
+    width: auto;
+  }
+
+  .stackflow-col--1{ grid-area: col1; }
+  .stackflow-col--2{ grid-area: col2; }
+  .stackflow-col--3{ grid-area: col3; }
+
+  .stackflow-copy{
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* centers everything horizontally */
+  text-align: center;    /* centers text */
+}
+
+.stackflow-copy p{
+  font-size: clamp(0.8rem, 1.4vw, 1.4rem);
+  max-width: 60ch;
+  margin: 0 auto;        /* 🔥 this is key */
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+  .stackflow-meta,
+  .stackflow-title,
+  .stackflow-title2,
+  .stackflow-copy p,
+  .stackflow-heading{
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .stackflow-kicker{
+    margin: 0 0 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .stackflow-heading{
+    margin: 0;
+    color: #fff;
+    font-size: clamp(3rem, 5vw, 4.5rem);
+    line-height: 0.97;
+    letter-spacing: -0.035em;
+    margin-bottom: 2rem;
+    font-weight: 300;
+  }
+
+  .stackflow-link{
+    margin-top: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    position: relative;
+    color: #F00303;
+    text-decoration: none;
+    font-size: clamp(1rem, 1.3vw, 1.3rem);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    transition:
+      color .25s cubic-bezier(.22,1,.36,1),
+      transform .25s cubic-bezier(.22,1,.36,1);
+  }
+
+  .stackflow-link::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .3s cubic-bezier(.22,1,.36,1);
+  }
+
+  .stackflow-link svg{
+    width: 22px;
+    height: 22px;
+    color: #ffffff;
+    transition: transform .3s cubic-bezier(.22,1,.36,1);
+  }
+
+  .stackflow-link:hover{
+    color: #ffffff;
+    transform: translateX(4px);
+  }
+
+  .stackflow-link:hover::after{
+    transform: scaleX(1);
+  }
+
+  .stackflow-link:hover svg{
+    transform: translateX(6px);
+    color: #F00303;
+  }
+
+  
+
+  /* =========================
+     OTHER SECTIONS
+  ========================= */
+  .card-row{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 16px;
+    margin-top: 28px;
+    width: min(1000px, 100%);
+  }
+
+  .card{
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 16px;
+    padding: 16px;
+    min-height: 120px;
+    color: rgba(255,255,255,0.92);
+  }
+
+  .spacer--dark{
+    min-height: 55vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    padding: 180px 20px 0;
+  }
+
+  .spacer--white{
+    height: 120vh;
+    max-width: 1000px;
+    margin: 24px auto;
+    border-radius: 18px;
+    background: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0,0,0,0.65);
+    font-weight: 600;
+    letter-spacing: .02em;
+  }
+
+  #loaderSvg{
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: block;
+    pointer-events: none;
+  }
+  .hero-topbar{
+  z-index: 5; /* highest */
+}
+
+.hero-rise-img{
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 104vh;
+  object-fit: cover;
+
+  z-index: 2;
+  pointer-events: none;
+
+  /* keep your fade */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+}
+.stackflow-shell{
+
+  z-index: 1; /* BELOW image */
+}
+
+  /* =========================
+     <= 1599px
+  ========================= */
+  @media (max-width: 1599px){
+    .side-img{
+      height: clamp(70vh, 65vw, 100vh);
+      width: clamp(500px, 82vw, 750px);
+      object-fit: cover;
+      --edgeInset: clamp(0px, (1200px - 200vw) * 1.18, 160px);
+    }
+
+    .side-img--left{
+      left: 50%;
+      right: auto;
+      transform: translateX(-120%);
+    }
+
+    .side-img--right{
+      left: 50%;
+      right: auto;
+      transform: translateX(20%);
+    }
+
+    .hero-topbar{
+      top: 10%;
+    }
+
+   
+    .stackflow-heading{
+      margin-top: 4rem;
+      margin-bottom: 1rem;
+      font-size: clamp(3rem, 4vw, 4rem);
+    }
+      .stackflow-copy p{
+      font-size: clamp(0.8rem, 1.2vw, 1.2rem);
+     
+      margin-bottom: 0rem;
+    }
+  }
+
+  /* =========================
+     <= 1180px
+  ========================= */
+  @media (max-width: 1180px){
+    .stackflow-shell{
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stackflow-copy{
+      grid-column: 1 / 3;
+      min-height: 420px;
+    }
+
+    .stackflow-col--1{
+      grid-column: 1 / 2;
+    }
+
+    .stackflow-col--2{
+      grid-column: 2 / 3;
+    }
+
+    .stackflow-col--3{
+      grid-column: 1 / 3;
+      grid-row: auto;
+    }
+
+    .stackflow-h-xl{
+      min-height: 520px;
+    }
+  
+  }
+
+  /* =========================
+     <= 900px
+  ========================= */
+  @media (max-width: 900px){
+    .card-row{
+      grid-template-columns: 1fr;
+    }
+
+    .stackflow-subscribe{
+      grid-template-columns: 1fr;
+    }
+
+    .stackflow-subscribe button{
+      width: 100%;
+      min-width: 0;
+    }
+  }
+
+  /* =========================
+     <= 760px
+  ========================= */
+  @media (max-width: 760px){
+    :root{
+      --beamY: -620px;
+    }
+
+    .hero{
+      min-height: 140vh;
+      padding-top: 100px;
+      margin-bottom: -20px;
+      overflow: visible;
+    }
+
+    .hero-rise-img{
+      inset: auto;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: auto;
+      height: 84vh;
+    }
+
+
+    .stackflow-shell{
+      width: min(1600px, calc(100% - 24px));
+      grid-template-columns: 1fr;
+    }
+
+    .stackflow-copy{
+      justify-content: flex-start;
+      padding-top: 3vh;
+      min-height: 100vh;
+    }
+
+    .stackflow-copy,
+    .stackflow-col--1,
+    .stackflow-col--2,
+    .stackflow-col--3{
+      grid-column: auto;
+      grid-row: auto;
+    }
+
+
+    #heroBottomIcon{
+      bottom: 1.5rem;
+      transform: translateX(-50%);
+      width: 90vw;
+    }
+
+    .wave-divider{
+      bottom: -10px;
+      min-height: 20px;
+      height: auto;
+    }
+    .stackflow-heading{
+      margin-top: -3rem;
+      margin-bottom: 1rem;
+    }
+  }
+</style>
+    <style>
+.hero-topbar{
+  position: absolute;
+  top: 6%;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+/* CENTER LOGO — true center of viewport */
+.hero-topbar__center{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  
+}
+
+.hero-topbar__center img{
+  height: clamp(120px, 9vw, 222px);
+  width: auto;
+}
+
+/* RIGHT CTA */
+.hero-topbar__cta{
+  position: absolute;
+  right: 28px;
+  top: 0;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #fafafa;
+  font-size: clamp(12px, 1vw, 14px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+
+  transition: transform .2s ease, color .2s ease;
+}
+
+.hero-topbar__cta svg{
+  width: 16px;
+  height: 16px;
+}
+
+.hero-topbar__cta svg path{
+  stroke: currentColor;
+}
+
+/* hover */
+.hero-topbar__cta:hover{
+  transform: translateY(-2px);
+  color: #f00303;
+}
+
+.stackflow-meta--featured{
+  top: 18px;
+  bottom: 18px;
+  left: 18px;
+  right: 18px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.stackflow-featured-top{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stackflow-meta--featured .featured-btn{
+  margin-top: 0;
+  align-self: flex-start;
+}
+
+/* =========================
+   FEATURED STORY BUTTON
+========================= */
+.featured-btn{
+  margin-top: 18px;
+  padding: 14px 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ffffff;
+  color: #151515;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+
+  transition: color .2s ease, transform .2s ease;
+}
+
+/* arrow */
+.featured-btn svg{
+  width: 16px;
+  height: 16px;
+  transition: transform .2s ease;
+}
+
+/* hover */
+.featured-btn:hover{
+  color: #6b6b6b;
+  transform: translateX(2px);
+}
+
+.featured-btn:hover svg{
+  transform: translateX(3px);
+}
+
+.stackflow-card--split{
+  position: relative;
+  overflow: hidden;
+}
+
+.stackflow-meta--split{
+  position: absolute;
+  inset: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+.stackflow-card-top{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stackflow-meta--split .featured-btn{
+  margin-top: 0;
+  align-self: flex-start;
+}
+
+/* optional: make text easier to read on image cards */
+
+.stackflow-card--split .stackflow-eyebrow,
+.stackflow-card--split .stackflow-title2{
+  position: relative;
+  z-index: 2;
+  color: #fff;
+}
+
+.stackflow-card--split .featured-btn{
+  position: relative;
+  z-index: 2;
+}
+/* =========================
+     <= 760px
+  ========================= */
+  @media (max-width: 760px){
+   
+
+    .hero-topbar{
+      top: 3%;
+    }
+
+    .hero-topbar__center img{
+      height: clamp(70px, 20vw, 120px);
+      width: auto;
+    }
+
+  }
+</style>
+
+<body>
+
+<div id="site-navbar"></div>
+<script>
+function initFullMenu(){
+  const fullMenu = document.getElementById("fullMenu");
+  const fullMenuImage = document.getElementById("fullMenuImage");
+  const fullMenuClose = document.getElementById("fullMenuClose");
+  const menuButtons = document.querySelectorAll("[data-menu-open]");
+  const menuGroups = document.querySelectorAll("[data-menu-panel]");
+
+  if (!fullMenu || !fullMenuImage || !fullMenuClose || !menuButtons.length) return;
+
+  function setMenuImage(src){
+    if (!src || fullMenuImage.getAttribute("src") === src) return;
+
+    fullMenuImage.classList.add("is-changing");
+
+    setTimeout(() => {
+      fullMenuImage.setAttribute("src", src);
+      fullMenuImage.classList.remove("is-changing");
+    }, 130);
+  }
+
+  function activateMenuGroup(name){
+    menuGroups.forEach(group => {
+      const isActiveGroup = group.dataset.menuPanel === name;
+      group.classList.toggle("is-active", isActiveGroup);
+
+      if (isActiveGroup) {
+        const links = group.querySelectorAll("a");
+        links.forEach(link => link.classList.remove("is-active"));
+
+        const firstLink = links[0];
+        if (firstLink) {
+          firstLink.classList.add("is-active");
+          setMenuImage(firstLink.dataset.img);
+        }
+      }
+    });
+  }
+
+function openFullMenu(name){
+  activateMenuGroup(name);
+
+  fullMenu.classList.add("is-open");
+  fullMenu.setAttribute("aria-hidden", "false");
+
+  document.body.classList.add("menu-lock");
+  document.documentElement.classList.add("menu-lock");
+}
+
+function closeFullMenu(){
+  fullMenu.classList.remove("is-open");
+  fullMenu.setAttribute("aria-hidden", "true");
+
+  document.body.classList.remove("menu-lock");
+  document.documentElement.classList.remove("menu-lock");
+}
+
+  menuButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      openFullMenu(button.dataset.menuOpen);
+    });
+  });
+
+  menuGroups.forEach(group => {
+    const links = group.querySelectorAll("a");
+
+    links.forEach(link => {
+      link.addEventListener("mouseenter", () => {
+        links.forEach(other => other.classList.remove("is-active"));
+        link.classList.add("is-active");
+        setMenuImage(link.dataset.img);
+      });
+
+      link.addEventListener("focus", () => {
+        links.forEach(other => other.classList.remove("is-active"));
+        link.classList.add("is-active");
+        setMenuImage(link.dataset.img);
+      });
+    });
+  });
+
+  fullMenuClose.addEventListener("click", closeFullMenu);
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") closeFullMenu();
+  });
+}
+
+document.addEventListener("DOMContentLoaded", initFullMenu);
+window.addEventListener("load", initFullMenu);
+</script>
+
+ <div id="scroll-container">
+  <main id="site">
+
+    <section class="intro-wrap" id="home">
+       <img class="side-img side-img--left" src="images/Griffin wing LT.png" alt="" aria-hidden="true">
+    <img class="side-img side-img--right" src="images/Griffin wing RT.png" alt="" aria-hidden="true">
+    
+      <div class="hero">
+        <video class="hero-rise-img" autoplay muted loop playsinline>
+          <source src="https://pub-8ad7c216262d47949e23e21b73c678fc.r2.dev/griffin_red_waves1.mp4" type="video/mp4">
+        </video>
+        <div class="hero-topbar">
+        <!-- Center Logo 
+        <div class="hero-topbar__center">
+          <img src="images/GriffinIcon.png" alt="Griffin Integrity">
+        </div>-->
+      </div>
+
+         <img id="heroBottomIcon" src="images/GriffinText.png" alt="" aria-hidden="true">
+        <div class="stackflow-shell">
+          <div class="stackflow-main">
+
+            <div class="stackflow-copy">
+              <h1 class="stackflow-heading">
+                Connect with the <span class="text-highlight">Right Experts</span><br>in NDT & Asset Integrity
+              </h1>
+             
+              <p class="stackflow-text">
+                We connect industry leaders with the right technical experts, bringing clarity and confidence to complex decisions.
+              </p>
+              
+              <a href="/capabilities" class="stackflow-link">
+                <span>Connect with an Expert</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 17L17 7M10 7h7v7"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+              </svg>
+              </a>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+      <svg class="wave-divider" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
+       <path
+  d="M0,80 C240,80 480,120 720,120 C960,120 1200,80 1440,80 L1440,180 L0,180 Z"
+  fill="#ffffff">
+</path>
+      </svg>
+    </section>
+</div>
+
+
+   
+<section class="caps-intro-section">
+  <div class="caps-intro-shell">
+    <div class="caps-intro-copy">
+      <p class="caps-intro-eyebrow">Who We Are</p>
+
+      <h2 class="caps-intro-title">
+        Griffin is an independent advisory platform connecting industry leaders, technical experts, and senior executives across the industrial inspection and asset integrity ecosystem.
+      </h2>
+
+      <h2 class="caps-intro-title">
+        Our network includes specialists in industrial operations, inspection technologies, infrastructure development, regulatory compliance, and corporate strategy.
+      </h2>
+
+      <a href="/capabilities" class="page-link">
+        <span>About Griffin</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true">
+          <path d="M184 112 L328 256 L184 400" fill="none" stroke="currentColor" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+.caps-intro-section {
+  background: #fff;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.caps-intro-shell {
+  width: min(900px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.caps-intro-copy {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.caps-intro-eyebrow {
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #777;
+}
+
+.caps-intro-title {
+  margin: 0 0 20px;
+  font-size: clamp(1.5rem, 2.4vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  font-weight: 300;
+  color: #111;
+}
+
+.page-link {
+  margin-top: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #F00303;
+  text-decoration: none;
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  font-weight: 700;
+  transition: transform .2s ease;
+}
+
+.page-link svg {
+  width: 18px;
+  height: 18px;
+  transition: transform .2s ease;
+}
+
+.page-link:hover {
+  transform: translateX(2px);
+}
+
+.page-link:hover svg {
+  transform: translateX(3px);
+}
+</style>
+
+
+<section class="expertise-section">
+  <div class="expertise-intro">
+    <div class="expertise-kicker">Executive Leadership</div>
+    <h2>Experience at global scale.</h2>
+    <p>
+      Senior executive and enterprise engineering leader with deep experience across
+      industrial inspection, asset integrity, pipeline and LNG infrastructure, and
+      global quality services.
+    </p>
+  </div>
+
+  <div class="expertise-grid">
+    <article class="expertise-card expertise-card--dark">
+      <div class="expertise-number">60+</div>
+      <p class="expertise-label">Years of combined leadership experience across engineering, inspection, integrity, and enterprise operations.</p>
+    </article>
+
+    <article class="expertise-card expertise-card--red">
+      <div class="expertise-number">14+</div>
+      <p class="expertise-label">Countries where global operations, teams, and service delivery were directed and scaled.</p>
+    </article>
+
+    <article class="expertise-card expertise-card--light">
+      <div class="expertise-number">$100M+</div>
+      <p class="expertise-label">P&amp;L responsibility managed across multi-national business units and complex service organizations.</p>
+    </article>
+
+    <article class="expertise-card expertise-card--blue">
+      <div class="expertise-number">$250M+</div>
+      <p class="expertise-label">Capital programs led across pipeline, LNG, infrastructure, and large-scale transformation initiatives.</p>
+    </article>
+  </div>
+</section>
+
+<style>
+  .expertise-section{
+  padding: clamp(64px, 9vw, 140px) 20px;
+  background: #061c26;
+  color: #fff;
+}
+
+.expertise-intro{
+  max-width: 1200px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+
+.expertise-kicker{
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.68);
+}
+
+.expertise-intro h2{
+margin: 0 0 18px;
+  font-size: clamp(2rem, 4.2vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-weight: 300;
+  color: #ffffff;
+  max-width: 52ch;
+}
+
+.expertise-intro p{
+  margin: 0 auto;
+  max-width: 60ch;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  color: rgba(255,255,255,0.82);
+}
+
+.expertise-grid{
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+.expertise-card{
+  position: relative;
+  padding: 34px 30px 30px;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 34px) 0,
+    100% 34px,
+    100% 100%,
+    34px 100%,
+    0 calc(100% - 34px)
+  );
+  box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+}
+
+.expertise-card:nth-child(2){
+  margin-top: 42px;
+}
+
+.expertise-card:nth-child(4){
+  margin-top: 42px;
+}
+
+.expertise-card--dark{
+  background: #0d2b38;
+}
+
+.expertise-card--red{
+  background: #f00303;
+  color: #fff;
+}
+
+.expertise-card--light{
+  background: #f5f1ea;
+  color: #111;
+}
+
+.expertise-card--blue{
+  background: #123f56;
+}
+
+.expertise-number{
+  font-size: clamp(3rem, 7vw, 6rem);
+  line-height: 0.9;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+}
+
+.expertise-label{
+  margin: 18px 0 0;
+  max-width: 28ch;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  font-weight: 500;
+  color: inherit;
+  opacity: 0.9;
+}
+
+@media (max-width: 800px){
+  .expertise-grid{
+    grid-template-columns: 1fr;
+  }
+
+  .expertise-card:nth-child(2),
+  .expertise-card:nth-child(4){
+    margin-top: 0;
+  }
+
+  .expertise-card{
+    min-height: 200px;
+  }
+}
+</style>
+
+
+
+<section class="stack-cards-section" id="stackCards">
+  <div class="stack-cards-shell">
+    <div class="stack-cards-stage">
+
+      <!-- PRACTICE AREA 1 INTRO -->
+      <article class="stack-card stack-card-practice practice-1-intro">
+        <div class="stack-card-inner stack-card-inner-practice">
+          <div class="stack-card-practice-content">
+            <!--<p class="stack-card-eyebrow">Practice Area 01</p>-->
+            <h2 class="stack-card-practice-title">Technical Consulting</h2>
+            <p class="stack-card-practice-text">
+              Advanced technical advisory services supporting inspection quality, code compliance, asset integrity, and next-generation NDT capabilities.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <!-- PRACTICE AREA 1 / CARD 1 -->
+      <article class="stack-card practice-1-card">
+        <div class="stack-card-inner">
+          <div class="stack-card-image main">
+            <img src="images/stock1.jpeg" alt="Inspection strategy">
+          </div>
+
+          <div class="stack-card-title-wrap">
+            <div class="stack-card-title-group">
+              <h3 class="stack-card-title">Technical Advisory &amp; NDT Leadership</h3>
+              <ul class="stack-card-links">
+                <li>
+                  <a href="/technical-consulting/ndt-level-iii-consulting-support.html">
+                    <span>NDT Level III Consulting &amp; Support</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H9M17 7V15" />
+                    </svg>
+                  </a>
+                </li>
+                <li>
+                  <a href="/technical-consulting/advanced-ndt-subject-matter-experts.html">
+                    <span>Advanced NDT Subject Matter Experts</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H9M17 7V15" />
+                    </svg>
+                  </a>
+                </li>
+                <li>
+                  <a href="/technical-consulting/ndt-written-practice-review-development.html">
+                    <span>NDT Written Practice Review and Development</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H9M17 7V15" />
+                    </svg>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <span>Advanced NDT Training Programs</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H9M17 7V15" />
+                    </svg>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="stack-card-content">
+            <div class="stack-card-text-wrap">
+              <p class="stack-card-text">
+                Independent senior technical guidance for inspection programs, procedure qualification, compliance, and complex problem-solving. We help organizations strengthen inspection quality, technical defensibility, and long-term program performance.
+              </p>
+
+              <a href="/technical-consulting.html" class="stack-btn-inline">
+                Learn more
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 17L17 7M17 7H9M17 7V15" />
+                </svg>
+              </a>
+            </div>
+
+            <div class="stack-card-image small">
+              <img src="images/stock2.jpeg" alt="Inspection detail">
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- PRACTICE AREA 1 / CARD 2 -->
+      <article class="stack-card practice-1-card">
+        <div class="stack-card-inner">
+          <div class="stack-card-image main">
+            <img src="images/stock24.jpeg" alt="Advanced inspection technologies">
+          </div>
+
+          <div class="stack-card-title-wrap">
+            <div class="stack-card-title-group">
+              <h3 class="stack-card-title">Advanced Inspection Technologies</h3>
+              <ul class="stack-card-links">
+                <li>
+                  <a href="/technical-consulting/advanced-ndt-technology-programs-and-procedures.html">
+                    <span>Advanced NDT Technology Programs and Procedures</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H9M17 7V15" />
+                    </svg>
+                  </a>
+                </li>
+                <li>
+                  <a href="/technical-consulting/automation-robotics-imaging-systems.html">
+                    <span>Automation, Robotics, and Advanced Imaging Systems</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H9M17 7V15" />
+                    </svg>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="stack-card-content">
+            <div class="stack-card-text-wrap">
+              <p class="stack-card-text">
+                Development and review of inspection methodologies, qualification plans, and implementation strategies for advanced NDT applications. We help modernize inspection capabilities through the right mix of technology, procedure, and field execution.
+              </p>
+
+              <a href="/technical-consulting.html" class="stack-btn-inline">
+                Learn more
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 17L17 7M17 7H9M17 7V15" />
+                </svg>
+              </a>
+            </div>
+
+            <div class="stack-card-image small">
+              <img src="images/stock2.jpeg" alt="Advanced technology detail">
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- PRACTICE AREA 2 INTRO -->
+      <article class="stack-card stack-card-practice practice-2-intro">
+        <div class="stack-card-inner stack-card-inner-practice">
+          <div class="stack-card-practice-content">
+            <!--<p class="stack-card-eyebrow">Practice Area 02</p>-->
+            <h2 class="stack-card-practice-title">Business Advisory Services</h2>
+            <p class="stack-card-practice-text">
+              Strategic advisory support for industrial service organizations, investors, and leadership teams operating in complex and highly regulated markets.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <!-- PRACTICE AREA 2 / CARD 3 -->
+      <article class="stack-card practice-2-card">
+        <div class="stack-card-inner">
+          <div class="stack-card-image main">
+            <img src="images/stock5.jpeg" alt="Strategy growth and transactions">
+          </div>
+
+          <div class="stack-card-title-wrap">
+            <div class="stack-card-title-group">
+              <h3 class="stack-card-title">Strategy, Growth &amp; Transactions</h3>
+              <ul class="stack-card-links">
+                <li>
+                  <a href="/business-advisory/mergers-acquisitions-support.html">
+                    <span>Mergers &amp; Acquisition Support</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H9M17 7V15" />
+                    </svg>
+                  </a>
+                </li>
+                <li>
+                  <a href="/business-advisory/corporate-development-strategic-planning.html">
+                    <span>Corporate Development &amp; Strategic Planning</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H9M17 7V15" />
+                    </svg>
+                  </a>
+                </li>
+                <li>
+                  <a href="/business-advisory/business-development-client-strategies.html">
+                    <span>Business Development &amp; Client Strategies</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H9M17 7V15" />
+                    </svg>
+                  </a>
+                </li>
+                <li>
+                  <a href="/business-advisory/capital-acquisition.html">
+                    <span>Capital Acquisition</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H9M17 7V15" />
+                    </svg>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="stack-card-content">
+            <div class="stack-card-text-wrap">
+              <p class="stack-card-text">
+                Strategic advisory support for acquisitions, growth planning, market positioning, and capital readiness. We help leadership teams and investors navigate high-impact decisions with stronger technical and commercial context.
+              </p>
+
+              <a href="#" class="stack-btn-inline">
+                Learn more
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 17L17 7M17 7H9M17 7V15" />
+                </svg>
+              </a>
+            </div>
+
+            <div class="stack-card-image small">
+              <img src="images/stock3.jpeg" alt="Strategy detail">
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- PRACTICE AREA 2 / CARD 4 -->
+      <article class="stack-card practice-2-card">
+        <div class="stack-card-inner">
+          <div class="stack-card-image main">
+            <img src="images/stock19.jpeg" alt="Talent and workforce strategy">
+          </div>
+
+          <div class="stack-card-title-wrap">
+            <div class="stack-card-title-group">
+              <h3 class="stack-card-title">Talent &amp; Workforce Strategy</h3>
+              <ul class="stack-card-links">
+                <li>
+                  <a href="/business-advisory/talent-acquisition-assessment.html">
+                    <span>Talent Acquisition &amp; Assessment</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H9M17 7V15" />
+                    </svg>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="stack-card-content">
+            <div class="stack-card-text-wrap">
+              <p class="stack-card-text">
+                Advisory support for identifying, evaluating, and strengthening technical and leadership talent. We help organizations build the workforce capabilities needed to execute, scale, and compete effectively.
+              </p>
+
+              <a href="#" class="stack-btn-inline">
+                Learn more
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 17L17 7M17 7H9M17 7V15" />
+                </svg>
+              </a>
+            </div>
+
+            <div class="stack-card-image small">
+              <img src="images/stock4.jpeg" alt="Talent strategy detail">
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<style>
+.stack-cards-section{
+  position: relative;
+  background: #08151d;
+  padding: 0;
+}
+
+.stack-cards-shell{
+  width: 100%;
+  margin: 0 auto;
+}
+
+.stack-cards-stage{
+  position: relative;
+}
+
+.stack-card{
+  position: relative;
+  height: 30rem;
+}
+
+.stack-card-inner{
+  position: relative;
+  height: 30rem;
+  display: grid;
+  grid-template-columns: 35% 30% 48%;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: 0;
+  background: #0d1d27;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.18);
+  will-change: transform;
+}
+
+.stack-card-inner-practice{
+  display: block;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0)),
+    #10222d;
+  border-color: rgba(255,255,255,0.09);
+}
+
+.stack-card-practice-content{
+  width: 100%;
+  max-width: 2200px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem 4.5rem;
+}
+
+.stack-card-eyebrow{
+  margin: 0 0 1rem 0;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: rgba(255,255,255,0.52);
+}
+
+.stack-card-practice-title{
+  margin: 0;
+  font-size: clamp(2.8rem, 8.6vw, 9.2rem);
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  font-weight: 800;
+  color: #fff;
+  max-width: 80ch;
+  text-wrap: balance;
+}
+
+.stack-card-practice-text{
+  margin: 1.5rem 0 0 0;
+  font-size: 1.08rem;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.82);
+  max-width: 54ch;
+}
+
+.stack-card-image{
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.stack-card-image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  padding: 4rem 0;
+}
+
+.stack-card-title-wrap{
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 4.5rem;
+}
+
+.stack-card-title-group{
+  width: 100%;
+  padding: 4rem 0;
+}
+
+.stack-card-title{
+  margin: 0;
+  font-size: clamp(1.4rem, 2vw, 2rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: 300;
+  color: #fff;
+  text-align: left;
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+.stack-card-links{
+  margin: 2.1rem 0 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: .55rem;
+  max-width: 33rem;
+}
+
+.stack-card-links li{
+  margin: 0;
+}
+
+.stack-card-links a{
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  color: rgba(255,255,255,0.76);
+  text-decoration: none;
+  transition: color 0.25s ease, transform 0.25s ease;
+  min-width: 0;
+}
+
+.stack-card-links a span{
+  display: inline-block;
+  line-height: 1.45;
+}
+
+.stack-card-links svg{
+  width: 12px;
+  height: 12px;
+  stroke: rgba(255,255,255,0.6);
+  stroke-width: 1.6;
+  fill: none;
+  flex-shrink: 0;
+  margin-top: 0.28rem;
+  transition: transform 0.25s ease, stroke 0.25s ease;
+}
+
+.stack-card-links a:hover{
+  color: #fff;
+}
+
+.stack-card-links a:hover svg{
+  transform: translate(2px, -2px);
+  stroke: #fff;
+}
+
+.stack-card-content{
+  display: grid;
+  grid-template-columns: 1fr 11rem;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 4rem 4rem;
+}
+
+.stack-card-text-wrap{
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  min-width: 0;
+}
+
+.stack-card-text{
+  margin: 0 0 1rem 0;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.76);
+  max-width: 54ch;
+}
+
+.stack-card-image.small{
+  height: 100%;
+  min-height: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  display: none;
+}
+
+.stack-btn-inline{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+  background: #0F3D51;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  white-space: nowrap;
+  width: fit-content;
+  transition: color 0.25s ease, opacity 0.25s ease, transform 0.25s ease;
+}
+
+.stack-btn-inline svg{
+  width: 12px;
+  height: 12px;
+  stroke: rgba(255,255,255,0.7);
+  stroke-width: 1.6;
+  fill: none;
+  transition: transform 0.25s ease, stroke 0.25s ease;
+}
+
+.stack-btn-inline:hover{
+  color: #fff;
+}
+
+.stack-btn-inline:hover svg{
+  stroke: #fff;
+  transform: translate(2px, -2px);
+}
+
+/* z-index ladder */
+.stack-card:nth-child(1) .stack-card-inner{ z-index: 1; }
+.stack-card:nth-child(2) .stack-card-inner{ z-index: 2; }
+.stack-card:nth-child(3) .stack-card-inner{ z-index: 3; }
+.stack-card:nth-child(4) .stack-card-inner{ z-index: 4; }
+.stack-card:nth-child(5) .stack-card-inner{ z-index: 5; }
+.stack-card:nth-child(6) .stack-card-inner{ z-index: 6; }
+.stack-card:nth-child(7) .stack-card-inner{ z-index: 7; }
+.stack-card:nth-child(8) .stack-card-inner{ z-index: 8; }
+
+/* tablet + mobile */
+@media (max-width: 1100px){
+  .stack-card,
+  .stack-card-inner{
+    height: auto;
+  }
+
+ 
+  .stack-card-inner{
+    grid-template-columns: 1fr;
+    transform: none !important;
+    padding: 1.5rem;
+  }
+
+  .stack-card-inner-practice{
+    display: block;
+  }
+
+  .stack-card-practice-content{
+    padding: 3rem 1rem 2rem;
+  }
+
+  .stack-card-practice-title{
+    max-width: none;
+    font-size: clamp(2.1rem, 9vw, 3.8rem);
+    line-height: 0.94;
+  }
+
+  .stack-card-practice-text{
+    font-size: 1rem;
+    line-height: 1.65;
+    max-width: 100%;
+  }
+
+  .stack-card-image.main{
+    height: 240px;
+  }
+
+  .stack-card-image img{
+    padding: 0;
+  }
+
+  .stack-card-title-wrap{
+    justify-content: flex-start;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 1.1rem 1rem 0.35rem;
+  }
+
+  .stack-card-title-group{
+    padding: 0;
+  }
+
+  .stack-card-title{
+    text-align: left;
+    max-width: none;
+    font-size: clamp(1.3rem, 5vw, 1.8rem);
+    line-height: 0.98;
+  }
+
+  .stack-card-content{
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0 1rem 1.1rem;
+  }
+
+  .stack-card-text-wrap{
+    align-content: start;
+  }
+
+  .stack-card-text{
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin-bottom: 0.75rem;
+  }
+
+  .stack-card-links{
+    max-width: 100%;
+    margin-top: 0.8rem;
+  }
+
+  .stack-card-image.small{
+    display: none;
+  }
+}
+
+@media (max-width: 760px){
+  .stack-cards-section{
+    padding: 0;
+  }
+
+  .stack-cards-shell{
+    width: 100%;
+    padding: 0;
+  }
+
+  .stack-card{
+    margin: 0;
+    border: none;
+  }
+
+  .stack-card-inner{
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+  }
+
+  .stack-card-image.main{
+    width: 100%;
+    height: 220px;
+  }
+
+  .stack-card-image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    padding: 0;
+  }
+
+  .stack-card-title-wrap{
+    padding: 0.9rem 0.9rem 0.2rem;
+  }
+
+  .stack-card-practice-content{
+    padding: 2.4rem 0.9rem 1.8rem;
+  }
+
+  .stack-card-content{
+    padding: 0 0.9rem 0.95rem;
+    gap: 0.6rem;
+  }
+
+  .stack-card-text{
+    font-size: 0.93rem;
+    line-height: 1.5;
+    margin-bottom: 0.7rem;
+  }
+
+  .stack-btn-inline{
+    margin-top: 0.2rem;
+    padding: 0.48rem 1rem;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 480px){
+  .stack-card-image.main{
+    height: 200px;
+  }
+
+  .stack-card-title-wrap{
+    padding: 2rem 2rem 0.05rem;
+  }
+
+  .stack-card-practice-content{
+    padding: 2.5rem 2rem 1.5rem;
+  }
+
+  .stack-card-practice-title{
+    font-size: 2.5rem;
+  }
+
+  .stack-card-title{
+    font-size: 1.7rem;
+  }
+
+  .stack-card-content{
+    padding: 2rem 2rem 0.15rem;
+  }
+
+  .stack-card-text{
+    font-size: 0.9rem;
+    line-height: 1.48;
+    margin-bottom: 0.65rem;
+  }
+
+  .stack-btn-inline{
+    padding: 0.66rem 1.2rem;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+}
+</style>
+<style>
+  /* keep arrow pinned instead of drifting when link text wraps */
+.stack-card-links a{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 12px;
+  align-items: start;
+  column-gap: 0.55rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.stack-card-links a span{
+  min-width: 0;
+  display: block;
+}
+
+.stack-card-links svg{
+  margin-top: 0.34rem;
+  justify-self: end;
+}
+
+/* give mobile cards more breathing room without feeling cramped */
+@media (max-width: 760px){
+  .stack-card-title-wrap{
+    padding: 1rem 1rem 0.35rem;
+  }
+
+  .stack-card-content{
+    padding: 0 1rem 1.1rem;
+    gap: 0.8rem;
+  }
+
+  .stack-card-links{
+    gap: 0.65rem;
+    margin-top: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stack-card-links a{
+    padding: 0.15rem 0;
+  }
+
+  .stack-card-title{
+    font-size: clamp(1.8rem, 5.2vw, 1.55rem);
+    line-height: 1.25;
+    margin-bottom: 1.5rem;
+  }
+
+  .stack-card-text{
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 480px){
+  .stack-card-practice-content{
+    padding: 2rem 1rem 1.4rem;
+  }
+
+  .stack-card-title-wrap{
+    padding: 1rem 1rem 0.3rem;
+  }
+
+  .stack-card-content{
+    padding: 0 1rem 1rem;
+  }
+
+  .stack-card-practice-title{
+    font-size: clamp(2rem, 10vw, 2.6rem);
+    line-height: 0.95;
+  }
+
+  .stack-card-title{
+    font-size: 1.35rem;
+    line-height: 1.08;
+  }
+
+  .stack-card-text{
+    font-size: 0.94rem;
+    line-height: 1.58;
+    margin-top: 2rem;
+  }
+
+  .stack-btn-inline{
+    font-size: 0.9rem;
+    padding: 0.62rem 1rem;
+    margin-bottom: 1rem;
+  }
+}
+</style>
+
+
+<!--
+<section class="insight-grid-section" id="news">
+  <div class="insight-grid-shell">
+    <div class="insight-grid-head">
+      <p class="insight-grid-eyebrow">Who We Help</p>
+      <h2 class="insight-grid-title">Choose the Path That Fits Your Business</h2>
+      <p class="insight-grid-intro">
+        Griffin supports technical, operational, and strategic decisions across the inspection and asset integrity market. Select the pathway that best matches your organization and see how we help solve problems, reduce risk, and create measurable outcomes.
+      </p>
+    </div>
+
+    <div class="insight-grid-cards insight-grid-cards--four">
+      <article class="insight-card">
+        <div class="insight-card-box">
+          <div class="insight-card-media">
+            <img src="images/stock13.jpeg" alt="Inspection planning">
+          </div>
+          <div class="insight-card-body">
+            <h3 class="insight-card-title">For Inspection & NDT Service Providers
+              <span class="title-arrow">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </h3>
+            <p class="insight-card-text">
+              When delivery quality, technical leadership, training, or program consistency become limiting factors, we help strengthen your operation through Level III support, written practice development, advanced training, and inspection program guidance so you can improve execution, credibility, and growth readiness.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <article class="insight-card">
+        <div class="insight-card-box">
+          <div class="insight-card-media">
+            <img src="images/stock12.jpeg" alt="Asset reliability advisory">
+          </div>
+          <div class="insight-card-body">
+            <h3 class="insight-card-title">For Asset Owners & Operators
+              <span class="title-arrow">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </h3>
+            <p class="insight-card-text">
+              When you need more confidence in inspection strategy, vendor capability, or technical decisions, we provide independent advisory support that helps reduce risk, improve reliability, and ensure your inspection programs are aligned with operational performance.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <article class="insight-card">
+        <div class="insight-card-box">
+          <div class="insight-card-media">
+            <img src="images/stock22.jpeg" alt="Technology commercialization support">
+          </div>
+          <div class="insight-card-body">
+            <h3 class="insight-card-title">For Technology Companies
+              <span class="title-arrow">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </h3>
+            <p class="insight-card-text">
+              When innovative inspection technologies need real-world validation, market alignment, or industry adoption, we help bridge the gap between product capability and field application so you can sharpen positioning, improve usability, and accelerate commercial traction.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <article class="insight-card">
+        <div class="insight-card-box">
+          <div class="insight-card-media">
+            <img src="images/stock25.jpeg" alt="Mergers and acquisitions strategy">
+          </div>
+          <div class="insight-card-body">
+            <h3 class="insight-card-title">For Investors, M&A & Strategic Buyers
+              <span class="title-arrow">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </h3>
+            <p class="insight-card-text">
+              When evaluating acquisitions, growth opportunities, or strategic investments in the inspection sector, we provide market, technical, and operational insight that helps you assess capability, identify risk, and make more informed transaction decisions.
+            </p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .insight-grid-section{
+  background: #ffffff;
+  color: #052330;
+  padding: clamp(72px, 6vw, 120px) 0;
+}
+
+.insight-grid-shell{
+  width: min(1400px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 60px);
+}
+
+.insight-grid-head{
+  max-width: 1080px;
+  margin: 0 auto clamp(34px, 5vw, 64px);
+  text-align: center;
+}
+
+.insight-grid-eyebrow{
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #052330;
+}
+
+.insight-grid-title{
+  margin: 0 0 18px;
+  font-size: clamp(2.4rem, 3.8vw, 3.5rem);
+  line-height: 0.97;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+  color: #052330;
+  max-width: 28ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.insight-grid-intro{
+  margin: 0 auto;
+  max-width: 78ch;
+  font-size: 16px;
+  line-height: 1.65;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.insight-grid-cards,
+.insight-grid-cards--four{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  align-items: stretch;
+}
+
+.insight-card{
+  display: flex;
+  min-width: 0;
+}
+
+.insight-card-box{
+  width: 100%;
+  background: #fff;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+  color: #052330;
+  height: 100%;
+}
+
+.insight-card-box:hover{
+  background: #052330;
+}
+
+.insight-card-media{
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.insight-card-media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.insight-card-body{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.insight-card-title{
+  margin: 0;
+  font-size: clamp(18px, 1.2vw, 22px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  color: #052330;
+  transition: color 0.3s ease;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  /* 🔑 FIX */
+  flex-wrap: nowrap;
+}
+
+.insight-card-text{
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #052330;
+  transition: color 0.3s ease;
+}
+
+.insight-card-box:hover .insight-card-title,
+.insight-card-box:hover .insight-card-text{
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.title-arrow{
+  display: inline-flex;
+  color: #052330;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.title-arrow svg{
+  width: 22px;
+  height: 22px;
+  transition: transform 0.3s ease;
+}
+
+.insight-card-box:hover .title-arrow{
+  color: #F00303;
+  transform: translateX(6px);
+}
+
+.insight-card-box:hover .title-arrow svg{
+  transform: translateX(2px);
+}
+
+/* Optional subtle equal-height feel for longer copy */
+.insight-card-text{
+  max-width: 34ch;
+}
+
+/* 2-column tablet */
+@media (max-width: 1200px){
+  .insight-grid-cards,
+  .insight-grid-cards--four{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .insight-card-box{
+    padding: 1.25rem;
+  }
+}
+
+/* 1-column mobile */
+@media (max-width: 760px){
+  .insight-grid-section{
+    padding: 60px 0;
+    margin-bottom: -4rem;
+  }
+
+  .insight-grid-shell{
+    width: min(1600px, calc(100% - 24px));
+    padding: 0 16px;
+  }
+
+  .insight-grid-title,
+  .insight-grid-intro{
+    max-width: 100%;
+  }
+
+  .insight-grid-cards,
+  .insight-grid-cards--four{
+    grid-template-columns: 1fr;
+  }
+
+  .insight-card{
+    padding: 0;
+  }
+
+  .insight-card-box{
+    padding: 1.5rem;
+  }
+
+  .insight-card-media{
+    min-height: 220px;
+    height: 220px;
+  }
+
+  .insight-card-title{
+    font-size: 1.3rem;
+  }
+
+  .insight-card-text{
+    font-size: 0.96rem;
+    line-height: 1.6;
+    max-width: 100%;
+  }
+}
+</style>-->
+
+
+<section class="why-griffin-section">
+  <div class="why-griffin-shell">
+    <div class="why-griffin-top">
+  
+  <div class="why-griffin-head">
+    <p class="why-griffin-eyebrow">Why Griffin Integrity Solutions</p>
+    <h2 class="why-griffin-title">Not a Traditional Consultancy</h2>
+    <p class="why-griffin-text">
+      We don’t deliver generic recommendations or theoretical frameworks.
+      We connect you with experienced professionals who provide practical, field-informed insight, and support you in making better decisions in high-stakes environments.
+    </p>
+  </div>
+
+  <div class="why-griffin-partners">
+    <div class="why-griffin-partner">
+      <div class="why-griffin-partner-image">
+        <img src="/images/professional1.jpeg" alt="Partner Logo 1">
+      </div>
+      <span>Technical Advisors</span>
+    </div>
+
+    <div class="why-griffin-partner">
+      <div class="why-griffin-partner-image">
+        <img src="/images/professional2.jpeg" alt="Partner Logo 1">
+      </div>
+      <span>Subject Matter Experts</span>
+    </div>
+  </div>
+
+</div>
+
+    <div class="why-griffin-grid">
+      <article class="why-griffin-card">
+        <h3>Strategic Advisory with Technical Depth</h3>
+        <p>
+          We bridge the gap between executive decision-making and technical reality, helping organizations navigate risk, growth, technology adoption, and market shifts with confidence.
+        </p>
+      </article>
+
+      <article class="why-griffin-card">
+        <h3>Industry Expertise</h3>
+        <p>
+          Led by professionals with deep experience across inspection, asset integrity, pipeline systems, and construction quality.
+        </p>
+      </article>
+
+      <article class="why-griffin-card">
+        <h3>Collaborative Expert Network</h3>
+        <p>
+          Access multidisciplinary expertise across NDT, fabrication quality, monitoring technologies, and corporate strategy without building a full-time team.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section class="client-ecosystem-section">
+  <div class="client-ecosystem-shell">
+    <div class="client-ecosystem-head">
+      <p class="client-ecosystem-eyebrow">Who We Serve</p>
+      <h2 class="client-ecosystem-title">Supporting critical decisions across the industry</h2>
+    </div>
+
+    <div class="client-ecosystem-grid">
+      <article class="client-ecosystem-card">
+        <h3>Owner-Operators</h3>
+        <p>
+          Improve asset reliability, inspection performance, and risk management across critical infrastructure.
+        </p>
+      </article>
+
+      <article class="client-ecosystem-card">
+        <h3>Private Equity &amp; Strategic Investors</h3>
+        <p>
+          Gain independent technical insight for diligence, growth evaluation, and operational improvement in industrial service investments.
+        </p>
+      </article>
+
+      <article class="client-ecosystem-card">
+        <h3>Service Providers</h3>
+        <p>
+          Strengthen technical credibility, align operations, and position for differentiated growth in competitive markets.
+        </p>
+      </article>
+
+      <article class="client-ecosystem-card">
+        <h3>EPC / Fabrication Organizations</h3>
+        <p>
+          Enhance quality execution, inspection planning, and compliance across complex project environments.
+        </p>
+      </article>
+
+      <article class="client-ecosystem-card">
+        <h3>Technology Developers</h3>
+        <p>
+          Align solutions with real industry needs, accelerate adoption, and connect with the right commercial opportunities.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .why-griffin-top{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: start;
+  margin-bottom: clamp(32px, 4vw, 56px);
+}
+
+.why-griffin-partners{
+  display: flex;
+  gap: 18px;
+}
+
+.why-griffin-partner{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.why-griffin-partner-image{
+  width: clamp(175px, 12vw, 420px);
+  aspect-ratio: 1 / 1;
+  background: #f6f3ee;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.why-griffin-partner-image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.why-griffin-partner span{
+  font-size: 0.8rem;
+  color: rgba(17,17,17,0.8);
+}
+  /* =========================
+   WHY GRIFFIN
+========================= */
+.why-griffin-section{
+  background: #fff;
+  padding: clamp(72px, 8vw, 120px) 0;
+}
+
+.why-griffin-shell{
+  width: min(1400px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 60px);
+}
+
+.why-griffin-head{
+  max-width: 980px;
+  margin-bottom: clamp(32px, 4vw, 56px);
+}
+
+.why-griffin-eyebrow{
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #777;
+}
+
+.why-griffin-title{
+  margin: 0 0 18px;
+  font-size: clamp(2rem, 4.2vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-weight: 300;
+  color: #111;
+  max-width: 17ch;
+}
+
+.why-griffin-text{
+  margin: 0;
+  max-width: 48ch;
+  font-size: clamp(1rem, 1.15vw, 1.15rem);
+  line-height: 1.7;
+  color: rgba(17,17,17,0.78);
+}
+
+.why-griffin-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.why-griffin-card{
+  position: relative;
+  min-height: 280px;
+  padding: 28px 26px 24px;
+  background: #f6f3ee;
+  color: #111;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 28px) 0,
+    100% 28px,
+    100% 100%,
+    28px 100%,
+    0 calc(100% - 28px)
+  );
+  box-shadow: 0 18px 40px rgba(0,0,0,0.05);
+}
+
+.why-griffin-card:nth-child(2){
+  margin-top: 36px;
+}
+
+.why-griffin-card h3{
+  margin: 0 0 18px;
+  font-size: clamp(1.25rem, 1.5vw, 1.7rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  color: #111;
+  max-width: 14ch;
+}
+
+.why-griffin-card p{
+  margin: 0;
+  max-width: 28ch;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: rgba(17,17,17,0.82);
+}
+
+/* =========================
+   CLIENT ECOSYSTEM
+========================= */
+.client-ecosystem-section{
+  background: #052330;
+  padding: 0 0 clamp(72px, 8vw, 120px);
+  padding-top:clamp(72px, 4vw, 120px);
+}
+
+.client-ecosystem-shell{
+  width: min(1400px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 60px);
+}
+
+.client-ecosystem-head{
+  max-width: 980px;
+  margin-bottom: clamp(32px, 4vw, 56px);
+}
+
+.client-ecosystem-eyebrow{
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.client-ecosystem-title{
+  margin: 0;
+  font-size: clamp(2rem, 4.2vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-weight: 300;
+  color: #ffffff;
+}
+
+.client-ecosystem-grid{
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+.client-ecosystem-card{
+  min-height: 220px;
+  padding: 24px 22px 20px;
+  background: #0d2b38;
+  color: #fff;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 24px) 0,
+    100% 24px,
+    100% 100%,
+    24px 100%,
+    0 calc(100% - 24px)
+  );
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.client-ecosystem-card:nth-child(2),
+.client-ecosystem-card:nth-child(4){
+  margin-top: 34px;
+}
+
+.client-ecosystem-card:nth-child(3){
+  background: #f00303;
+}
+
+.client-ecosystem-card:nth-child(5){
+  background: #f5f1ea;
+  color: #111;
+}
+
+.client-ecosystem-card h3{
+  margin: 0 0 18px;
+  font-size: clamp(1.05rem, 1.2vw, 1.35rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+  max-width: 12ch;
+}
+
+.client-ecosystem-card p{
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  opacity: 0.92;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 1200px){
+  .why-griffin-grid{
+    grid-template-columns: 1fr;
+  }
+
+  .why-griffin-card:nth-child(2){
+    margin-top: 0;
+  }
+
+  .client-ecosystem-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .client-ecosystem-card:nth-child(2),
+  .client-ecosystem-card:nth-child(4){
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 760px){
+  .why-griffin-section{
+    padding: 64px 0;
+  }
+
+  .client-ecosystem-section{
+    padding: 0 0 64px;
+    padding-top:clamp(72px, 4vw, 120px);
+  }
+
+  .why-griffin-shell,
+  .client-ecosystem-shell{
+    width: min(1600px, calc(100% - 24px));
+    padding: 0 16px;
+  }
+
+  .why-griffin-title,
+  .client-ecosystem-title{
+    max-width: 100%;
+  }
+
+  .why-griffin-card,
+  .client-ecosystem-card{
+    min-height: auto;
+  }
+
+  .client-ecosystem-grid{
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 760px){
+  .why-griffin-top{
+    grid-template-columns: 1fr;
+  }
+
+  .why-griffin-partners{
+    margin-top: -20px;
+    display: flex;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .why-griffin-partner{
+    flex: 1;
+  }
+
+  .why-griffin-partner-image{
+    width: 100%;
+    max-width: none; /* remove clamp restriction */
+  }
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="industries-split-section">
+  <div class="industries-split-shell">
+
+    <!-- LEFT CONTENT -->
+    <div class="industries-split-left">
+      <p class="industries-eyebrow">Industries We Serve</p>
+      <h2 class="industries-title">
+        Critical Infrastructure
+      </h2>
+      <p class="industries-intro">
+        We support asset-intensive industries where inspection, integrity, and risk management are critical to safe operation, regulatory compliance, and sustained performance.
+      </p>
+    </div>
+
+    <!-- RIGHT GRID -->
+    <div class="industries-split-right">
+
+  <div class="industry-group">
+    <div class="industry-group-head">
+      <div class="industry-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M12 2C12 2 6 9 6 13a6 6 0 0 0 12 0c0-4-6-11-6-11z"/>
+        </svg>
+      </div>
+      <h3>Energy</h3>
+    </div>
+    <ul>
+      <li>Oil &amp; Gas</li>
+      <li>LNG</li>
+      <li>Petrochemical</li>
+      <li>Pipelines</li>
+    </ul>
+  </div>
+
+  <div class="industry-group">
+    <div class="industry-group-head">
+      <div class="industry-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/>
+        </svg>
+      </div>
+      <h3>Power Generation</h3>
+    </div>
+    <ul>
+      <li>Fossil Power</li>
+      <li>Nuclear</li>
+      <li>Renewable Energy</li>
+    </ul>
+  </div>
+
+  <div class="industry-group">
+    <div class="industry-group-head">
+      <div class="industry-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+  <!-- main horizontal vessel -->
+  <rect x="3" y="7" width="18" height="10" rx="5"/>
+
+  <!-- internal bands / weld seams -->
+  <path d="M9 7v10M15 7v10"/>
+
+  <!-- inlet / outlet nozzles -->
+  <path d="M3 12H1M23 12h-2"/>
+
+  <!-- support legs -->
+  <path d="M8 17v2M16 17v2"/>
+</svg>
+      </div>
+      <h3>Industrial Manufacturing</h3>
+    </div>
+    <ul>
+      <li>Heavy Fabrication</li>
+      <li>Pressure Vessels</li>
+      <li>Process Equipment</li>
+    </ul>
+  </div>
+
+  <div class="industry-group">
+    <div class="industry-group-head">
+      <div class="industry-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/>
+        </svg>
+      </div>
+      <h3>Infrastructure &amp; Defense</h3>
+    </div>
+    <ul>
+      <li>Shipbuilding</li>
+      <li>Aerospace</li>
+      <li>Transportation Infrastructure</li>
+    </ul>
+  </div>
+
+</div>
+
+  </div>
+</section>
+
+<style>
+.industries-split-section{
+  padding: clamp(72px, 8vw, 120px) 0;
+  background: #ffffff;
+}
+
+.industries-split-shell{
+  width: min(1400px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 60px);
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: start;
+}
+
+/* LEFT */
+.industries-eyebrow{
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #777;
+}
+
+.industries-title{
+ margin: 0;
+  font-size: clamp(2rem, 4.2vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-weight: 300;
+  color: #111;
+}
+
+.industries-intro{
+  font-size: 16px;
+  line-height: 1.65;
+  color: rgba(0,0,0,0.7);
+  max-width: 46ch;
+}
+
+/* RIGHT */
+.industries-split-right{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 28px;
+}
+
+.industry-group{
+  padding: 0 0 18px;
+  border-top: 1px solid rgba(5,35,48,0.1);
+}
+
+.industry-group-head{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 0 12px;
+}
+
+.industry-group h3{
+  margin: 0;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  color: #052330;
+}
+
+.industry-group ul{
+  margin: 0;
+  padding: 0 0 0 42px;
+  list-style: none;
+}
+
+.industry-group li{
+  position: relative;
+  margin: 0 0 8px;
+  color: rgba(5,35,48,0.78);
+  line-height: 1.5;
+}
+
+.industry-group li::before{
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 0.68em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(240,3,3,0.9);
+}
+
+@media (max-width: 900px){
+  .industries-split-right{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ICON */
+.industry-icon{
+  width: 28px;
+  height: 28px;
+  color: #052330;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.industry-icon svg{
+  width: 100%;
+  height: 100%;
+}
+
+/* TEXT */
+.industry-row span{
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  color: #052330;
+}
+
+/* Responsive */
+@media (max-width: 900px){
+  .industries-split-shell{
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .industries-title{
+    max-width: 100%;
+  }
+
+  .industries-intro{
+    max-width: 100%;
+  }
+}
+</style>
+
+
+<section class="image-left-feature-section">
+  <div class="image-left-feature-shell">
+
+    <div class="image-left-feature-grid">
+
+      <!-- LEFT: IMAGE STACK -->
+      <div class="image-left-feature-media">
+        <div class="image-left-feature-bg"></div>
+        <div class="image-left-feature-image">
+          <img src="/images/stock27.jpeg" alt="Feature Image">
+        </div>
+      </div>
+
+      <!-- RIGHT: CONTENT -->
+      <div class="image-left-feature-content">
+        <p class="image-left-feature-eyebrow">Next-Generation Inspection</p>
+        <h2 class="image-left-feature-title">Inspection 4.0 Technology Stack</h2>
+        <p class="image-left-feature-text">
+          Advanced NDT, automation, and AI are transforming how inspection is performed and how decisions are made. We connect organizations with experts who understand how these technologies work together in real-world environments.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+/* =========================
+   IMAGE LEFT FEATURE
+========================= */
+.image-left-feature-section{
+  background: #fff;
+  padding: clamp(72px, 8vw, 120px) 0;
+}
+
+.image-left-feature-shell{
+  width: min(1400px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 60px);
+}
+
+.image-left-feature-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 100px);
+  align-items: center;
+}
+
+/* =========================
+   MEDIA (LEFT)
+========================= */
+.image-left-feature-media{
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+}
+
+/* BLUE OFFSET BOX */
+.image-left-feature-bg{
+  position: absolute;
+  top: -14px;
+  left: -24px;
+  width: 100%;
+  height: 100%;
+  background: #0d2b38;
+  z-index: 0;
+
+  clip-path: polygon(
+    0 0,
+    calc(100% - 28px) 0,
+    100% 28px,
+    100% 100%,
+    28px 100%,
+    0 calc(100% - 28px)
+  );
+}
+
+/* IMAGE */
+.image-left-feature-image{
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+
+  clip-path: polygon(
+    0 0,
+    calc(100% - 28px) 0,
+    100% 28px,
+    100% 100%,
+    28px 100%,
+    0 calc(100% - 28px)
+  );
+
+  box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+}
+
+.image-left-feature-image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* =========================
+   CONTENT (RIGHT)
+========================= */
+.image-left-feature-eyebrow{
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #777;
+}
+
+.image-left-feature-title{
+  margin: 0 0 18px;
+  font-size: clamp(2rem, 4.2vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-weight: 300;
+  color: #111;
+  max-width: 16ch;
+}
+
+.image-left-feature-text{
+  margin: 0;
+  max-width: 60ch;
+  font-size: clamp(1rem, 1.1vw, 1.1rem);
+  line-height: 1.7;
+  color: rgba(17,17,17,0.78);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px){
+  .image-left-feature-grid{
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .image-left-feature-media{
+    max-width: 100%;
+  }
+
+  .image-left-feature-bg{
+    top: -16px;
+    left: -16px;
+  }
+}
+</style>
+
+<!--
+<section class="why-firm-feature">
+  <img class="why-firm-feature__image" src="/images/stock8.jpeg" alt="Industrial inspection and strategy background">
+
+  <div class="why-firm-feature__overlay">
+    <div class="why-firm-feature__card">
+      <p class="why-firm-feature__eyebrow">Why Partner With Griffin Integrity Solutions?</p>
+      <h2>Positioned at the Intersection of Strategy, Technical Insight, and Industry Reality</h2>
+      <p class="why-firm-feature__intro">
+        Griffin Integrity Solutions combines deep technical expertise with real-world industry experience and strategic advisory.
+
+While most consulting firms focus on asset owners, Griffin is uniquely positioned to support inspection service providers—a critical but often overlooked segment of the market.
+
+By aligning technical insight with market realities, we deliver practical guidance that helps inspection organizations grow, compete, and operate more effectively.
+      </p>
+
+      <div class="why-firm-feature__points">
+
+        <div class="why-firm-feature__point">
+          <div class="why-firm-feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="M21 21l-4.3-4.3"></path>
+              <path d="M8 11h6"></path>
+              <path d="M11 8v6"></path>
+            </svg>
+          </div>
+          <div class="why-firm-feature__point-text">
+            <h3>Technical fluency in advanced NDT</h3>
+            <p>Deep familiarity with modern inspection methods, technical standards, and field realities.</p>
+          </div>
+        </div>
+
+        <div class="why-firm-feature__point">
+          <div class="why-firm-feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="5" cy="12" r="2"></circle>
+              <circle cx="19" cy="5" r="2"></circle>
+              <circle cx="19" cy="19" r="2"></circle>
+              <path d="M7 12h10"></path>
+              <path d="M17 6l-5 5"></path>
+              <path d="M17 18l-5-5"></path>
+            </svg>
+          </div>
+          <div class="why-firm-feature__point-text">
+            <h3>Strategic understanding of inspection markets</h3>
+            <p>Insight into how service providers, asset owners, and technology players intersect.</p>
+          </div>
+        </div>
+
+        <div class="why-firm-feature__point">
+          <div class="why-firm-feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z"></path>
+              <path d="M9.5 12l2 2 3-4"></path>
+            </svg>
+          </div>
+          <div class="why-firm-feature__point-text">
+            <h3>Practical, execution-focused guidance</h3>
+            <p>Recommendations grounded in implementation realities, risk, compliance, and long-term value.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.why-firm-feature{
+  position: relative;
+  min-height: clamp(520px, 58vw, 780px);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.why-firm-feature__image{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.why-firm-feature::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(5,35,48,0.62) 0%,
+    rgba(5,35,48,0.48) 28%,
+    rgba(5,35,48,0.18) 58%,
+    rgba(255,255,255,0.00) 100%
+  );
+  z-index: 1;
+}
+
+.why-firm-feature__overlay{
+  position: relative;
+  z-index: 2;
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.why-firm-feature__card{
+  width: min(560px, 52%);
+  background: rgba(255,255,255,0.95);
+  padding: clamp(28px, 4vw, 42px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.14);
+}
+
+.why-firm-feature__eyebrow{
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #052330;
+}
+
+.why-firm-feature__card h2{
+  margin: 0 0 16px;
+  color: #111111;
+  font-size: clamp(1.9rem, 2.5vw, 2.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  font-weight: 400;
+  max-width: 20ch;
+}
+
+.why-firm-feature__intro{
+  margin: 0 0 28px;
+  color: rgba(17,17,17,0.74);
+  font-size: 1rem;
+  line-height: 1.72;
+  max-width: 52ch;
+}
+
+.why-firm-feature__points{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.why-firm-feature__point{
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(5,35,48,0.10);
+}
+
+.why-firm-feature__point:first-child{
+  padding-top: 0;
+  border-top: none;
+}
+
+.why-firm-feature__icon{
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  color: #052330;
+}
+
+.why-firm-feature__icon svg{
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.why-firm-feature__point-text h3{
+  margin: 0 0 6px;
+  color: #111111;
+  font-size: 22px;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+}
+
+.why-firm-feature__point-text p{
+  margin: 0;
+  color: rgba(17,17,17,0.74);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+@media (max-width: 900px){
+  .why-firm-feature{
+    min-height: 680px;
+    align-items: end;
+    padding-bottom: 28px;
+  }
+
+  .why-firm-feature::after{
+    background: linear-gradient(
+      180deg,
+      rgba(5,35,48,0.50) 0%,
+      rgba(5,35,48,0.24) 34%,
+      rgba(255,255,255,0.88) 100%
+    );
+  }
+
+  .why-firm-feature__card{
+    width: 100%;
+    max-width: 100%;
+  }
+}
+</style>-->
+
+
+<!--
+<section class="image-scroller-section">
+  <div class="image-scroller-inner">
+    <div class="image-scroller-head">
+      <div class="image-scroller-eyebrow">Industry Insights & Intelligence</div>
+
+      <div class="image-scroller-controls">
+        <button class="scroller-arrow scroller-prev is-disabled" aria-label="Previous">
+          <svg viewBox="0 0 24 24">
+            <path d="M15 6l-6 6 6 6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <button class="scroller-arrow scroller-next is-active" aria-label="Next">
+          <svg viewBox="0 0 24 24">
+            <path d="M9 6l6 6-6 6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="image-scroller-viewport" id="projectScroller">
+    <div class="image-scroller-track">
+
+      <article class="scroller-card scroller-card--red">
+        <div class="scroller-copy">
+          <div class="card-eyebrow"><span>The Shift Toward Automated Inspection</span><span>01</span></div>
+          <p>Certified Level III expertise supporting inspection programs, procedure development, compliance strategies, and technical decision-making. Our consultants work directly with your teams to ensure inspections meet industry standards while improving reliability, documentation, and operational confidence.</p>
+        </div>
+      </article>
+
+      <article class="scroller-card scroller-card--image">
+        <div class="scroller-image-wrap">
+          <img src="images/stock2.jpeg" alt="">
+        </div>
+        <div class="scroller-copy">
+          <div class="card-eyebrow"><span>Advanced NDT Experts</span><span>02</span></div>
+          <p>Experienced NDT subject matter experts providing guidance on advanced inspection technologies, complex inspection challenges, and system implementation. We help organizations improve inspection performance, reduce uncertainty, and build stronger technical capabilities.</p>
+        </div>
+      </article>
+
+      <article class="scroller-card scroller-card--red">
+        <div class="scroller-copy">
+          <div class="card-eyebrow"><span>NDT Written Practice</span><span>03</span></div>
+          <p>Comprehensive review and development of written practices designed to meet industry standards and regulatory requirements. Our team ensures documentation is clear, compliant, and aligned with your operational workflows and inspection programs.</p>
+        </div>
+      </article>
+
+      <article class="scroller-card scroller-card--image">
+        <div class="scroller-image-wrap">
+          <img src="images/stock4.jpeg" alt="">
+        </div>
+        <div class="scroller-copy">
+          <div class="card-eyebrow"><span>Advanced NDT Training</span><span>04</span></div>
+          <p>Structured training programs designed to advance technician knowledge and practical capability in modern inspection methods. Our courses combine technical theory with real-world application to strengthen both individual expertise and organizational competency.</p>
+        </div>
+      </article>
+
+      <article class="scroller-card scroller-card--red">
+        <div class="scroller-copy">
+          <div class="card-eyebrow"><span>NDT Technology Programs</span><span>05</span></div>
+          <p>Implementation and optimization of advanced nondestructive testing technologies and procedures. We help organizations integrate modern inspection tools that improve detection capability, increase efficiency, and strengthen the reliability of inspection results.</p>
+        </div>
+      </article>
+
+      <article class="scroller-card scroller-card--image">
+        <div class="scroller-image-wrap">
+          <img src="images/stock3.jpeg" alt="">
+        </div>
+        <div class="scroller-copy">
+          <div class="card-eyebrow"><span>Automation & Robotics</span><span>06</span></div>
+          <p>Development and integration of robotic and automated inspection systems that enhance safety, repeatability, and productivity. These systems reduce manual risk while enabling consistent, high-precision inspection across complex assets and environments.</p>
+        </div>
+      </article>
+
+      <article class="scroller-card scroller-card--red">
+        <div class="scroller-copy">
+          <div class="card-eyebrow"><span>Advanced Imaging Systems</span><span>07</span></div>
+          <p>Deployment of high-resolution imaging and advanced inspection visualization systems that improve defect detection and analysis. These technologies provide clearer inspection data and support more confident decision-making during asset evaluation and maintenance planning.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="image-scroller-inner">
+    <div class="scroller-progress">
+      <div class="scroller-progress-bar"></div>
+    </div>
+  </div>
+</section>
+<style>
+:root{
+  --section-max: 1280px;
+  --section-pad: 24px;
+}
+
+.image-scroller-section{
+  background:#fff;
+  color:#ffffff;
+  padding:6rem 0 7rem;
+  overflow:hidden;
+  
+}
+
+.image-scroller-inner{
+  width:min(var(--section-max), calc(100% - (var(--section-pad) * 2)));
+  margin:0 auto;
+}
+
+.image-scroller-head{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  margin-bottom:2rem;
+  
+}
+
+.image-scroller-eyebrow{
+  font-size: clamp(2.4rem, 2.2vw, 2.3rem);
+  line-height: 0.97;
+  letter-spacing: -0.035em;
+  font-weight: 300;
+  color:#052330;
+  margin-left: 0.5rem;
+}
+
+.image-scroller-controls{
+  position:absolute;
+  right:0;
+  display:flex;
+  gap:.75rem;
+}
+
+.scroller-arrow{
+  width:64px;
+  height:64px;
+  border-radius:14px;
+  border:1px solid #d6d6d6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  background:#fff;
+  transition:
+    background .25s ease,
+    color .25s ease,
+    border-color .25s ease,
+    transform .15s ease;
+}
+
+.scroller-arrow svg{
+  width:26px;
+  height:26px;
+  display:block;
+}
+
+.scroller-arrow.is-disabled{
+  background:#e6e6e6;
+  color:#ffffff;
+  border-color:#e6e6e6;
+  cursor:default;
+}
+
+.scroller-arrow.is-active{
+  background:#0F3D51;
+  color:#ffffff;
+  border-color:#0F3D51;
+}
+
+.image-scroller-viewport{
+  overflow:hidden;
+  cursor:grab;
+  width:100%;
+}
+
+.image-scroller-track{
+  display:flex;
+  gap:2.4rem;
+
+  /* aligns first card with the left edge of the 1200px inner container */
+  padding-left:max(var(--section-pad), calc((100vw - var(--section-max)) / 2));
+  padding-right:max(var(--section-pad), calc((100vw - var(--section-max)) / 2));
+}
+
+.image-scroller-track::after{
+  content:"";
+  flex:0 0 1px;
+}
+
+.scroller-card{
+  position:relative;
+  flex:0 0 clamp(340px, 28vw, 450px);
+  aspect-ratio:360 / 420;
+  border-radius:22px;
+  overflow:hidden;
+}
+
+.scroller-card--red{
+  background:#f00303;
+  color:#fff;
+}
+
+.scroller-card--image{
+  background:#000;
+}
+
+.scroller-image-wrap{
+  position:absolute;
+  inset:0;
+}
+
+.scroller-image-wrap img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.scroller-image-wrap::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.25);
+}
+
+.scroller-copy{
+  position:absolute;
+  inset:0;
+  padding:1.4rem;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  z-index:2;
+}
+
+.card-eyebrow{
+  display:flex;
+  justify-content:space-between;
+  margin-top:.3rem;
+  margin-bottom:clamp(.8rem,1.2vw,1.4rem);
+  font-size:clamp(11px,0.9vw,15px);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-weight:700;
+  opacity:.9;
+}
+
+.card-eyebrow span:last-child{
+  opacity:.6;
+}
+
+.scroller-copy p{
+  margin:0;
+  font-size:clamp(18px,1.6vw,24px);
+  line-height:1.45;
+  max-width:28ch;
+}
+
+.scroller-progress{
+  width:100%;
+  height:2px;
+  background:#eee;
+  margin:3rem auto 0;
+}
+
+.scroller-progress-bar{
+  width:8%;
+  height:100%;
+  background:#000;
+}
+
+.navbar{
+  transition:
+    transform .35s cubic-bezier(.22,1,.36,1),
+    opacity .25s ease,
+    background .2s ease;
+}
+
+.navbar.navbar--hidden{
+  transform:translateX(-50%) translateY(calc(-100% - 18px));
+  opacity:.98;
+}
+
+@media (max-width: 900px){
+  .image-scroller-head{
+    gap:1.25rem;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .image-scroller-controls{
+    position:static;
+    right:auto;
+  }
+
+  .image-scroller-track{
+    padding-left:var(--section-pad);
+    padding-right:var(--section-pad);
+  }
+}
+</style>-->
+
+
+<!--
+  <section class="blue-cta">
+  <h2 class="display-heading">
+    Precision That <span class="text-highlight">Performs</span>.
+  </h2>
+</section>
+
+
+<style>
+ .blue-cta{
+  height: 80vh;
+  min-height: 600px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+
+  padding: 0 20px;
+
+  position: relative;
+  overflow: hidden;
+
+  background-image: url("images/bluebg3.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  /* ✅ makes the image stay “locked” while content scrolls */
+  background-attachment: fixed;
+  will-change: background-position;
+}
+#heroTitle,
+#criticalTitle{
+  will-change: transform;
+}
+
+/* overlay for readability */
+.blue-cta::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,0.25);
+  z-index:0;
+}
+
+.blue-cta > *{
+  position: relative;
+  z-index:1;
+  color:#fff;
+}
+</style>
+
+<section class="white-cta">
+  <h2 class="display-heading">
+  <span class="text-highlight">Safety, Integrity, and Performance</span><br> Through Proven Evaluation.
+  </h2>
+</section>
+
+<style>
+  .white-cta{
+  height: 80vh;
+  min-height: 600px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+
+  padding: 0 20px;
+
+  position: relative;
+  overflow: hidden;
+
+  background:#ffffff;
+}
+
+.white-cta > *{
+  position: relative;
+  z-index:1;
+  color:#111;
+}
+
+/* accent word
+.text-accent{
+  position: relative;
+  display: inline-block;
+}
+
+.text-accent::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0.12em;
+  width:100%;
+  height:0.35em;
+  background:#3b82f6;
+  z-index:-1;
+  transform: skewX(-8deg);
+}
+*/
+</style>-->
+
+<!--
+<section class="ndt-grid-section">
+  <h2 class="display-heading ndt-grid-title">
+    Our Partners in Industrial Inspection & Asset Integrity
+  </h2>
+
+  <div class="ndt-box-row">
+
+    <div class="ndt-box">
+      <span class="box-glow"></span>
+      <span class="fade-right"></span>
+     <img src="images/partner-logo1.png" alt="Partner Logo 1" class="partner-logo is-blur">
+    </div>
+
+    <div class="ndt-box">
+      <span class="box-glow"></span>
+      <span class="fade-right"></span>
+      <img src="images/partner-logo2.png" alt="Partner Logo 2" class="partner-logo is-blur">
+    </div>
+
+    <div class="ndt-box">
+      <span class="box-glow"></span>
+      <span class="fade-right"></span>
+      <img src="images/partner-logo1.png" alt="Partner Logo 1" class="partner-logo">
+    </div>
+
+    <div class="ndt-box">
+      <span class="box-glow"></span>
+      <span class="fade-right"></span>
+      <img src="images/partner-logo2.png" alt="Partner Logo 2" class="partner-logo">
+    </div>
+
+    <div class="ndt-box">
+      <span class="box-glow"></span>
+      <span class="fade-right"></span>
+      <img src="images/partner-logo1.png" alt="Partner Logo 1" class="partner-logo is-blur">
+    </div>
+
+    <div class="ndt-box">
+      <span class="box-glow"></span>
+      <span class="fade-right"></span>
+      <span class="right-edge"></span>
+      <img src="images/partner-logo2.png" alt="Partner Logo 2" class="partner-logo is-blur">
+    </div>
+
+    <span class="dot" style="--x:0%; --y:0%;"></span>
+    <span class="dot" style="--x:16.6667%; --y:0%;"></span>
+    <span class="dot" style="--x:33.3333%; --y:0%;"></span>
+    <span class="dot" style="--x:50%; --y:0%;"></span>
+    <span class="dot" style="--x:66.6667%; --y:0%;"></span>
+    <span class="dot" style="--x:83.3333%; --y:0%;"></span>
+    <span class="dot" style="--x:100%; --y:0%;"></span>
+
+
+    <span class="dot" style="--x:0%; --y:100%;"></span>
+    <span class="dot" style="--x:16.6667%; --y:100%;"></span>
+    <span class="dot" style="--x:33.3333%; --y:100%;"></span>
+    <span class="dot" style="--x:50%; --y:100%;"></span>
+    <span class="dot" style="--x:66.6667%; --y:100%;"></span>
+    <span class="dot" style="--x:83.3333%; --y:100%;"></span>
+    <span class="dot" style="--x:100%; --y:100%;"></span>
+
+  </div>
+</section>
+
+<style>
+.ndt-grid-section{
+  background:#fff;
+  padding:80px 24px 120px;
+}
+
+.ndt-grid-title{
+  text-align:center;
+  max-width:1000px;
+  margin:0 auto 170px;
+  font-size:clamp(2.4rem, 3.8vw, 3.5rem);
+  line-height:0.97;
+  letter-spacing:-0.035em;
+  font-weight:500;
+  color:#052330;
+}
+
+.ndt-box-row{
+  --line:2px;
+  --dot:10px;
+  --box-h:180px;
+  --fade-h:130px;
+  --idle:#111;
+  --active:#0b3a59;
+  --edge-idle:rgba(17,17,17,0.24);
+  --edge-active:rgba(17, 94, 146, 0.38);
+
+  width:1200px;
+  max-width:none;
+  display:grid;
+  grid-template-columns:repeat(6, 1fr);
+  position:relative;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+/* keep your bottom ghost horizontal row */
+.ndt-box-row::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:calc(var(--fade-h) * -1);
+  height:var(--line);
+  background:rgba(17,17,17,0.28);
+  mask-image:linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0,0,0,0.55) 14%,
+    rgba(0,0,0,1) 50%,
+    rgba(0,0,0,0.55) 86%,
+    transparent 100%
+  );
+  -webkit-mask-image:linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0,0,0,0.55) 14%,
+    rgba(0,0,0,1) 50%,
+    rgba(0,0,0,0.55) 86%,
+    transparent 100%
+  );
+  pointer-events:none;
+}
+
+.ndt-box{
+  --ink: var(--idle);
+  --edge-ink: var(--edge-idle);
+  --box-glow-x:50%;
+  --box-glow-y:50%;
+
+  position:relative;
+  height:var(--box-h);
+  border-top:var(--line) solid var(--ink);
+  border-bottom:var(--line) solid var(--ink);
+  border-left:var(--line) solid var(--ink);
+  background:none;
+  overflow:visible; /* important: keep top/bottom ghost fades visible */
+  isolation:isolate;
+}
+
+/* local glow, clipped so it does NOT spill outside the box */
+.box-glow{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  opacity:0;
+  overflow:hidden;
+  border-radius:0;
+}
+
+.box-glow::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(
+      circle 220px at var(--box-glow-x) var(--box-glow-y),
+      rgba(143,211,255,0.34) 0%,
+      rgba(143,211,255,0.18) 30%,
+      rgba(143,211,255,0.08) 48%,
+      transparent 70%
+    );
+}
+
+/* logos */
+.partner-logo{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  width:auto;
+  height:auto;
+  max-width:82%;
+  max-height:62px;
+  object-fit:contain;
+  z-index:3;
+  pointer-events:none;
+}
+
+.partner-logo.is-blur{
+  filter:blur(4px);
+  opacity:0.7;
+}
+
+/* left side ghost verticals */
+.ndt-box::before{
+  content:"";
+  position:absolute;
+  left:calc(var(--line) * -1);
+  top:calc(var(--fade-h) * -1);
+  width:var(--line);
+  height:var(--fade-h);
+  background:linear-gradient(
+    to top,
+    var(--ink) 0%,
+    rgba(17,17,17,0) 100%
+  );
+  z-index:2;
+  pointer-events:none;
+}
+
+.ndt-box::after{
+  content:"";
+  position:absolute;
+  left:calc(var(--line) * -1);
+  bottom:calc(var(--fade-h) * -1);
+  width:var(--line);
+  height:var(--fade-h);
+  background:linear-gradient(
+    to bottom,
+    var(--ink) 0%,
+    rgba(17,17,17,0) 100%
+  );
+  z-index:2;
+  pointer-events:none;
+}
+
+/* right side ghost verticals */
+.fade-right{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+}
+
+.fade-right::before{
+  content:"";
+  position:absolute;
+  right:calc(var(--line) * -1);
+  top:calc(var(--fade-h) * -1);
+  width:var(--line);
+  height:var(--fade-h);
+  background:linear-gradient(
+    to top,
+    var(--ink) 0%,
+    rgba(17,17,17,0) 100%
+  );
+}
+
+.fade-right::after{
+  content:"";
+  position:absolute;
+  right:calc(var(--line) * -1);
+  bottom:calc(var(--fade-h) * -1);
+  width:var(--line);
+  height:var(--fade-h);
+  background:linear-gradient(
+    to bottom,
+    var(--ink) 0%,
+    rgba(17,17,17,0) 100%
+  );
+}
+
+/* final right edge */
+.right-edge{
+  position:absolute;
+  top:0;
+  right:0;
+  width:var(--line);
+  height:100%;
+  background:var(--ink);
+  z-index:5;
+  pointer-events:none;
+}
+
+/* dots */
+.dot{
+  position:absolute;
+  width:var(--dot);
+  height:var(--dot);
+  border-radius:50%;
+  background:var(--idle);
+  left:var(--x);
+  top:var(--y);
+  transform:translate(-50%,-50%);
+  z-index:10;
+  pointer-events:none;
+  box-shadow:0 0 0 0 rgba(143,211,255,0);
+}
+
+/* LEFT SIDE special box */
+.ndt-box:first-child{
+  border-left:var(--line) solid var(--edge-ink);
+  border-top:none;
+  border-bottom:none;
+  background:
+    linear-gradient(to right, var(--edge-ink) 0px, var(--ink) 25vw) top left / 100% var(--line) no-repeat,
+    linear-gradient(to right, var(--edge-ink) 0px, var(--ink) 25vw) bottom left / 100% var(--line) no-repeat;
+}
+
+.ndt-box:first-child::before{
+  background:linear-gradient(
+    to top,
+    var(--edge-ink) 0%,
+    rgba(17,17,17,0) 100%
+  );
+}
+
+.ndt-box:first-child::after{
+  background:linear-gradient(
+    to bottom,
+    var(--edge-ink) 0%,
+    rgba(17,17,17,0) 100%
+  );
+}
+
+/* RIGHT SIDE special box */
+.ndt-box:last-of-type{
+  border-top:none !important;
+  border-bottom:none !important;
+  border-right:none !important;
+  background-image:
+    linear-gradient(to left, var(--edge-ink) 0px, var(--ink) 25vw),
+    linear-gradient(to left, var(--edge-ink) 0px, var(--ink) 25vw) !important;
+  background-position:
+    top right,
+    bottom right !important;
+  background-size:
+    100% var(--line),
+    100% var(--line) !important;
+  background-repeat:
+    no-repeat,
+    no-repeat !important;
+}
+
+.ndt-box:last-of-type .fade-right::before{
+  background:linear-gradient(
+    to top,
+    var(--edge-ink) 0%,
+    rgba(17,17,17,0) 100%
+  ) !important;
+}
+
+.ndt-box:last-of-type .fade-right::after{
+  background:linear-gradient(
+    to bottom,
+    var(--edge-ink) 0%,
+    rgba(17,17,17,0) 100%
+  ) !important;
+}
+
+.ndt-box:last-of-type .right-edge{
+  background:var(--edge-ink) !important;
+}
+
+@media (max-width:1024px){
+  .ndt-box-row{
+    --line:1px;
+    --dot:5px;
+    --box-h:160px;
+    --fade-h:80px;
+    width:1000px;
+    margin:0;
+    padding:0;
+  }
+
+  .ndt-grid-title{
+    margin:0 auto 100px;
+    font-size:clamp(2rem, 3.2vw, 3.2rem);
+  }
+
+  .partner-logo{
+    max-width:78%;
+    max-height:54px;
+  }
+
+  .box-glow::before{
+    background:
+      radial-gradient(
+        circle 90px at var(--box-glow-x) var(--box-glow-y),
+        rgba(143,211,255,0.34) 0%,
+        rgba(143,211,255,0.18) 30%,
+        rgba(143,211,255,0.08) 48%,
+        transparent 70%
+      );
+  }
+}
+.ndt-box-row::after{
+  content:none;
+}
+</style>-->
+
+
+<section class="partner-network-section">
+  <div class="partner-network-shell">
+    <div class="partner-network-head">
+      <p class="partner-network-eyebrow">Our Partner Network</p>
+      <h2 class="partner-network-title">
+        Trusted partners across industrial inspection and asset integrity
+      </h2>
+      <p class="partner-network-text">
+        We collaborate with specialized organizations that strengthen technical delivery,
+        expand field capability, and support better outcomes across high-stakes inspection environments.
+      </p>
+    </div>
+
+    <div class="partner-network-grid">
+      <article class="partner-card">
+        <div class="partner-card-logo-wrap">
+          <img src="images/partner-logo1.png" alt="Partner Name 1" class="partner-card-logo">
+        </div>
+        <h3>Sound NDT Solutions</h3>
+        <p></p>
+      </article>
+
+      <article class="partner-card">
+        <div class="partner-card-logo-wrap">
+          <img src="images/partner-logo2.png" alt="Partner Name 2" class="partner-card-logo">
+        </div>
+        <h3>Top Notch NDT</h3>
+        <p></p>
+      </article>
+
+      <article class="partner-card">
+        <div class="partner-card-logo-wrap">
+          <img src="images/partner-logo3.png" alt="Partner Name 3" class="partner-card-logo">
+        </div>
+        <h3>ATCO Automated Scanning Systems</h3>
+        <p></p>
+      </article>
+
+      <article class="partner-card">
+        <div class="partner-card-logo-wrap">
+          <img src="images/partner-logo4.png" alt="Partner Name 4" class="partner-card-logo">
+        </div>
+        <h3>Halo NDT Techologies</h3>
+        <p></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+.partner-network-section{
+  background:#fff;
+
+}
+
+.partner-network-shell{
+  width:min(1400px, calc(100% - 40px));
+  margin:0 auto;
+  padding:0 clamp(20px, 4vw, 60px);
+}
+
+.partner-network-head{
+  max-width:1200px;
+  margin:0 auto clamp(36px, 5vw, 56px);
+  text-align:center;
+}
+
+.partner-network-eyebrow{
+  margin:0 0 14px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:#6d7880;
+}
+
+.partner-network-title{
+  margin:0 0 18px;
+  font-size:clamp(2.2rem, 4.4vw, 4.25rem);
+  line-height:0.96;
+  letter-spacing:-0.04em;
+  font-weight:300;
+  color:#052330;
+}
+
+.partner-network-text{
+  margin:0 auto;
+  max-width:68ch;
+  font-size:clamp(1rem, 1.1vw, 1.1rem);
+  line-height:1.7;
+  color:rgba(5,35,48,0.74);
+}
+
+.partner-network-grid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:22px;
+  align-items:stretch;
+}
+
+.partner-card{
+  position:relative;
+  padding:28px 24px 24px;
+  background:#f6f8fa;
+  border:1px solid rgba(5,35,48,0.08);
+  min-height:280px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease;
+  clip-path:polygon(
+    0 0,
+    calc(100% - 22px) 0,
+    100% 22px,
+    100% 100%,
+    22px 100%,
+    0 calc(100% - 22px)
+  );
+}
+/*
+.partner-card::before{
+  content:"";
+  position:absolute;
+  top:-1px;
+  left:-1px;
+  width:72px;
+  height:72px;
+  background:linear-gradient(135deg, rgba(18,102,163,0.14), rgba(18,102,163,0));
+  pointer-events:none;
+}
+*/
+.partner-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(18,102,163,0.22);
+  box-shadow:0 20px 40px rgba(0,0,0,0.08);
+  background:#fbfcfd;
+}
+
+.partner-card-logo-wrap{
+  height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  margin-bottom:24px;
+  padding-bottom:18px;
+  border-bottom:1px solid rgba(5,35,48,0.08);
+}
+
+.partner-card-logo{
+  max-width:160px;
+  max-height:42px;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  display:block;
+}
+
+.partner-card h3{
+  margin:0 0 12px;
+  font-size:1.2rem;
+  line-height:1.1;
+  letter-spacing:-0.02em;
+  font-weight:600;
+  color:#052330;
+}
+
+.partner-card p{
+  margin:0;
+  font-size:0.97rem;
+  line-height:1.6;
+  color:rgba(5,35,48,0.76);
+}
+
+/* Optional stagger for desktop */
+.partner-card:nth-child(2),
+.partner-card:nth-child(4){
+  margin-top:28px;
+}
+
+@media (max-width:1100px){
+  .partner-network-grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+
+  .partner-card:nth-child(2),
+  .partner-card:nth-child(4){
+    margin-top:0;
+  }
+}
+
+@media (max-width:680px){
+  .partner-network-section{
+    padding:64px 0;
+  }
+
+  .partner-network-shell{
+    width:min(1600px, calc(100% - 24px));
+    padding:0 16px;
+  }
+
+  .partner-network-grid{
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+
+  .partner-card{
+    min-height:auto;
+    padding:24px 20px 20px;
+  }
+
+  .partner-card-logo-wrap{
+    height:64px;
+    margin-bottom:18px;
+    padding-bottom:14px;
+  }
+
+  .partner-card-logo{
+    max-width:140px;
+    max-height:38px;
+  }
+}
+</style>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script>
+(() => {
+  const row = document.querySelector(".ndt-box-row");
+  if (!row) return;
+
+  const boxes = Array.from(row.querySelectorAll(".ndt-box"));
+  const dots = Array.from(row.querySelectorAll(".dot"));
+
+  const ACTIVE = "#8fd3ff";
+  const ACTIVE_EDGE = "rgba(143,211,255,0.38)";
+  const IDLE = "#111";
+  const IDLE_EDGE = "rgba(17,17,17,0.24)";
+
+  function getBoxCornerDots(index) {
+    return [
+      dots[index],       // top-left
+      dots[index + 1],   // top-right
+      dots[index + 7],   // bottom-left
+      dots[index + 8]    // bottom-right
+    ].filter(Boolean);
+  }
+
+  function lightBox(index) {
+    const box = boxes[index];
+    const glow = box.querySelector(".box-glow");
+    const logo = box.querySelector(".partner-logo");
+    const cornerDots = getBoxCornerDots(index);
+
+    gsap.to(box, {
+      "--ink": ACTIVE,
+      "--edge-ink": ACTIVE_EDGE,
+      duration: 0.22,
+      ease: "power2.out",
+      overwrite: "auto"
+    });
+
+    gsap.to(glow, {
+      opacity: 1,
+      duration: 0.2,
+      ease: "power2.out",
+      overwrite: "auto"
+    });
+/*
+    gsap.to(cornerDots, {
+      backgroundColor: ACTIVE,
+      boxShadow: "0 0 0 6px rgba(143,211,255,0.16)",
+      duration: 0.22,
+      ease: "power2.out",
+      overwrite: "auto"
+    });*/
+
+    if (logo) {
+      if (logo.classList.contains("is-blur")) {
+        gsap.to(logo, {
+          filter: "blur(0px)",
+          opacity: 1,
+          duration: 0.25,
+          ease: "power2.out",
+          overwrite: "auto"
+        });
+      } else {
+        gsap.to(logo, {
+          opacity: 1,
+          duration: 0.25,
+          ease: "power2.out",
+          overwrite: "auto"
+        });
+      }
+    }
+  }
+
+  function resetBox(index) {
+    const box = boxes[index];
+    const glow = box.querySelector(".box-glow");
+    const logo = box.querySelector(".partner-logo");
+    const cornerDots = getBoxCornerDots(index);
+
+    gsap.to(box, {
+      "--ink": IDLE,
+      "--edge-ink": IDLE_EDGE,
+      duration: 0.28,
+      ease: "power2.out",
+      overwrite: "auto"
+    });
+
+    gsap.to(glow, {
+      opacity: 0,
+      duration: 0.24,
+      ease: "power2.out",
+      overwrite: "auto"
+    });
+
+    gsap.to(box, {
+      "--box-glow-x": "50%",
+      "--box-glow-y": "50%",
+      duration: 0.28,
+      ease: "power2.out",
+      overwrite: "auto"
+    });
+
+    gsap.to(cornerDots, {
+      backgroundColor: IDLE,
+      boxShadow: "0 0 0 0 rgba(143,211,255,0)",
+      duration: 0.28,
+      ease: "power2.out",
+      overwrite: "auto"
+    });
+
+    if (logo) {
+      if (logo.classList.contains("is-blur")) {
+        gsap.to(logo, {
+          filter: "blur(4px)",
+          opacity: 0.7,
+          duration: 0.28,
+          ease: "power2.out",
+          overwrite: "auto"
+        });
+      } else {
+        gsap.to(logo, {
+          filter: "blur(0px)",
+          opacity: 1,
+          duration: 0.28,
+          ease: "power2.out",
+          overwrite: "auto"
+        });
+      }
+    }
+  }
+
+  boxes.forEach((box, index) => {
+    box.addEventListener("mouseenter", () => {
+      lightBox(index);
+    });
+
+    box.addEventListener("mousemove", (e) => {
+      const rect = box.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+      gsap.to(box, {
+        "--box-glow-x": x + "%",
+        "--box-glow-y": y + "%",
+        duration: 0.14,
+        ease: "power2.out",
+        overwrite: true
+      });
+    });
+
+    box.addEventListener("mouseleave", () => {
+      resetBox(index);
+    });
+  });
+})();
+</script>
+
+
+
+
+
+<section class="contact-section">
+  <div class="contact-header">
+    <h2>
+      <span class="text-highlight">Contact</span> Us
+    </h2>
+    <div class="contact-divider"></div>
+  </div>
+
+  <div class="contact-grid">
+
+    <!-- LEFT SIDE -->
+    <div class="contact-left">
+      <h3>Reach Out to Learn More About Griffin Integrity Solutions</h3>
+      <p>
+        If you’d like to learn more about Griffin Integrity Solutions, our technical advisory capabilities, or how we can support your organization, we’d be glad to connect.
+
+        Our team provides clear, practical guidance tailored to your operational and strategic needs.
+      </p>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="contact-right">
+      <h3>Tell Us a Bit About You</h3>
+
+      <form class="contact-form">
+
+        <label>
+          Full Name
+          <input type="text" name="name" placeholder="John Doe" required>
+        </label>
+
+        <label>
+          Phone Number
+          <input type="tel" name="phone" placeholder="(555) 123-4567">
+        </label>
+
+        <label>
+          Email Address
+          <input type="email" name="email" placeholder="john@company.com" required>
+        </label>
+
+        <label>
+          Company Name
+          <input type="text" name="company" placeholder="Your Company Name">
+        </label>
+
+        <label>
+          How Can We Help?
+          <textarea name="message" rows="5" placeholder="Tell us more about your project or needs..."></textarea>
+        </label>
+
+        <button type="submit" class="contact-btn">
+          Submit Inquiry
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<style>
+/* ============================
+   CONTACT SECTION (WHITE) — Bigger Type + Underline Inputs
+============================ */
+/* ====== FORCE FULL-WIDTH BREAKOUT (works inside max-width parents) ====== */
+.contact-section{
+  position: relative;
+  width: 100vw;
+  left: 50%;
+  margin-left: -50vw;
+
+  /* keep it flush, no accidental overflow from browser rounding */
+  overflow-x: clip;
+
+  background: #ffffff;
+  padding: clamp(90px, 10vw, 160px) clamp(24px, 4vw, 60px);
+}
+
+/* safety: prevent any global max-width rules from affecting it */
+.contact-section{
+  max-width: none !important;
+}
+
+/* also prevent horizontal scrolling if something else overflows */
+html, body{
+  overflow-x: clip;
+}
+
+/* HEADER */
+.contact-header{
+  text-align:center;
+  margin-bottom: clamp(44px, 5vw, 80px);
+  
+}
+
+.contact-header h2{
+  font-size: clamp(44px, 10vw, 142px);   /* ✅ bigger */
+  margin:0;
+  font-weight:750;
+  letter-spacing:-0.03em;
+  color:#111;
+}
+
+.text-highlight{
+  color:#1a5c91;
+}
+
+.contact-divider{
+  width: 100%;
+  height:1px;
+  background:#a9a9a9;
+  margin:22px auto 0;
+  border-radius:999px;
+}
+
+/* GRID */
+.contact-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(44px, 6vw, 120px);
+  
+  margin:0 auto;
+  align-items:start;
+}
+
+/* LEFT */
+.contact-left {
+  border-left: 10px solid red;
+  padding-left: 2rem;
+}
+.contact-left h3{
+  font-size: clamp(24px, 3.4vw, 54px);  /* ✅ bigger */
+  margin:0 0 18px;
+  color:#111;
+  letter-spacing:-0.01em;
+  font-weight: 200;
+}
+
+.contact-left p{
+  font-size: clamp(17px, 1.2vw, 20px);  /* ✅ bigger */
+  line-height:1.75;
+  color:#555;
+  max-width:60ch;
+}
+
+/* RIGHT */
+.contact-right h3{
+  font-size: clamp(24px, 3.4vw, 54px);  /* ✅ bigger */
+  margin:0 0 22px;
+  color:#111;
+  letter-spacing:-0.01em;
+  font-weight: 200;
+}
+
+/* FORM */
+.contact-form{
+  display:flex;
+  flex-direction:column;
+  gap: 20px;
+}
+
+/* label text bigger */
+.contact-form label{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  
+  letter-spacing:.06em;
+  font-size: 18px;          /* ✅ bigger */
+  font-weight:400;
+  color:#333;
+}
+
+/* ✅ Underline-only inputs */
+.contact-form input,
+.contact-form textarea{
+  background: transparent;     /* no box bg */
+  border: none;                /* remove all borders */
+  border-bottom: 1px solid #d5d9de;  /* ✅ underline */
+  border-radius: 0;
+  padding: 8px 0px 12px;      /* top/right/bottom feel good */
+  font-size: 18px;             /* ✅ bigger input text */
+  color:#111;
+  outline:none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+/* Force form fields to use site font */
+.contact-form input,
+.contact-form textarea,
+.contact-form select,
+.contact-form button {
+  font-family: 'Zalando Sans', sans-serif;
+}
+
+/* keep textarea neat */
+.contact-form textarea{
+  resize: vertical;
+  min-height: 140px;
+  padding-top: 10px;
+}
+
+/* focus state */
+.contact-form input:focus,
+.contact-form textarea:focus{
+  border-bottom-color: #ff0505;
+  
+}
+
+/* placeholders */
+.contact-form input::placeholder,
+.contact-form textarea::placeholder{
+  color:#9aa3ad;
+}
+
+/* BUTTON (slightly bigger) */
+.contact-btn{
+  margin-top:14px;
+  background:#ffffff;
+  color:#000000;
+  border: 1px solid;
+  padding:16px 22px;
+  border-radius:0px;
+  font-size:22px;
+  font-weight:200;
+  letter-spacing:.05em;
+  cursor:pointer;
+  transition: transform .2s ease, opacity .2s ease;
+  width: fit-content;      /* nice “CTA” feel */
+}
+
+.contact-btn:hover{
+  transform: translateY(-2px);
+  opacity:.92;
+}
+
+/* MOBILE */
+@media (max-width: 900px){
+  .contact-grid{
+    grid-template-columns: 1fr;
+  }
+  .contact-left p{
+    max-width:100%;
+  }
+  .contact-btn{
+    width:100%;
+    text-align:center;
+  }
+}
+</style>
+
+ 
+
+
+<footer class="site-footer">
+
+  <div class="footer-inner">
+
+    <!-- Column 1 (Logo - spans 50%) -->
+    <div class="footer-col footer-col--logo">
+      <img src="images/Griffin Integrity Logo wt.png" 
+           alt="Griffin Integrity Solutions" 
+           class="footer-logo">
+    </div>
+
+    <!-- Column 2 -->
+    <div class="footer-col">
+      <h4 class="footer-title">Services</h4>
+      <ul class="footer-links">
+        <li><a href="#">Technical Consulting</a></li>
+        <li><a href="#">Advisory Services</a></li>
+        <li><a href="#">Affiliate Organizations</a></li>
+      </ul>
+    </div>
+
+    <!-- Column 3 -->
+    <div class="footer-col">
+      <h4 class="footer-title">Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">News</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+
+    <!-- Column 4 -->
+    <div class="footer-col">
+      <h4 class="footer-title">Reach Us</h4>
+      <div class="footer-socials">
+        <a href="#" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M6 9h3v12H6zM7.5 4a1.75 1.75 0 110 3.5A1.75 1.75 0 017.5 4zM12 9h3v1.7c.4-.8 1.5-1.9 3.4-1.9 3.6 0 4.6 2.3 4.6 5.3V21h-3v-6.1c0-1.6-.6-2.7-2.1-2.7-1.3 0-2.1.9-2.4 1.7-.1.3-.1.7-.1 1V21h-3z" fill="currentColor"/></svg>
+        </a>
+
+        <a href="#" aria-label="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v6h3v-6h3l1-3h-4v-2c0-.6.4-1 1-1z" fill="currentColor"/></svg>
+        </a>
+
+        <a href="#" aria-label="X">
+          <svg viewBox="0 0 24 24"><path d="M3 3l7 9-7 9h3l5-6 5 6h5l-7-9 7-9h-3l-5 6-5-6z" fill="currentColor"/></svg>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Row -->
+  <div class="footer-bottom">
+    <div class="footer-copy">
+      © 2026 Griffin Integrity Solutions, LLC. All Rights Reserved
+    </div>
+
+    <div class="footer-credit">
+      Website by <a href="https://mcvdesign.com" target="_blank">MCVDesign</a>
+    </div>
+  </div>
+
+</footer>
+<style>
+  /* ===================== FOOTER ===================== */
+.site-footer{
+  position: relative;
+
+  /* ✅ full-bleed breakout */
+  width: 100vw;
+  left: 50%;
+  margin-left: -50vw;
+
+  background-image: url("images/bluebg3.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  color:#fff;
+  padding: clamp(60px, 8vw, 100px) clamp(18px, 4vw, 70px) 30px;
+
+
+  
+
+  overflow-x: clip; /* prevents rounding overflow */
+}
+
+/* Top grid */
+.footer-inner{
+  display:grid;
+  grid-template-columns: 4fr 2fr 1fr 1fr;
+  gap: clamp(24px, 4vw, 80px);
+}
+.footer-inner,
+.footer-bottom{
+  width: 100%;
+  max-width: none;         /* ✅ remove 1200px cap */
+  margin: 0 auto;
+}
+/* Logo column */
+.footer-col--logo{
+  display:flex;
+  align-items:flex-start;
+}
+
+.footer-logo{
+  width:200px;
+  height:auto;
+  object-fit:contain;
+}
+
+/* Titles */
+.footer-title{
+  font-size:16px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-bottom:18px;
+  font-weight:400;
+  opacity:.5;
+  color:rgb(255, 255, 255);
+}
+
+/* Links */
+.footer-links{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+.footer-links li{
+  margin-bottom:12px;
+}
+
+.footer-links a{
+  text-decoration:none;
+  color:#ffffff;
+  font-size:16px;
+  transition: color .2s ease;
+}
+
+.footer-links a:hover{
+  color:#F00303;
+}
+
+/* Social Icons */
+.footer-socials{
+  display:flex;
+  flex-direction: column;  /* ✅ stack vertically */
+  gap:16px;
+  align-items: flex-start; /* keeps them left aligned */
+}
+.footer-socials a{
+  width:24px;
+  height:24px;
+  color:#ffffffcc;
+  transition: color .2s ease, transform .2s ease;
+}
+
+.footer-socials a:hover{
+  color:#F00303;
+  transform: translateY(-2px);
+}
+
+.footer-socials svg{
+  width:100%;
+  height:100%;
+}
+
+/* Bottom row */
+.footer-bottom{
+  margin-top: clamp(36px, 5vw, 70px);
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0);
+
+  font-size:16px;
+  color:#ffffff99;
+}
+.footer-credit a{
+  color:#ffffffcc;
+  text-decoration:none;
+  font-weight:600;
+  transition: color .2s ease;
+}
+
+.footer-credit a:hover{
+  color:#F00303;
+}
+
+/* ===================== Responsive ===================== */
+@media (max-width: 900px){
+  .footer-inner{
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .footer-col--logo{
+    grid-column: span 2;
+  }
+
+  .footer-bottom{
+    flex-direction: column;
+    gap: 12px;
+    text-align:center;
+  }
+}
+</style>
+
+
+
+  <!-- ✅ One SVG "sheet" (white + loader content) that gets cut out by expanding window -->
+  <svg id="loaderSvg" aria-hidden="true">
+    <defs>
+      <!-- Window mask: white = keep sheet, black = hole -->
+      <mask id="revealMask" maskUnits="userSpaceOnUse">
+        <rect id="maskBase" x="0" y="0" width="1" height="1" fill="white"></rect>
+        <rect id="maskWindow" x="0" y="0" width="0" height="0" fill="black"></rect>
+      </mask>
+
+      <!-- Clip for square reveal (bottom -> top) -->
+      <clipPath id="squareClip">
+        <rect id="squareClipRect" x="0" y="0" width="0" height="0"></rect>
+      </clipPath>
+
+      <!-- ✅ Clip for text reveal (bottom -> top) -->
+      <clipPath id="rectRevealClip">
+        <rect id="rectRevealRect" x="0" y="0" width="0" height="0"></rect>
+      </clipPath>
+    </defs>
+
+    <g id="sheet" mask="url(#revealMask)">
+      <!-- White background sheet -->
+      <rect id="cover" x="0" y="0" width="1" height="1" fill="#ffffff"></rect>
+
+      <!-- Side ovals as images -->
+      <image id="ovalLImg" href="images/img3.png" x="0" y="0" width="180" height="1" preserveAspectRatio="none"></image>
+      <image id="ovalRImg" href="images/img4.png" x="0" y="0" width="180" height="1" preserveAspectRatio="none"></image>
+
+      <!-- Center stage -->
+      <g id="stage">
+        <!-- ✅ Text/logo reveals upward from behind a mask -->
+        <g clip-path="url(#rectRevealClip)">
+          <image id="rectImg" href="images/GriffinText.png" x="0" y="0" width="400" height="96" preserveAspectRatio="none"></image>
+        </g>
+
+        <!-- Square reveals bottom->top via clipPath -->
+        <image id="squareImg" href="images/GriffinIcon.png"
+               x="0" y="0" width="96" height="96"
+               preserveAspectRatio="none"
+               clip-path="url(#squareClip)"></image>
+      </g>
+    </g>
+  </svg>
+<!-- LOAD SCREEN SCRIPT
+  <script>
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const easeOut = (t) => 1 - Math.pow(1 - t, 4.5);
+  const easeInOutCubic = (t) =>
+    t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+
+  // Easing helpers (no overshoot)
+  const easeLinear   = (t) => t;
+  const easeSoftOut  = (t) => 1 - Math.pow(1 - t, 4.5);
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+  const easeOutQuint = (t) => 1 - Math.pow(1 - t, 6);
+
+  // ✅ ONLY CHANGE: make the square icon a bit narrower (width only)
+  const SQUARE_WIDTH_SCALE = 0.90; // 0.95 = slight, 0.9 = noticeable
+
+  function lockScroll(){
+    const y = window.scrollY || document.documentElement.scrollTop || 0;
+    document.body.dataset.scrollY = String(y);
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${y}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+  }
+  function unlockScroll(){
+    const y = parseInt(document.body.dataset.scrollY || "0", 10);
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.width = "";
+    document.body.removeAttribute("data-scroll-y");
+    window.scrollTo(0, y);
+  }
+
+  function animateAttrs(el, from, to, duration, easeFn = (x)=>x){
+    return new Promise(resolve=>{
+      const t0 = performance.now();
+      function frame(now){
+        const t = Math.min(1, (now - t0)/duration);
+        const e = easeFn(t);
+
+        if ("x" in from) el.setAttribute("x", from.x + (to.x - from.x)*e);
+        if ("y" in from) el.setAttribute("y", from.y + (to.y - from.y)*e);
+        if ("w" in from) el.setAttribute("width",  from.w + (to.w - from.w)*e);
+        if ("h" in from) el.setAttribute("height", from.h + (to.h - from.h)*e);
+
+        if ("tx" in from || "sx" in from || "sy" in from || "tx" in to || "sx" in to || "sy" in to){
+          const tx = (from.tx ?? 0) + ((to.tx ?? 0) - (from.tx ?? 0))*e;
+          const hasScale = ("sx" in from) || ("sy" in from) || ("sx" in to) || ("sy" in to);
+          if (hasScale){
+            const sx = (from.sx ?? 1) + ((to.sx ?? 1) - (from.sx ?? 1))*e;
+            const sy = (from.sy ?? 1) + ((to.sy ?? 1) - (from.sy ?? 1))*e;
+            el.setAttribute("transform", `translate(${tx},0) scale(${sx},${sy})`);
+          } else {
+            el.setAttribute("transform", `translate(${tx},0)`);
+          }
+        }
+
+        if ("op" in from){
+          const op = from.op + (to.op - from.op)*e;
+          el.setAttribute("opacity", op);
+        }
+
+        if(t < 1) requestAnimationFrame(frame);
+        else resolve();
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  function sizeScene(){
+    const svg = document.getElementById("loaderSvg");
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+
+    const root = getComputedStyle(document.documentElement);
+    const sq    = parseFloat(root.getPropertyValue("--square")) || 96;
+    const gap   = parseFloat(root.getPropertyValue("--gap")) || 8;
+    const rectW = parseFloat(root.getPropertyValue("--rectW")) || 254;
+    const rectH = parseFloat(root.getPropertyValue("--rectH")) || 96;
+    const ovalW = parseFloat(root.getPropertyValue("--ovalW")) || 800;
+
+    // ✅ derived width for the square only
+    const sqW = sq * SQUARE_WIDTH_SCALE;
+    const sqOffsetX = (sq - sqW) / 2; // keeps the narrower icon centered
+
+    // base mask + cover
+    const maskBase = document.getElementById("maskBase");
+    const cover = document.getElementById("cover");
+    maskBase.setAttribute("width", w);
+    maskBase.setAttribute("height", h);
+    cover.setAttribute("width", w);
+    cover.setAttribute("height", h);
+
+    // Stage 1: square alone centered (using base square for layout)
+    const sqX = (w - sq)/2;
+    const sqY = (h - sq)/2;
+
+    // Stage 2: centered group (layout uses sq so overall spacing/centering stays identical)
+    const groupW  = sq + gap + rectW;
+    const groupH  = Math.max(sq, rectH);
+    const gxGroup = (w - groupW)/2;
+    const gyGroup = (h - groupH)/2;
+
+    // rect pinned to square: start + final (layout uses sq)
+    const rectStartX = sqX + sq + gap;
+    const rectStartY = sqY + (sq - rectH) / 2;
+
+    const rectFinalX = gxGroup + sq + gap;
+    const rectFinalY = gyGroup + (sq - rectH) / 2;
+
+    // --- square image (ONLY width scaled) ---
+    const squareImg = document.getElementById("squareImg");
+    squareImg.setAttribute("x", sqX + sqOffsetX);
+    squareImg.setAttribute("y", sqY);
+    squareImg.setAttribute("width", sqW);
+    squareImg.setAttribute("height", sq);
+    squareImg.setAttribute("opacity", 1);
+
+    // clip rect must match the same width & x
+    const squareClipRect = document.getElementById("squareClipRect");
+    squareClipRect.setAttribute("x", sqX + sqOffsetX);
+    squareClipRect.setAttribute("y", sqY + sq);
+    squareClipRect.setAttribute("width", sqW);
+    squareClipRect.setAttribute("height", 0);
+
+    // rect logo
+    const rectImg = document.getElementById("rectImg");
+    rectImg.setAttribute("width", rectW);
+    rectImg.setAttribute("height", rectH);
+    rectImg.setAttribute("x", rectStartX);
+    rectImg.setAttribute("y", rectStartY);
+    rectImg.setAttribute("opacity", 1);
+
+    const rectRevealRect = document.getElementById("rectRevealRect");
+    rectRevealRect.setAttribute("x", rectStartX);
+    rectRevealRect.setAttribute("y", rectStartY + rectH);
+    rectRevealRect.setAttribute("width", rectW);
+    rectRevealRect.setAttribute("height", 0);
+
+    // ovals
+    const ovalLImg = document.getElementById("ovalLImg");
+    const ovalRImg = document.getElementById("ovalRImg");
+    ovalLImg.setAttribute("width", ovalW);
+    ovalLImg.setAttribute("height", h);
+    ovalLImg.setAttribute("x", 0);
+    ovalLImg.setAttribute("y", 0);
+
+    ovalRImg.setAttribute("width", ovalW);
+    ovalRImg.setAttribute("height", h);
+    ovalRImg.setAttribute("x", w - ovalW);
+    ovalRImg.setAttribute("y", 0);
+
+    return {
+      w, h,
+      sq, sqW, sqOffsetX,
+      gap, rectW, rectH, ovalW,
+      sqX, sqY, gxGroup, gyGroup,
+      rectStartX, rectStartY, rectFinalX, rectFinalY
+    };
+  }
+
+  (async function run(){
+    lockScroll();
+
+    let S = sizeScene();
+    const onResize = () => { S = sizeScene(); };
+    window.addEventListener("resize", onResize, { passive:true });
+
+    const maskWindow = document.getElementById("maskWindow");
+    maskWindow.setAttribute("x", 0);
+    maskWindow.setAttribute("y", 0);
+    maskWindow.setAttribute("width", 0);
+    maskWindow.setAttribute("height", 0);
+
+    const squareImg      = document.getElementById("squareImg");
+    const squareClipRect = document.getElementById("squareClipRect");
+    const rectImg        = document.getElementById("rectImg");
+    const rectRevealRect = document.getElementById("rectRevealRect");
+    const ovalLImg       = document.getElementById("ovalLImg");
+    const ovalRImg       = document.getElementById("ovalRImg");
+
+    // ovals start offscreen
+    ovalLImg.setAttribute("transform", `translate(${-S.ovalW},0)`);
+    ovalRImg.setAttribute("transform", `translate(${ S.ovalW},0)`);
+
+    // square reveal starts bottom -> top (use sqW + offset)
+    squareClipRect.setAttribute("x", S.sqX + S.sqOffsetX);
+    squareClipRect.setAttribute("y", S.sqY + S.sq);
+    squareClipRect.setAttribute("width", S.sqW);
+    squareClipRect.setAttribute("height", 0);
+
+    // rect reveal starts closed at bottom (pinned start)
+    rectRevealRect.setAttribute("x", S.rectStartX);
+    rectRevealRect.setAttribute("y", S.rectStartY + S.rectH);
+    rectRevealRect.setAttribute("width", S.rectW);
+    rectRevealRect.setAttribute("height", 0);
+
+    // 1) reveal square (BOTTOM -> TOP) (width = sqW, height = sq)
+    await animateAttrs(
+      squareClipRect,
+      { x: S.sqX + S.sqOffsetX, y: S.sqY + S.sq, w: S.sqW, h: 0 },
+      { x: S.sqX + S.sqOffsetX, y: S.sqY,        w: S.sqW, h: S.sq },
+      1400,
+      easeLinear
+    );
+
+    await sleep(120);
+
+    // 2) move into centered pair (layout still uses sqX/gxGroup, but we keep offset consistent)
+    const sqToX = S.gxGroup;
+    const moveDuration = 900;
+
+    const moveSquare = Promise.all([
+      animateAttrs(
+        squareImg,
+        { x:S.sqX + S.sqOffsetX, y:S.sqY,     w:S.sqW, h:S.sq },
+        { x:sqToX + S.sqOffsetX, y:S.gyGroup, w:S.sqW, h:S.sq },
+        moveDuration,
+        easeInOutCubic
+      ),
+      animateAttrs(
+        squareClipRect,
+        { x:S.sqX + S.sqOffsetX, y:S.sqY,     w:S.sqW, h:S.sq },
+        { x:sqToX + S.sqOffsetX, y:S.gyGroup, w:S.sqW, h:S.sq },
+        moveDuration,
+        easeInOutCubic
+      )
+    ]);
+
+    const moveTextWithSquare = animateAttrs(
+      rectImg,
+      { x:S.rectStartX, y:S.rectStartY, w:S.rectW, h:S.rectH },
+      { x:S.rectFinalX, y:S.rectFinalY, w:S.rectW, h:S.rectH },
+      moveDuration,
+      easeInOutCubic
+    );
+
+    const revealTextPinned = animateAttrs(
+      rectRevealRect,
+      { x:S.rectStartX, y:S.rectStartY + S.rectH, w:S.rectW, h:0 },
+      { x:S.rectFinalX, y:S.rectFinalY,           w:S.rectW, h:S.rectH },
+      moveDuration,
+      easeInOutCubic
+    );
+
+    const ovalsIn = Promise.all([
+      animateAttrs(ovalLImg, { tx:-S.ovalW }, { tx:0 }, 1100, easeOut),
+      animateAttrs(ovalRImg, { tx: S.ovalW }, { tx:0 }, 1100, easeOut),
+    ]);
+
+    await Promise.all([moveSquare, moveTextWithSquare, revealTextPinned, ovalsIn]);
+
+    // fade out logo + icon
+    await Promise.all([
+      animateAttrs(squareImg, { op: 1 }, { op: 0 }, 220, easeOutCubic),
+      animateAttrs(rectImg,   { op: 1 }, { op: 0 }, 220, easeOutCubic),
+    ]);
+
+    // 4) MASK: 2 phases
+    const startSize = 16;
+
+    const maskPhase1 = {
+      vw: 0.99,
+      vh: 0.005,
+      duration: 750,
+      ease: easeSoftOut,
+      hold: 120
+    };
+
+    const maskPhase2 = {
+      duration: 950,
+      ease: easeOutQuint
+    };
+
+    const midW = S.w * maskPhase1.vw;
+    const midH = S.h * maskPhase1.vh;
+    const midX = (S.w - midW) / 2;
+    const midY = (S.h - midH) / 2;
+
+    await animateAttrs(
+      maskWindow,
+      { x:(S.w-startSize)/2, y:(S.h-startSize)/2, w:startSize, h:startSize },
+      { x:midX, y:midY, w:midW, h:midH },
+      maskPhase1.duration,
+      maskPhase1.ease
+    );
+
+    if ((maskPhase1.hold ?? 0) > 0) await sleep(maskPhase1.hold);
+
+    await animateAttrs(
+      maskWindow,
+      { x:midX, y:midY, w:midW, h:midH },
+      { x:0, y:0, w:S.w, h:S.h },
+      maskPhase2.duration,
+      maskPhase2.ease
+    );
+
+    window.removeEventListener("resize", onResize);
+    document.getElementById("loaderSvg").remove();
+    unlockScroll();
+
+    const heroIcon = document.getElementById("heroDropIcon");
+    if (heroIcon) {
+      heroIcon.style.transition =
+        "transform 1400ms cubic-bezier(.22,1,.36,1), opacity 500ms ease";
+      heroIcon.style.opacity = "1";
+      requestAnimationFrame(() => {
+        heroIcon.style.transform = "translate(-50%, 0) scale(1)";
+      });
+    }
+  })();
+</script>-->
+
+<script>
+ 
+</script>
+
+<script>
+
+  
+  
+</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="/navbar.js"></script>
+<script src="/load-navbar.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  gsap.registerPlugin(ScrollTrigger);
+
+  if (window.innerWidth <= 1100) return;
+
+  const section = document.querySelector(".stack-cards-section");
+  const cards = gsap.utils.toArray(".stack-card");
+
+  if (!section || !cards.length) return;
+
+  cards.forEach((card) => {
+    const inner = card.querySelector(".stack-card-inner");
+
+    ScrollTrigger.create({
+      trigger: card,
+      start: "top top",
+      endTrigger: section,
+      end: "bottom bottom",
+      pin: inner,
+      pinSpacing: false,
+      invalidateOnRefresh: true
+    });
+
+    ScrollTrigger.create({
+      trigger: card,
+      start: "top top",
+      endTrigger: section,
+      end: "bottom bottom",
+      onEnter: () => gsap.to(inner, {
+        scale: 1,
+        duration: 0.25,
+        ease: "power2.out"
+      }),
+      onLeaveBack: () => gsap.to(inner, {
+        scale: 1,
+        duration: 0.25,
+        ease: "power2.out"
+      })
+    });
+  });
+
+  ScrollTrigger.refresh();
+});
+</script>
+
+
+<script>
+(function () {
+  const viewport = document.getElementById("projectScroller");
+  if (!viewport || typeof gsap === "undefined") return;
+
+  const navbar = document.querySelector(".navbar");
+  const track = viewport.querySelector(".image-scroller-track");
+  const cards = Array.from(track.querySelectorAll(".scroller-card"));
+  const prevBtn = document.querySelector(".scroller-prev");
+  const nextBtn = document.querySelector(".scroller-next");
+  const progressBar = document.querySelector(".scroller-progress-bar");
+  const lenis = window.lenis || null;
+
+  if (!track || !cards.length) return;
+
+  let currentX = 0;
+  let maxX = 0;
+  let cardStep = 0;
+  let dragStartX = 0;
+  let startTrackX = 0;
+  let isDragging = false;
+
+  let navHiddenByScroller = false;
+  let navLockUntil = 0;
+  let lastScrollY = window.scrollY || 0;
+
+  function now() {
+    return performance.now();
+  }
+
+  function hideNavbar(lockMs = 700) {
+    if (!navbar) return;
+    navbar.classList.add("navbar--hidden");
+    navHiddenByScroller = true;
+    navLockUntil = now() + lockMs;
+  }
+
+  function showNavbar() {
+    if (!navbar) return;
+    navbar.classList.remove("navbar--hidden");
+    navHiddenByScroller = false;
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function getCardStep() {
+    if (cards.length < 2) return cards[0].offsetWidth;
+    return cards[1].offsetLeft - cards[0].offsetLeft;
+  }
+
+  function getMaxX() {
+    return Math.max(0, track.scrollWidth - viewport.clientWidth);
+  }
+
+  function getPages() {
+    if (!cardStep) return 1;
+    return Math.max(1, Math.round(maxX / cardStep) + 1);
+  }
+
+  function getNearestPage() {
+    if (!cardStep) return 0;
+    return clamp(Math.round(Math.abs(currentX) / cardStep), 0, getPages() - 1);
+  }
+
+  function updateArrowState() {
+    if (!prevBtn || !nextBtn) return;
+
+    const edgeTolerance = 12;
+    const atStart = Math.abs(currentX) <= edgeTolerance;
+    const atEnd = maxX === 0 || Math.abs(currentX) >= (maxX - edgeTolerance);
+
+    if (atStart) {
+      prevBtn.classList.add("is-disabled");
+      prevBtn.classList.remove("is-active");
+      prevBtn.setAttribute("aria-disabled", "true");
+    } else {
+      prevBtn.classList.remove("is-disabled");
+      prevBtn.classList.add("is-active");
+      prevBtn.setAttribute("aria-disabled", "false");
+    }
+
+    if (atEnd) {
+      nextBtn.classList.add("is-disabled");
+      nextBtn.classList.remove("is-active");
+      nextBtn.setAttribute("aria-disabled", "true");
+    } else {
+      nextBtn.classList.remove("is-disabled");
+      nextBtn.classList.add("is-active");
+      nextBtn.setAttribute("aria-disabled", "false");
+    }
+  }
+
+  function updateProgress() {
+    if (progressBar) {
+      const progress = maxX > 0 ? Math.abs(currentX) / maxX : 0;
+      const width = clamp(progress * 100, 5, 100);
+      progressBar.style.width = width + "%";
+    }
+
+    updateArrowState();
+  }
+
+  function animateToPage(index, duration = 0.75) {
+  const lastPage = getPages() - 1;
+  const page = clamp(index, 0, lastPage);
+
+  let targetX = -(page * cardStep);
+
+  if (page === lastPage) {
+    targetX = -maxX;
+  } else {
+    targetX = Math.max(targetX, -maxX);
+  }
+
+  gsap.killTweensOf(track);
+
+  gsap.to(track, {
+    x: targetX,
+    duration,
+    ease: "back.out(1.15)",
+    onUpdate: () => {
+      currentX = Number(gsap.getProperty(track, "x"));
+      updateProgress();
+    },
+    onComplete: () => {
+      currentX = targetX;         // force exact final value
+      gsap.set(track, { x: currentX });
+      updateProgress();
+    }
+  });
+}
+
+  function refresh() {
+    cardStep = getCardStep();
+    maxX = getMaxX();
+    currentX = -clamp(Math.abs(currentX), 0, maxX);
+    gsap.set(track, { x: currentX });
+    updateProgress();
+  }
+
+  function beginScrollerInteraction(lockMs = 900) {
+    hideNavbar(lockMs);
+  }
+
+  prevBtn?.addEventListener("click", () => {
+    if (prevBtn.classList.contains("is-disabled")) return;
+    beginScrollerInteraction(900);
+    animateToPage(getNearestPage() - 1);
+  });
+
+  nextBtn?.addEventListener("click", () => {
+    if (nextBtn.classList.contains("is-disabled")) return;
+    beginScrollerInteraction(900);
+    animateToPage(getNearestPage() + 1);
+  });
+
+  viewport.addEventListener("dragstart", (e) => e.preventDefault());
+
+  cards.forEach((card) => {
+    const img = card.querySelector("img");
+    if (img) img.addEventListener("dragstart", (e) => e.preventDefault());
+  });
+
+  viewport.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    dragStartX = e.clientX;
+    startTrackX = currentX;
+
+    beginScrollerInteraction(1200);
+
+    viewport.classList.add("is-dragging");
+    gsap.killTweensOf(track);
+  });
+
+  window.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+
+    const delta = e.clientX - dragStartX;
+    let nextX = startTrackX + delta * 1.15;
+
+    if (nextX > 0) nextX = nextX * 0.22;
+
+    if (nextX < -maxX) {
+      const over = nextX + maxX;
+      nextX = -maxX + over * 0.22;
+    }
+
+    currentX = nextX;
+    gsap.set(track, { x: currentX });
+    updateProgress();
+
+    e.preventDefault();
+  });
+
+  window.addEventListener("mouseup", () => {
+    if (!isDragging) return;
+
+    isDragging = false;
+    viewport.classList.remove("is-dragging");
+
+    navLockUntil = now() + 700;
+
+    if (currentX > 0) {
+      gsap.to(track, {
+        x: 0,
+        duration: 0.55,
+        ease: "power3.out",
+        onUpdate: () => {
+          currentX = Number(gsap.getProperty(track, "x"));
+          updateProgress();
+        },
+        onComplete: () => {
+          currentX = Number(gsap.getProperty(track, "x"));
+          updateProgress();
+        }
+      });
+      return;
+    }
+
+    if (currentX < -maxX) {
+      gsap.to(track, {
+        x: -maxX,
+        duration: 0.55,
+        ease: "power3.out",
+        onUpdate: () => {
+          currentX = Number(gsap.getProperty(track, "x"));
+          updateProgress();
+        },
+        onComplete: () => {
+          currentX = Number(gsap.getProperty(track, "x"));
+          updateProgress();
+        }
+      });
+      return;
+    }
+
+    animateToPage(getNearestPage(), 0.72);
+  });
+
+  viewport.addEventListener("touchstart", (e) => {
+    isDragging = true;
+    dragStartX = e.touches[0].clientX;
+    startTrackX = currentX;
+
+    beginScrollerInteraction(1200);
+
+    viewport.classList.add("is-dragging");
+    gsap.killTweensOf(track);
+  }, { passive: true });
+
+  viewport.addEventListener("touchmove", (e) => {
+    if (!isDragging) return;
+
+    const delta = e.touches[0].clientX - dragStartX;
+    let nextX = startTrackX + delta;
+
+    if (nextX > 0) nextX = nextX * 0.22;
+
+    if (nextX < -maxX) {
+      const over = nextX + maxX;
+      nextX = -maxX + over * 0.22;
+    }
+
+    currentX = nextX;
+    gsap.set(track, { x: currentX });
+    updateProgress();
+  }, { passive: true });
+
+  viewport.addEventListener("touchend", () => {
+    if (!isDragging) return;
+
+    isDragging = false;
+    viewport.classList.remove("is-dragging");
+
+    navLockUntil = now() + 700;
+
+    if (currentX > 0) {
+      gsap.to(track, {
+        x: 0,
+        duration: 0.55,
+        ease: "power3.out",
+        onUpdate: () => {
+          currentX = Number(gsap.getProperty(track, "x"));
+          updateProgress();
+        },
+        onComplete: () => {
+          currentX = Number(gsap.getProperty(track, "x"));
+          updateProgress();
+        }
+      });
+      return;
+    }
+
+    if (currentX < -maxX) {
+      gsap.to(track, {
+        x: -maxX,
+        duration: 0.55,
+        ease: "power3.out",
+        onUpdate: () => {
+          currentX = Number(gsap.getProperty(track, "x"));
+          updateProgress();
+        },
+        onComplete: () => {
+          currentX = Number(gsap.getProperty(track, "x"));
+          updateProgress();
+        }
+      });
+      return;
+    }
+
+    animateToPage(getNearestPage(), 0.72);
+  }, { passive: true });
+
+  function maybeRestoreNavbar(scrollY) {
+    if (!navHiddenByScroller) {
+      lastScrollY = scrollY;
+      return;
+    }
+
+    if (now() < navLockUntil) {
+      lastScrollY = scrollY;
+      return;
+    }
+
+    const delta = scrollY - lastScrollY;
+
+    if (Math.abs(delta) > 2) {
+      showNavbar();
+    }
+
+    lastScrollY = scrollY;
+  }
+
+  if (lenis && typeof lenis.on === "function") {
+    lenis.on("scroll", ({ animatedScroll }) => {
+      maybeRestoreNavbar(animatedScroll);
+    });
+  } else {
+    window.addEventListener("scroll", () => {
+      maybeRestoreNavbar(window.scrollY || window.pageYOffset || 0);
+    }, { passive: true });
+  }
+
+  window.addEventListener("resize", refresh);
+  window.addEventListener("load", refresh);
+
+  refresh();
+})();
+</script>
+<script>
+(() => {
+  if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion) return;
+
+  const riseTargets = gsap.utils.toArray([
+    "#heroTitle",
+    ".hero-scroll-indicator",
+    "#criticalTitle",
+    ".feature-heading",
+    ".feature-title",
+    ".feature-text",
+    ".image-scroller-eyebrow",
+    ".scroller-copy .card-eyebrow",
+    ".scroller-copy p",
+    ".blue-cta .display-heading",
+    ".white-cta .display-heading",
+    ".ndt-grid-title",
+    ".contact-header h2",
+    ".contact-left h3",
+    ".contact-left p",
+    ".contact-right h3",
+    ".contact-form label",
+    ".contact-btn",
+    ".caps-intro-title",
+    ".caps-intro-eyebrow",
+    ".stackflow-heading",
+    ".insight-grid-title",
+    ".insight-grid-eyebrow",
+    ".insight-grid-intro",
+    
+ 
+    
+  ]);
+
+    const riseTargets2 = gsap.utils.toArray([
+    ".stackflow-copy p",
+    ".stackflow-link",
+    ".stackflow-card"
+    
+  ]);
+
+    const riseTargets3 = gsap.utils.toArray([
+    ".insight-card"
+    
+  ]);
+  const footerTitleTargets = gsap.utils.toArray([
+    ".footer-title"
+  ]);
+
+  const fadeOnlyTargets = gsap.utils.toArray([
+    ".footer-logo",
+    ".footer-links li",
+    ".footer-socials a"
+  ]);
+
+  riseTargets.forEach((el) => {
+    gsap.fromTo(
+      el,
+      {
+        autoAlpha: 0,
+        y: 36
+      },
+      {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.85,
+        ease: "power3.out",
+        clearProps: "transform,opacity,visibility",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 88%",
+          once: true
+        }
+      }
+    );
+  });
+
+riseTargets2.forEach((el) => {
+  gsap.fromTo(
+    el,
+    {
+      autoAlpha: 0,
+      y: 36
+    },
+    {
+      autoAlpha: 1,
+      y: 0,
+      duration: 1.6,
+      delay: 0.3, // 👈 add this
+      ease: "power3.out",
+      clearProps: "transform,opacity,visibility",
+      scrollTrigger: {
+        trigger: el,
+        start: "top 88%",
+        once: true
+      }
+    }
+  );
+});
+riseTargets3.forEach((el, i) => {
+  gsap.fromTo(
+    el,
+    {
+      autoAlpha: 0,
+      y: 36
+    },
+    {
+      autoAlpha: 1,
+      y: 0,
+      duration: 1.9,
+      delay: i * 0.35, // 👈 stagger effect
+      ease: "power3.out",
+      clearProps: "transform,opacity,visibility",
+      scrollTrigger: {
+        trigger: el,
+        start: "top 88%",
+        once: true
+      }
+    }
+  );
+});
+  footerTitleTargets.forEach((el) => {
+    gsap.fromTo(
+      el,
+      {
+        opacity: 0
+      },
+      {
+        opacity: 0.5,
+        duration: 0.85,
+        ease: "power3.out",
+        clearProps: "opacity",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 92%",
+          once: true
+        }
+      }
+    );
+  });
+
+  fadeOnlyTargets.forEach((el) => {
+    gsap.fromTo(
+      el,
+      {
+        autoAlpha: 0
+      },
+      {
+        autoAlpha: 1,
+        duration: 0.85,
+        ease: "power3.out",
+        clearProps: "opacity,visibility",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 92%",
+          once: true
+        }
+      }
+    );
+  });
+
+  ScrollTrigger.refresh();
+})();
+</script>
+<!-- ✅ REPLACE your Capabilities dropdown script with this full version
+     (same behavior as you have now, but adds fade in/out when switching tabs) -->
+
+<script src="/navbar.js"></script>
+
+
+<script>
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
+  const nav = performance.getEntriesByType("navigation")[0];
+  const isReload = nav && nav.type === "reload";
+
+  if (isReload) {
+    window.scrollTo(0, 0);
+    window.addEventListener("load", () => window.scrollTo(0, 0), { once: true });
+  }
+</script>
+
+
+<script>
+(() => {
+  if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion) return;
+
+  const heroTitle = document.getElementById("heroTitle");
+  const criticalTitle = document.getElementById("criticalTitle");
+  const blueCta = document.querySelector(".blue-cta");
+/*
+  if (heroTitle) {
+    gsap.to(heroTitle, {
+      y: -140,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".intro-wrap",
+        start: "top top",
+        end: "bottom top",
+        scrub: 0.35
+      }
+    });
+  }*/
+
+  if (criticalTitle) {
+    gsap.fromTo(
+      criticalTitle,
+      { y: 90 },
+      {
+        y: -150,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".spacer--dark",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.35
+        }
+      }
+    );
+  }
+
+  if (blueCta) {
+    gsap.fromTo(
+      blueCta,
+      { backgroundPosition: "50% 50%" },
+      {
+        backgroundPosition: "50% 120%",
+        ease: "none",
+        scrollTrigger: {
+          trigger: blueCta,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.45
+        }
+      }
+    );
+  }
+
+  ScrollTrigger.refresh();
+})();
+</script>
+
+<script src="https://unpkg.com/lenis@1.3.18/dist/lenis.min.js"></script>
+<script>
+  (() => {
+    const lenis = new Lenis({
+      autoRaf: true,
+      smoothWheel: true,
+      syncTouch: false,
+      lerp: 0.1,
+      anchors: {
+        offset: 110
+      }
+    });
+
+    window.lenis = lenis;
+  })();
+</script>
+<style>
+
+
+</style>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+const intro = document.querySelector(".intro-wrap");
+const img = document.querySelector(".hero-rise-img");
+const stackflowMain = document.querySelector(".stackflow-main");
+const griffinText = document.querySelector("#heroBottomIcon");
+
+if (intro && img) {
+  const isMobile = window.matchMedia("(max-width: 760px)").matches;
+
+  if (isMobile) {
+    gsap.set(img, {
+      yPercent: 0,
+      opacity: 1,
+      filter: "blur(0px)"
+    });
+
+    gsap.set(img, {
+      top: "auto",
+      bottom: 0
+    });
+
+    if (griffinText) {
+      gsap.set(griffinText, {
+        yPercent: 0
+      });
+    }
+
+    if (stackflowMain) {
+      gsap.set(stackflowMain, {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)"
+      });
+    }
+
+  } else {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: intro,
+        start: "top top",
+        end: "+=150%",
+        scrub: true,
+        pin: true,
+        anticipatePin: 1
+      }
+    });
+
+    tl.fromTo(
+      img,
+      {
+        yPercent: 60,
+        opacity: 0,
+        filter: "blur(12px)"
+      },
+      {
+        yPercent: 0,
+        opacity: 1,
+        filter: "blur(0px)",
+        ease: "none"
+      },
+      0.2
+    );
+
+    if (griffinText) {
+      tl.fromTo(
+        griffinText,
+        {
+          yPercent: 120
+        },
+        {
+          yPercent: 0,
+          ease: "none"
+        },
+        0.2
+      );
+    }
+
+    if (stackflowMain) {
+      tl.to(
+        stackflowMain,
+        {
+          opacity: 0,
+          y: -36,
+          filter: "blur(8px)",
+          ease: "none"
+        },
+        0.1
+      );
+    }
+  }
+}
+</script>
+
+</body>
+</html>

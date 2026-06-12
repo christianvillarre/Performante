@@ -1,0 +1,273 @@
+.simple-nav__menu button{
+  font: inherit;
+  font-family: inherit;
+
+  background: transparent;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.simple-nav-wrap{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 300;
+  background: transparent;
+}
+
+.simple-nav{
+  height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 34px;
+  padding: 0 clamp(18px, 4vw, 34px);
+  background: #000;
+}
+
+.simple-nav__logo img{
+  height: 54px;
+  width: auto;
+  display: block;
+}
+
+.simple-nav__menu{
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 3vw, 44px);
+  margin-right: auto;
+  margin-left: 30px;
+}
+
+.simple-nav__menu button{
+  background: transparent;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.simple-nav__menu button:hover{
+  color: #c95f00;
+}
+
+.simple-nav__call{
+  color: #fff;
+  text-decoration: none;
+  font-size: 21px;
+  font-weight: 400;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.simple-nav__call:hover{
+  color: #d71920;
+}
+
+/* FULL MENU */
+.full-menu{
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  background: #3a3a3a;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .3s ease, visibility .3s ease;
+}
+
+.full-menu.is-open{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.full-menu__rail{
+  width: 4vw;
+  min-width: 92px;
+  height: 100vh;
+  background: #242424;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 34px 0;
+  gap: 34px;
+}
+
+.full-menu__icon{
+  width: 28px;
+  height: auto;
+  display: block;
+}
+
+.full-menu__close{
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.45);
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.full-menu__close:hover{
+  background: #c95f00;
+  border-color: #c95f00;
+}
+
+.full-menu__panel{
+  width: 20vw;
+  min-width: 0px;
+  height: 100vh;
+  background: #303030;
+  padding: 120px 28px 40px;
+  overflow-y: auto;
+}
+
+.full-menu__group{
+  display: none;
+}
+
+.full-menu__group.is-active{
+  display: block;
+}
+
+.full-menu__group h2{
+  color: #fff;
+  font-size: clamp(12px, 1.2vw, 28px);
+  line-height: .95;
+  margin: 0 0 38px;
+  text-transform: uppercase;
+  letter-spacing: -.04em;
+}
+
+.full-menu__group a{
+  display: block;
+  color: rgba(255,255,255,.62);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+.full-menu__group a:hover,
+.full-menu__group a.is-active{
+  color: #fff;
+}
+
+.full-menu__image{
+  flex: 1;
+  height: 100vh;
+  overflow: hidden;
+  background: #111;
+}
+
+.full-menu__image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(.72) contrast(1.08);
+  transform: scale(1.02);
+  transition: opacity .25s ease, transform .45s ease;
+}
+
+.full-menu__image img.is-changing{
+  opacity: .35;
+  transform: scale(1.05);
+}
+
+body.menu-lock{
+  overflow: hidden;
+}
+body.menu-lock{
+  overflow: hidden;
+  height: 100vh;
+  touch-action: none;
+}
+html.menu-lock,
+body.menu-lock{
+  overflow: hidden;
+  height: 100vh;
+}
+body{
+  padding-top: 0 !important;
+}
+
+@media(max-width: 900px){
+  .simple-nav{
+    height: auto;
+    min-height: 78px;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 16px 18px;
+  }
+
+  .simple-nav__logo img{
+    height: 42px;
+  }
+
+  .simple-nav__menu{
+    order: 3;
+    width: 100%;
+    margin: 0;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .simple-nav__menu button{
+    font-size: 11px;
+    letter-spacing: .1em;
+  }
+
+  .simple-nav__call{
+    font-size: 13px;
+  }
+
+  .full-menu{
+    flex-direction: column;
+  }
+
+  .full-menu__rail{
+    width: 100%;
+    min-width: 0;
+    height: 86px;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 20px;
+  }
+
+  .full-menu__icon{
+    width: 42px;
+  }
+
+  .full-menu__panel{
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    padding: 34px 24px;
+  }
+
+  .full-menu__image{
+    height: calc(100vh - 86px - 330px);
+    min-height: 280px;
+  }
+}
