@@ -842,21 +842,8 @@
 
 
 
-<style>
-  #cube3d{
-  width: 400px;
-  height: 400px;
-  position: relative;
-}
-</style>
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-  }
-}
-</script>
+
+
 <script type="importmap">
 {
   "imports": {
@@ -873,6 +860,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 const container = document.getElementById("cube3d");
 
 if (container) {
+
   const scene = new THREE.Scene();
 
   const camera = new THREE.PerspectiveCamera(
@@ -890,20 +878,35 @@ if (container) {
   });
 
   renderer.setSize(container.clientWidth, container.clientHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
   container.appendChild(renderer.domElement);
 
-  scene.add(new THREE.AmbientLight(0xffffff, 2));
+  /* LIGHTING */
 
-  const light = new THREE.DirectionalLight(0xffffff, 3);
-  light.position.set(5, 5, 10);
-  scene.add(light);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+  scene.add(ambientLight);
+
+  const keyLight = new THREE.DirectionalLight(0xffffff, 8);
+  keyLight.position.set(5, 5, 10);
+  scene.add(keyLight);
+
+  const frontLight = new THREE.DirectionalLight(0xffffff, 5);
+  frontLight.position.set(0, 0, 8);
+  scene.add(frontLight);
+
+  const darkFill = new THREE.DirectionalLight(0x050505, 4);
+  darkFill.position.set(-5, 2, 4);
+  scene.add(darkFill);
+
+  const rimLight = new THREE.DirectionalLight(0xffffff, 6);
+  rimLight.position.set(0, 4, -8);
+  scene.add(rimLight);
 
   let model;
 
-  /* STARTING ROTATION */
-  const startX = -0.35;
-  const startY = 0.95;
+  const startX = 0;
+  const startY = 0;
 
   let targetX = startX;
   let targetY = startY;
@@ -911,8 +914,10 @@ if (container) {
   const loader = new GLTFLoader();
 
   loader.load(
-    "/images/cube.glb",
+    "/images/icon.glb",
+
     function (gltf) {
+
       model = gltf.scene;
 
       model.position.set(0, 0, 0);
@@ -921,44 +926,79 @@ if (container) {
       model.rotation.x = startX;
       model.rotation.y = startY;
 
+      model.traverse((child) => {
+
+        if (child.isMesh && child.material) {
+
+          child.material.color.set("#3a3a3a");
+
+          child.material.metalness = 0.35;
+          child.material.roughness = 0.55;
+
+          if (child.material.emissive) {
+            child.material.emissive.set("#000000");
+            child.material.emissiveIntensity = 0;
+          }
+
+          child.material.needsUpdate = true;
+        }
+
+      });
+
       scene.add(model);
+
     },
+
     undefined,
+
     function (error) {
       console.error("GLB Load Failed:", error);
     }
   );
 
   window.addEventListener("mousemove", function (e) {
+
     const x = e.clientX / window.innerWidth - 0.5;
     const y = e.clientY / window.innerHeight - 0.5;
 
-    /* MORE NOTICEABLE MOVEMENT */
     targetY = startY + x * 0.75;
     targetX = startX + y * 0.45;
+
   });
 
   function animate() {
+
     requestAnimationFrame(animate);
 
     if (model) {
+
       model.rotation.x += (targetX - model.rotation.x) * 0.07;
       model.rotation.y += (targetY - model.rotation.y) * 0.07;
+
     }
 
     renderer.render(scene, camera);
+
   }
 
   animate();
 
   window.addEventListener("resize", function () {
+
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
 
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setSize(
+      container.clientWidth,
+      container.clientHeight
+    );
+
   });
+
 }
 </script>
+
+
 <script>
 function initFullMenu(){
   const fullMenu = document.getElementById("fullMenu");
@@ -1078,10 +1118,12 @@ window.addEventListener("load", () => {
   <main id="site">
 
     <section class="intro-wrap" id="home">
-       <img class="side-img side-img--left" src="images/Griffin wing LT.png" alt="" aria-hidden="true">
-    <img class="side-img side-img--right" src="images/Griffin wing RT.png" alt="" aria-hidden="true">
+      
     
       <div class="hero">
+
+        <div class="hero-smoke"></div>
+        <canvas id="smokeWaves"></canvas>
         <video class="hero-rise-img" autoplay muted loop playsinline>
           <source src="https://pub-8ad7c216262d47949e23e21b73c678fc.r2.dev/griffin_red_waves1.mp4" type="video/mp4">
         </video>
@@ -1092,48 +1134,122 @@ window.addEventListener("load", () => {
         </div>-->
       </div>
 
-         <img id="heroBottomIcon" src="images/GriffinText.png" alt="" aria-hidden="true">
+         <!--<img id="heroBottomIcon" src="images/GriffinText.png" alt="" aria-hidden="true">-->
         <div class="stackflow-shell">
           <div class="stackflow-main">
-            <div id="cube3d"></div>
+            <div class="hero-3d-center">
+  <div id="cube3d"></div>
+</div>
 
-            <div class="stackflow-copy">
-              <h1 class="stackflow-heading">
-                Connect with the <span class="text-highlight">Right Experts</span><br>in NDT & Asset Integrity
-              </h1>
-             
-              <p class="stackflow-text">
-                We connect industry leaders with the right technical experts, bringing clarity and confidence to complex decisions.
-              </p>
-              
-              <a href="/capabilities" class="stackflow-link">
-                <span>Connect with an Expert</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7 17L17 7M10 7h7v7"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"/>
-              </svg>
-              </a>
-            </div>
-
+<div class="hero-bottom-title">
+  <h1>The Next Wave <br>of Surface Design</h1>
+</div>
 
           </div>
         </div>
       </div>
 
-      <svg class="wave-divider" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
-       <path
-  d="M0,80 C240,80 480,120 720,120 C960,120 1200,80 1440,80 L1440,180 L0,180 Z"
-  fill="#ffffff">
-</path>
-      </svg>
+      
     </section>
 </div>
+<style>
+  #smokeWaves{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.42;
+  mix-blend-mode: screen;
+}
+  .hero-smoke{
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
 
+  background:
+    radial-gradient(circle at 20% 40%, rgba(69, 69, 69, 0.12), transparent 28%),
+    radial-gradient(circle at 70% 55%, rgba(255,255,255,0.10), transparent 32%),
+    radial-gradient(circle at 45% 75%, rgba(255,255,255,0.08), transparent 35%);
 
+  filter: blur(28px);
+  opacity: 0.65;
+  animation: smokeMove 12s ease-in-out infinite alternate;
+}
+
+@keyframes smokeMove{
+  from{
+    transform: translate(-3%, 2%) scale(1);
+  }
+  to{
+    transform: translate(4%, -3%) scale(1.12);
+  }
+}
+</style>
+<style>
+  .stackflow-shell{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.stackflow-main{
+  width: 100%;
+  height: 100%;
+}
+
+.hero-3d-center{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#cube3d{
+  width: 650px;
+  height: 650px;
+}
+
+.hero-bottom-title{
+  position: absolute;
+  left: clamp(24px, 5vw, 80px);
+  bottom: clamp(32px, 7vh, 90px);
+  z-index: 5;
+  pointer-events: auto;
+  text-align: left;
+}
+
+.hero-bottom-title h1{
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2.4rem, 4vw, 4.5rem);
+  line-height: .95;
+  letter-spacing: -0.05em;
+  font-weight: 300;
+  max-width: 15ch;
+}
+
+@media(max-width: 760px){
+  #cube3d{
+    width: 360px;
+    height: 360px;
+  }
+
+  .hero-bottom-title{
+    left: 22px;
+    bottom: 42px;
+  }
+
+  .hero-bottom-title h1{
+    font-size: clamp(2rem, 12vw, 3.6rem);
+  }
+}
+</style>
    
 <section class="caps-intro-section">
   <div class="caps-intro-shell">
@@ -4540,9 +4656,142 @@ By aligning technical insight with market realities, we deliver practical guidan
 </style>
 
 
+<style>
+  #smokeWaves{
+  opacity: 0;
+}
 
+.hero-smoke{
+  opacity: 0;
+}
+</style>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script>
+window.addEventListener("load", () => {
+  gsap.set("#cube3d", {
+    opacity: 0,
+    scale: 0.82,
+    filter: "blur(18px)"
+  });
+
+  gsap.set(["#smokeWaves", ".hero-smoke"], {
+    opacity: 0
+  });
+
+  gsap.set(".hero-bottom-title", {
+    opacity: 0,
+    y: 30
+  });
+
+  const heroIntro = gsap.timeline({
+    delay: 0.25,
+    defaults: {
+      ease: "power3.out"
+    }
+  });
+
+  heroIntro
+    .to("#cube3d", {
+      opacity: 1,
+      scale: 1,
+      filter: "blur(0px)",
+      duration: 1.6
+    })
+    .to(["#smokeWaves", ".hero-smoke"], {
+      opacity: 0.28,
+      duration: 2.2
+    }, "-=0.9")
+    .to(".hero-bottom-title", {
+      opacity: 1,
+      y: 0,
+      duration: 1.1
+    }, "-=1.2");
+});
+</script>
+<script>
+const smokeCanvas = document.getElementById("smokeWaves");
+const smokeCtx = smokeCanvas.getContext("2d");
+
+const smoke = {
+  w: 0,
+  h: 0,
+  t: 0,
+  speed: 0.0004
+};
+
+function resizeSmoke(){
+  smoke.w = window.innerWidth;
+  smoke.h = window.innerHeight;
+
+  smokeCanvas.width = smoke.w * window.devicePixelRatio;
+  smokeCanvas.height = smoke.h * window.devicePixelRatio;
+
+  smokeCanvas.style.width = smoke.w + "px";
+  smokeCanvas.style.height = smoke.h + "px";
+
+  smokeCtx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+}
+
+window.addEventListener("resize", resizeSmoke);
+resizeSmoke();
+
+function drawSmoke(){
+  smoke.t += smoke.speed;
+
+  smokeCtx.clearRect(0, 0, smoke.w, smoke.h);
+
+  for(let i = 0; i < 7; i++){
+    const yBase = smoke.h * (0.25 + i * 0.09);
+    const amp = 45 + i * 12;
+    const wave = 0.004 + i * 0.0008;
+    const alpha = 0.045 - i * 0.003;
+
+    smokeCtx.beginPath();
+
+    for(let x = -100; x <= smoke.w + 100; x += 12){
+      const y =
+        yBase +
+        Math.sin(x * wave + smoke.t * (80 + i * 12)) * amp +
+        Math.sin(x * wave * 1.8 + smoke.t * (45 + i * 9)) * amp * 0.45;
+
+      if(x === -100){
+        smokeCtx.moveTo(x, y);
+      } else {
+        smokeCtx.lineTo(x, y);
+      }
+    }
+
+    smokeCtx.strokeStyle = `rgba(180, 180, 180, ${alpha})`;
+    smokeCtx.lineWidth = 70 + i * 18;
+    smokeCtx.lineCap = "round";
+    smokeCtx.lineJoin = "round";
+    smokeCtx.filter = "blur(28px)";
+    smokeCtx.stroke();
+  }
+
+  smokeCtx.filter = "none";
+
+  const glow = smokeCtx.createRadialGradient(
+    smoke.w * 0.5,
+    smoke.h * 0.55,
+    0,
+    smoke.w * 0.5,
+    smoke.h * 0.55,
+    smoke.w * 0.65
+  );
+
+  glow.addColorStop(0, "rgba(255,255,255,0.08)");
+  glow.addColorStop(0.45, "rgba(120,120,120,0.05)");
+  glow.addColorStop(1, "rgba(0,0,0,0)");
+
+  smokeCtx.fillStyle = glow;
+  smokeCtx.fillRect(0, 0, smoke.w, smoke.h);
+}
+
+gsap.ticker.add(drawSmoke);
+</script>
+
 <script>
 (() => {
   const row = document.querySelector(".ndt-box-row");
