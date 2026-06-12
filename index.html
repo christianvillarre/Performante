@@ -56,7 +56,8 @@
   body{
     margin: 0;
     font-family: 'Orbitron', sans-serif;
-    background: #052330;
+    /*background: #052330;*/
+    background: white;
     color: var(--ink);
     overflow-x: hidden;
   }
@@ -244,7 +245,7 @@
     background: #fff;
     margin-top: -2px;
     padding: clamp(32px, 0vw, 0px) 0 40px;
-    z-index: 4;
+    z-index: 54;
   }
 
   /* =========================
@@ -493,7 +494,6 @@
   .hero-topbar{
   z-index: 5; /* highest */
 }
-
 .hero-rise-img{
   position: absolute;
   inset: 0;
@@ -503,6 +503,8 @@
 
   z-index: 2;
   pointer-events: none;
+
+  filter: grayscale(100%) contrast(1.15) brightness(0.8);
 
   /* keep your fade */
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
@@ -914,7 +916,7 @@ if (container) {
   const loader = new GLTFLoader();
 
   loader.load(
-    "/images/icon3.glb",
+    "/images/icon4.glb",
 
     function (gltf) {
 
@@ -961,8 +963,8 @@ if (container) {
     const x = e.clientX / window.innerWidth - 0.5;
     const y = e.clientY / window.innerHeight - 0.5;
 
-    targetY = startY + x * 0.75;
-    targetX = startX + y * 0.45;
+    targetY = startY + x * 1;
+    targetX = startX + y * 0.85;
 
   });
 
@@ -972,8 +974,8 @@ if (container) {
 
     if (model) {
 
-      model.rotation.x += (targetX - model.rotation.x) * 0.07;
-      model.rotation.y += (targetY - model.rotation.y) * 0.07;
+      model.rotation.x += (targetX - model.rotation.x) * 0.10;
+      model.rotation.y += (targetY - model.rotation.y) * 0.10;
 
     }
 
@@ -1127,6 +1129,17 @@ window.addEventListener("load", () => {
         <video class="hero-rise-img" autoplay muted loop playsinline>
           <source src="https://pub-8ad7c216262d47949e23e21b73c678fc.r2.dev/griffin_red_waves1.mp4" type="video/mp4">
         </video>
+         <div class="hero-truck-titles">
+          <h2>FULL COLOR WRAPS</h2>
+          <h2>COMMERCIAL FLEET SERVICES</h2>
+          <h2>PAINT PROTECTION</h2>
+        </div>
+
+        <div class="hero-truck-sequence">
+          <img src="/images/truck1.png" alt="">
+          <img src="/images/truck2.png" alt="">
+          <img src="/images/truck3.png" alt="">
+        </div>
         <div class="hero-topbar">
         <!-- Center Logo 
         <div class="hero-topbar__center">
@@ -1149,9 +1162,8 @@ window.addEventListener("load", () => {
         </div>
       </div>
 
-      
+    
     </section>
-</div>
 <style>
   #smokeWaves{
   position: absolute;
@@ -1195,6 +1207,7 @@ window.addEventListener("load", () => {
   width: 100%;
   z-index: 4;
   pointer-events: none;
+  
 }
 
 .stackflow-main{
@@ -1249,94 +1262,56 @@ window.addEventListener("load", () => {
     font-size: clamp(2rem, 12vw, 3.6rem);
   }
 }
+.hero-truck-titles{
+  position:absolute;
+  inset:0;
+  z-index:45;
+  pointer-events:none;
+}
+
+.hero-truck-titles h2{
+  position:absolute;
+  left:50%;
+  top:clamp(120px,15vh,320px);
+
+  transform:translateX(-50%);
+
+  margin:0;
+  opacity:0;
+
+  color:#fff;
+  font-size:clamp(2rem,4vw,2.5rem);
+  font-weight:300;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  text-align:center;
+
+  white-space:nowrap;
+}
+.hero-truck-sequence{
+  position:absolute;
+  inset:0;
+  z-index:40;
+  pointer-events:none;
+  overflow:visible;
+}
+
+.hero-truck-sequence img{
+  position:absolute;
+  left:50%;
+  bottom:clamp(32px, 8vh, 90px);
+
+  width:clamp(360px, 72vw, 1250px);
+  height:auto;
+  max-height:82vh;
+
+  object-fit:contain;
+  opacity:0;
+}
+
 </style>
    
-<section class="caps-intro-section">
-  <div class="caps-intro-shell">
-    <div class="caps-intro-copy">
-      <p class="caps-intro-eyebrow">Who We Are</p>
 
-      <h2 class="caps-intro-title">
-        Griffin is an independent advisory platform connecting industry leaders, technical experts, and senior executives across the industrial inspection and asset integrity ecosystem.
-      </h2>
-
-      <h2 class="caps-intro-title">
-        Our network includes specialists in industrial operations, inspection technologies, infrastructure development, regulatory compliance, and corporate strategy.
-      </h2>
-
-      <a href="/capabilities" class="page-link">
-        <span>About Griffin</span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true">
-          <path d="M184 112 L328 256 L184 400" fill="none" stroke="currentColor" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
-    </div>
-  </div>
-</section>
-
-<style>
-.caps-intro-section {
-  background: #fff;
-  padding: 80px 0;
-  text-align: center;
-}
-
-.caps-intro-shell {
-  width: min(900px, calc(100% - 40px));
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.caps-intro-copy {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.caps-intro-eyebrow {
-  margin: 0 0 14px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #777;
-}
-
-.caps-intro-title {
-  margin: 0 0 20px;
-  font-size: clamp(1.5rem, 2.4vw, 2.5rem);
-  line-height: 1.1;
-  letter-spacing: -0.035em;
-  font-weight: 300;
-  color: #111;
-}
-
-.page-link {
-  margin-top: 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: #F00303;
-  text-decoration: none;
-  font-size: clamp(1rem, 1.2vw, 1.2rem);
-  font-weight: 700;
-  transition: transform .2s ease;
-}
-
-.page-link svg {
-  width: 18px;
-  height: 18px;
-  transition: transform .2s ease;
-}
-
-.page-link:hover {
-  transform: translateX(2px);
-}
-
-.page-link:hover svg {
-  transform: translateX(3px);
-}
-</style>
 
 
 <section class="expertise-section">
@@ -1376,7 +1351,7 @@ window.addEventListener("load", () => {
 <style>
   .expertise-section{
   padding: clamp(64px, 9vw, 140px) 20px;
-  background: #061c26;
+  /*background: #061c26;*/
   color: #fff;
 }
 
@@ -1392,7 +1367,7 @@ window.addEventListener("load", () => {
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.68);
+  color: rgba(0, 0, 0, 0.68);
 }
 
 .expertise-intro h2{
@@ -1401,7 +1376,7 @@ margin: 0 0 18px;
   line-height: 0.95;
   letter-spacing: -0.04em;
   font-weight: 300;
-  color: #ffffff;
+  color: #000000;
   max-width: 52ch;
 }
 
@@ -1409,7 +1384,7 @@ margin: 0 0 18px;
   margin: 0 auto;
   max-width: 60ch;
   font-size: clamp(1rem, 1.4vw, 1.2rem);
-  color: rgba(255,255,255,0.82);
+  color: rgba(0, 0, 0, 0.82);
 }
 
 .expertise-grid{
@@ -5417,6 +5392,8 @@ html, body{
     text-align:center;
   }
 }
+
+
 </style>
 
 
@@ -5794,7 +5771,7 @@ html, body{
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="/navbar.js"></script>
 <script src="/load-navbar.js"></script>
-
+<!--
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   gsap.registerPlugin(ScrollTrigger);
@@ -5839,7 +5816,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   ScrollTrigger.refresh();
 });
-</script>
+</script>-->
 
 
 <script>
@@ -6465,99 +6442,188 @@ riseTargets3.forEach((el, i) => {
 
 
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
 <script>
-gsap.registerPlugin(ScrollTrigger);
+/* INTRO / TRUCK ONLY */
+document.addEventListener("DOMContentLoaded", () => {
+  gsap.registerPlugin(ScrollTrigger);
 
-const intro = document.querySelector(".intro-wrap");
-const img = document.querySelector(".hero-rise-img");
-const stackflowMain = document.querySelector(".stackflow-main");
-const griffinText = document.querySelector("#heroBottomIcon");
+  const intro = document.querySelector(".intro-wrap");
+  const video = document.querySelector(".hero-rise-img");
+  const stackflowMain = document.querySelector(".stackflow-main");
+  const truckImgs = gsap.utils.toArray(".hero-truck-sequence img");
+  const truckTitles = gsap.utils.toArray(".hero-truck-titles h2");
 
-if (intro && img) {
-  const isMobile = window.matchMedia("(max-width: 760px)").matches;
+  if (!intro || !video) return;
+  if (window.innerWidth <= 760) return;
 
-  if (isMobile) {
-    gsap.set(img, {
+  gsap.set(truckImgs, {
+    xPercent: -50,
+    y: 250,
+    opacity: 0,
+    filter: "blur(10px)"
+  });
+
+  gsap.set(truckTitles, {
+    y: 25,
+    opacity: 0,
+    filter: "blur(12px)"
+  });
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      id: "introTruckTrigger",
+      trigger: intro,
+      start: "top top",
+      end: "+=820%",
+      scrub: true,
+      pin: true,
+      anticipatePin: 1,
+      invalidateOnRefresh: false
+    }
+  });
+
+  tl.fromTo(
+    video,
+    {
+      yPercent: 60,
+      opacity: 0,
+      filter: "grayscale(100%) contrast(1.15) brightness(0.85) blur(12px)"
+    },
+    {
       yPercent: 0,
       opacity: 1,
-      filter: "blur(0px)"
-    });
+      filter: "grayscale(100%) contrast(1.15) brightness(0.85) blur(0px)",
+      ease: "none"
+    },
+    0
+  );
 
-    gsap.set(img, {
-      top: "auto",
-      bottom: 0
-    });
-
-    if (griffinText) {
-      gsap.set(griffinText, {
-        yPercent: 0
-      });
-    }
-
-    if (stackflowMain) {
-      gsap.set(stackflowMain, {
-        opacity: 1,
-        y: 0,
-        filter: "blur(0px)"
-      });
-    }
-
-  } else {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: intro,
-        start: "top top",
-        end: "+=150%",
-        scrub: true,
-        pin: true,
-        anticipatePin: 1
-      }
-    });
-
-    tl.fromTo(
-      img,
+  if (stackflowMain) {
+    tl.to(
+      stackflowMain,
       {
-        yPercent: 60,
         opacity: 0,
-        filter: "blur(12px)"
-      },
-      {
-        yPercent: 0,
-        opacity: 1,
-        filter: "blur(0px)",
+        y: -36,
+        filter: "blur(8px)",
         ease: "none"
       },
-      0.2
+      0.05
+    );
+  }
+
+  if (truckImgs.length >= 3 && truckTitles.length >= 3) {
+
+    /* TITLE 1 */
+    tl.to(truckTitles[0], {
+      y: 0,
+      opacity: 1,
+      filter: "blur(0px)",
+      ease: "none"
+    }, 0.18);
+
+    /* TRUCK 1 */
+    tl.to(truckImgs[0], {
+      y: 0,
+      opacity: 1,
+      filter: "blur(0px)",
+      ease: "none"
+    }, 0.3);
+
+    /* TITLE 1 OUT */
+    tl.to(truckTitles[0], {
+      opacity: 0,
+      filter: "blur(10px)",
+      ease: "none"
+    }, 0.82);
+
+    /* TRUCK 1 OUT */
+    tl.to(truckImgs[0], {
+      xPercent: -300,
+      opacity: 0,
+      ease: "none"
+    }, 0.9);
+
+    /* TITLE 2 */
+    tl.to(truckTitles[1], {
+      y: 0,
+      opacity: 1,
+      filter: "blur(0px)",
+      ease: "none"
+    }, 0.82);
+
+    /* TRUCK 2 */
+    tl.fromTo(
+      truckImgs[1],
+      {
+        xPercent: 300,
+        y: 0,
+        opacity: 0,
+        filter: "blur(0px)"
+      },
+      {
+        xPercent: -50,
+        opacity: 1,
+        ease: "none"
+      },
+      0.9
     );
 
-    if (griffinText) {
-      tl.fromTo(
-        griffinText,
-        {
-          yPercent: 120
-        },
-        {
-          yPercent: 0,
-          ease: "none"
-        },
-        0.2
-      );
-    }
+    /* TITLE 2 OUT */
+    tl.to(truckTitles[1], {
+      opacity: 0,
+      filter: "blur(10px)",
+      ease: "none"
+    }, 1.48);
 
-    if (stackflowMain) {
-      tl.to(
-        stackflowMain,
-        {
-          opacity: 0,
-          y: -36,
-          filter: "blur(8px)",
-          ease: "none"
-        },
-        0.1
-      );
-    }
+    /* TRUCK 2 OUT */
+    tl.to(truckImgs[1], {
+      xPercent: -300,
+      opacity: 0,
+      ease: "none"
+    }, 1.5);
+
+    /* TITLE 3 */
+    tl.to(truckTitles[2], {
+      y: 0,
+      opacity: 1,
+      filter: "blur(0px)",
+      ease: "none"
+    }, 1.28);
+
+    /* TRUCK 3 */
+    tl.fromTo(
+      truckImgs[2],
+      {
+        xPercent: 300,
+        y: 0,
+        opacity: 0,
+        filter: "blur(0px)"
+      },
+      {
+        xPercent: -50,
+        opacity: 1,
+        ease: "none"
+      },
+      1.5
+    );
+
+    /* HOLD FINAL */
+    tl.to(truckImgs[2], {
+      opacity: 1,
+      ease: "none"
+    }, 1.8);
+
+    tl.to(truckTitles[2], {
+      opacity: 1,
+      filter: "blur(0px)",
+      ease: "none"
+    }, 1.5);
   }
-}
+});
 </script>
 
 </body>
