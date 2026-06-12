@@ -930,8 +930,31 @@ function closeFullMenu(){
 
 document.addEventListener("DOMContentLoaded", initFullMenu);
 window.addEventListener("load", initFullMenu);
-</script>
 
+
+</script>
+<script>
+window.addEventListener("load", () => {
+
+  const nav = document.querySelector(".simple-nav-wrap");
+  let lastScroll = 0;
+
+  window.addEventListener("scroll", () => {
+    const currentScroll = window.scrollY;
+
+    if (currentScroll <= 20) {
+      nav.classList.remove("scrolled");
+    } else if (currentScroll > lastScroll) {
+      nav.classList.add("scrolled");
+    } else {
+      nav.classList.remove("scrolled");
+    }
+
+    lastScroll = currentScroll;
+  });
+
+});
+</script>
  <div id="scroll-container">
   <main id="site">
 

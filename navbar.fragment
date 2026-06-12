@@ -1,7 +1,7 @@
 <header class="simple-nav-wrap">
   <div class="simple-nav">
     <a href="/" class="simple-nav__logo">
-      <img src="/images/logo.png" alt="Performante Wraps">
+      <img id="navLogo" src="/images/logo.png" alt="Performante Wraps">
     </a>
 
     <nav class="simple-nav__menu">

@@ -36,6 +36,7 @@
   height: 54px;
   width: auto;
   display: block;
+  margin-top:-4px;
 }
 
 .simple-nav__menu{
@@ -270,4 +271,21 @@ body{
     height: calc(100vh - 86px - 330px);
     min-height: 280px;
   }
+}
+
+.simple-nav{
+  height: 82px;
+  transition: height .3s ease;
+}
+
+.simple-nav-wrap.scrolled .simple-nav{
+  height: 58px;
+}
+.simple-nav__logo img{
+  height: 54px;
+  transition: height .3s ease;
+}
+
+.simple-nav-wrap.scrolled .simple-nav__logo img{
+  height: 36px;
 }
