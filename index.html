@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
 
 <link rel="stylesheet" href="/navbar.css" />
-  
 </head>
 <style>
   :root{
@@ -840,6 +839,126 @@
 <body>
 
 <div id="site-navbar"></div>
+
+
+
+<style>
+  #cube3d{
+  width: 400px;
+  height: 400px;
+  position: relative;
+}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+const container = document.getElementById("cube3d");
+
+if (container) {
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(
+    35,
+    container.clientWidth / container.clientHeight,
+    0.1,
+    100
+  );
+
+  camera.position.set(0, 0, 10);
+
+  const renderer = new THREE.WebGLRenderer({
+    alpha: true,
+    antialias: true
+  });
+
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  container.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 2));
+
+  const light = new THREE.DirectionalLight(0xffffff, 3);
+  light.position.set(5, 5, 10);
+  scene.add(light);
+
+  let model;
+
+  /* STARTING ROTATION */
+  const startX = -0.35;
+  const startY = 0.95;
+
+  let targetX = startX;
+  let targetY = startY;
+
+  const loader = new GLTFLoader();
+
+  loader.load(
+    "/images/cube.glb",
+    function (gltf) {
+      model = gltf.scene;
+
+      model.position.set(0, 0, 0);
+      model.scale.set(1, 1, 1);
+
+      model.rotation.x = startX;
+      model.rotation.y = startY;
+
+      scene.add(model);
+    },
+    undefined,
+    function (error) {
+      console.error("GLB Load Failed:", error);
+    }
+  );
+
+  window.addEventListener("mousemove", function (e) {
+    const x = e.clientX / window.innerWidth - 0.5;
+    const y = e.clientY / window.innerHeight - 0.5;
+
+    /* MORE NOTICEABLE MOVEMENT */
+    targetY = startY + x * 0.75;
+    targetX = startX + y * 0.45;
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    if (model) {
+      model.rotation.x += (targetX - model.rotation.x) * 0.07;
+      model.rotation.y += (targetY - model.rotation.y) * 0.07;
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  window.addEventListener("resize", function () {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+}
+</script>
 <script>
 function initFullMenu(){
   const fullMenu = document.getElementById("fullMenu");
@@ -976,6 +1095,7 @@ window.addEventListener("load", () => {
          <img id="heroBottomIcon" src="images/GriffinText.png" alt="" aria-hidden="true">
         <div class="stackflow-shell">
           <div class="stackflow-main">
+            <div id="cube3d"></div>
 
             <div class="stackflow-copy">
               <h1 class="stackflow-heading">
@@ -5996,7 +6116,7 @@ riseTargets3.forEach((el, i) => {
 <!-- ✅ REPLACE your Capabilities dropdown script with this full version
      (same behavior as you have now, but adds fade in/out when switching tabs) -->
 
-<script src="/navbar.js"></script>
+
 
 
 <script>
