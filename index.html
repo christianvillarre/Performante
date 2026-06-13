@@ -840,8 +840,83 @@
 
 <body>
 
-<div id="site-navbar"></div>
+<header class="simple-nav-wrap">
+  <div class="simple-nav">
+    <a href="/" class="simple-nav__logo">
+      <img id="navLogo" src="/images/logo.png" alt="Performante Wraps">
+    </a>
 
+    <nav class="simple-nav__menu">
+      <button type="button" data-menu-open="wrap">Wrap</button>
+<button type="button" data-menu-open="protect">Protect</button>
+<button type="button" data-menu-open="tint">Tint</button>
+<button type="button" data-menu-open="about">About</button>
+<button type="button" data-menu-open="contact">Contact</button>
+    </nav>
+
+    <a href="tel:3462445833" class="simple-nav__call">
+      Call: (346) 244-5833
+    </a>
+  </div>
+</header>
+
+<div class="full-menu" id="fullMenu" aria-hidden="true">
+  <aside class="full-menu__rail">
+    <img src="/images/logo-icon.png" alt="Performante Wraps" class="full-menu__icon">
+
+    <button class="full-menu__close" id="fullMenuClose" aria-label="Close menu">
+      ✕
+    </button>
+  </aside>
+
+  <aside class="full-menu__panel">
+    <div class="full-menu__group is-active" data-menu-panel="wrap">
+      <h2>Wrap</h2>
+      <a href="/wraps/custom.html" data-img="/images/stock7.jpeg">Custom Wraps</a>
+      <a href="/wraps/color-change.html" data-img="/images/stock1.jpeg">Color Change Wraps</a>
+      <a href="/wraps/commercial-fleet.html" data-img="/images/stock8.jpeg" class="is-active">Commerical Fleet Wraps</a>
+      <a href="/wraps/watercraft.html" data-img="/images/stock9.jpeg">Watercraft</a>
+      <a href="/wraps/architectural.html" data-img="/images/stock10.jpeg">Architectural Wraps</a>
+    </div>
+
+    <div class="full-menu__group" data-menu-panel="protect">
+      <h2>Protect</h2>
+
+      <a href="/paint-protection-film.html" data-img="/images/stock6.jpeg">Paint Protection Film</a>
+      <a href="/clear-bra.html" data-img="/images/stock2.jpeg">Clear Bra</a>
+      <a href="/full-front-ppf.html" data-img="/images/stock1.jpeg">Full Front PPF</a>
+      <a href="/ceramic-coating.html" data-img="/images/stock3.jpeg">Ceramic Coating</a>
+    </div>
+
+    <div class="full-menu__group" data-menu-panel="tint">
+      <h2>Tint</h2>
+
+      <a href="/window-tint.html" data-img="/images/stock11.jpeg">Window Tint</a>
+      <a href="/ceramic-tint.html" data-img="/images/stock12.jpeg">Ceramic Tint</a>
+      <a href="/windshield-tint.html" data-img="/images/stock15.jpeg">Windshield Tint</a>
+    </div>
+
+    <div class="full-menu__group" data-menu-panel="about">
+      <h2>About</h2>
+
+      <a href="/about.html" data-img="/images/stock14.jpeg">Our Shop</a>
+      <a href="/gallery.html" data-img="/images/stock13.jpeg">Gallery</a>
+      <a href="/reviews.html" data-img="/images/stock4.jpeg">Reviews</a>
+    </div>
+
+    <div class="full-menu__group" data-menu-panel="contact">
+      <h2>Contact</h2>
+
+      <a href="/contact.html" data-img="/images/stock16.jpeg">Request a Quote</a>
+      <a href="/appointment.html" data-img="/images/stock2.jpeg">Book Appointment</a>
+      <a href="/location.html" data-img="/images/stock3.jpeg">Location</a>
+    </div>
+  </aside>
+
+  <main class="full-menu__image">
+    <img src="/images/stock5.jpg" alt="" id="fullMenuImage">
+  </main>
+</div>
 
 
 
@@ -1325,41 +1400,362 @@ window.addEventListener("load", () => {
 </style>
    
 
+<section class="insight-grid-section" id="news">
+  <div class="insight-grid-shell">
+    <div class="insight-grid-head">
+      <p class="insight-grid-eyebrow">Who We Help</p>
+      <h2 class="insight-grid-title">Wrap Solutions Built Around Your Vehicle</h2>
+      <p class="insight-grid-intro">
+        From commercial fleets to full color change wraps, paint protection film, and custom vehicle styling, Performante Wraps helps drivers and businesses protect, promote, and transform their vehicles with premium installation and detail-driven results.
+      </p>
+    </div>
+
+    <div class="insight-grid-cards insight-grid-cards--four">
+      <article class="insight-card">
+        <div class="insight-card-box">
+          <div class="insight-card-media">
+            <img src="images/stock13.jpeg" alt="Commercial vehicle wrap">
+          </div>
+          <div class="insight-card-body">
+            <h3 class="insight-card-title">Commercial Wraps
+              <span class="title-arrow">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </h3>
+            <p class="insight-card-text">
+              Turn your company vehicles into moving advertisements with clean, professional branding that helps your business stand out on the road.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <article class="insight-card">
+        <div class="insight-card-box">
+          <div class="insight-card-media">
+            <img src="images/stock12.jpeg" alt="Full color vehicle wrap">
+          </div>
+          <div class="insight-card-body">
+            <h3 class="insight-card-title">Full Color Change Wraps
+              <span class="title-arrow">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </h3>
+            <p class="insight-card-text">
+              Give your vehicle a completely new look with high-quality vinyl finishes, bold colors, satin tones, gloss styles, and custom design options.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <article class="insight-card">
+        <div class="insight-card-box">
+          <div class="insight-card-media">
+            <img src="images/stock4.jpeg" alt="Paint protection film">
+          </div>
+          <div class="insight-card-body">
+            <h3 class="insight-card-title">Paint Protection Film
+              <span class="title-arrow">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </h3>
+            <p class="insight-card-text">
+              Protect your paint from rock chips, road debris, scratches, and daily wear with clear protection designed to preserve the finish underneath.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <article class="insight-card">
+        <div class="insight-card-box">
+          <div class="insight-card-media">
+            <img src="images/stock14.jpeg" alt="Custom vehicle styling">
+          </div>
+          <div class="insight-card-body">
+            <h3 class="insight-card-title">Custom Styling
+              <span class="title-arrow">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </h3>
+            <p class="insight-card-text">
+              From accents and chrome deletes to racing stripes and specialty finishes, we help create a custom look that fits your style.
+            </p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .insight-grid-section{
+  background: #ffffff;
+  color: #052330;
+  padding: clamp(72px, 6vw, 120px) 0;
+}
+.insight-grid-section{
+  position:relative;
+  background:#fff;
+  margin-top:-3px;
+  z-index:60;
+}
+
+.insight-grid-section::before{
+  content:"";
+  position:absolute;
+  top:-6px;
+  left:0;
+  width:100%;
+  height:8px;
+  background:#fff;
+  z-index:1;
+}
+.insight-grid-shell{
+  width: min(1400px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 60px);
+}
+
+.insight-grid-head{
+  max-width: 1080px;
+  margin: 0 auto clamp(34px, 5vw, 64px);
+  text-align: center;
+}
+
+.insight-grid-eyebrow{
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #052330;
+}
+
+.insight-grid-title{
+  margin: 0 0 18px;
+  font-size: clamp(2.4rem, 3.8vw, 3.5rem);
+  line-height: 0.97;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+  color: #052330;
+  max-width: 28ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.insight-grid-intro{
+  margin: 0 auto;
+  max-width: 78ch;
+  font-size: 16px;
+  line-height: 1.65;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.insight-grid-cards,
+.insight-grid-cards--four{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  align-items: stretch;
+}
+
+.insight-card{
+  display: flex;
+  min-width: 0;
+}
+
+.insight-card-box{
+  width: 100%;
+  background: #fff;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+  color: #052330;
+  height: 100%;
+}
+
+.insight-card-box:hover{
+  background: #052330;
+}
+
+.insight-card-media{
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.insight-card-media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.insight-card-body{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.insight-card-title{
+  margin: 0;
+  font-size: clamp(18px, 1.2vw, 22px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  color: #052330;
+  transition: color 0.3s ease;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  /* 🔑 FIX */
+  flex-wrap: nowrap;
+}
+
+.insight-card-text{
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #052330;
+  transition: color 0.3s ease;
+}
+
+.insight-card-box:hover .insight-card-title,
+.insight-card-box:hover .insight-card-text{
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.title-arrow{
+  display: inline-flex;
+  color: #052330;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.title-arrow svg{
+  width: 22px;
+  height: 22px;
+  transition: transform 0.3s ease;
+}
+
+.insight-card-box:hover .title-arrow{
+  color: #F00303;
+  transform: translateX(6px);
+}
+
+.insight-card-box:hover .title-arrow svg{
+  transform: translateX(2px);
+}
+
+/* Optional subtle equal-height feel for longer copy */
+.insight-card-text{
+  max-width: 34ch;
+}
+
+/* 2-column tablet */
+@media (max-width: 1200px){
+  .insight-grid-cards,
+  .insight-grid-cards--four{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .insight-card-box{
+    padding: 1.25rem;
+  }
+}
+
+/* 1-column mobile */
+@media (max-width: 760px){
+  .insight-grid-section{
+    padding: 60px 0;
+    margin-bottom: -4rem;
+  }
+
+  .insight-grid-shell{
+    width: min(1600px, calc(100% - 24px));
+    padding: 0 16px;
+  }
+
+  .insight-grid-title,
+  .insight-grid-intro{
+    max-width: 100%;
+  }
+
+  .insight-grid-cards,
+  .insight-grid-cards--four{
+    grid-template-columns: 1fr;
+  }
+
+  .insight-card{
+    padding: 0;
+  }
+
+  .insight-card-box{
+    padding: 1.5rem;
+  }
+
+  .insight-card-media{
+    min-height: 220px;
+    height: 220px;
+  }
+
+  .insight-card-title{
+    font-size: 1.3rem;
+  }
+
+  .insight-card-text{
+    font-size: 0.96rem;
+    line-height: 1.6;
+    max-width: 100%;
+  }
+}
+</style>
 
 
 <section class="expertise-section">
   <div class="expertise-intro">
-    <div class="expertise-kicker">Executive Leadership</div>
-    <h2>Experience at global scale.</h2>
+    <div class="expertise-kicker">Premium Vehicle Wraps</div>
+    <h2>Designed to stand out. Installed to last.</h2>
     <p>
-      Senior executive and enterprise engineering leader with deep experience across
-      industrial inspection, asset integrity, pipeline and LNG infrastructure, and
-      global quality services.
+      Performante Wraps delivers high-quality vehicle wraps, paint protection, window tint, and custom styling for personal vehicles, exotic cars, trucks, and commercial fleets.
     </p>
   </div>
 
   <div class="expertise-grid">
     <article class="expertise-card expertise-card--dark">
-      <div class="expertise-number">60+</div>
-      <p class="expertise-label">Years of combined leadership experience across engineering, inspection, integrity, and enterprise operations.</p>
+      <div class="expertise-number">360°</div>
+      <p class="expertise-label">Vehicle branding solutions for full wraps, partial wraps, decals, lettering, and fleet graphics.</p>
     </article>
 
     <article class="expertise-card expertise-card--red">
-      <div class="expertise-number">14+</div>
-      <p class="expertise-label">Countries where global operations, teams, and service delivery were directed and scaled.</p>
+      <div class="expertise-number">PPF</div>
+      <p class="expertise-label">Clear paint protection film options built to help defend your vehicle from road wear and everyday damage.</p>
     </article>
 
     <article class="expertise-card expertise-card--light">
-      <div class="expertise-number">$100M+</div>
-      <p class="expertise-label">P&amp;L responsibility managed across multi-national business units and complex service organizations.</p>
+      <div class="expertise-number">100%</div>
+      <p class="expertise-label">Custom wrap designs tailored around your brand, vehicle body lines, finish preference, and overall vision.</p>
     </article>
 
     <article class="expertise-card expertise-card--blue">
-      <div class="expertise-number">$250M+</div>
-      <p class="expertise-label">Capital programs led across pipeline, LNG, infrastructure, and large-scale transformation initiatives.</p>
+      <div class="expertise-number">Pro</div>
+      <p class="expertise-label">Detail-focused installation for clean edges, smooth panels, professional presentation, and lasting visual impact.</p>
     </article>
   </div>
 </section>
+
 
 <style>
   .expertise-section{
@@ -1402,10 +1798,10 @@ window.addEventListener("load", () => {
 
 .expertise-intro h2{
 margin: 0 0 18px;
-  font-size: clamp(2rem, 4.2vw, 4.5rem);
+  font-size: clamp(2.4rem, 3.8vw, 3.5rem);
   line-height: 0.95;
   letter-spacing: -0.04em;
-  font-weight: 300;
+  font-weight: 500;
   color: #000000;
   max-width: 52ch;
 }
@@ -1509,62 +1905,31 @@ margin: 0 0 18px;
   <div class="stack-cards-shell">
     <div class="stack-cards-stage">
 
-      <!-- PRACTICE AREA 1 INTRO -->
       <article class="stack-card stack-card-practice practice-1-intro">
         <div class="stack-card-inner stack-card-inner-practice">
           <div class="stack-card-practice-content">
-            <!--<p class="stack-card-eyebrow">Practice Area 01</p>-->
-            <h2 class="stack-card-practice-title">Technical Consulting</h2>
+            <h2 class="stack-card-practice-title">Vehicle Wraps</h2>
             <p class="stack-card-practice-text">
-              Advanced technical advisory services supporting inspection quality, code compliance, asset integrity, and next-generation NDT capabilities.
+              Premium wrap services for personal vehicles, luxury cars, trucks, commercial fleets, and businesses that want a bold, professional presence on the road.
             </p>
           </div>
         </div>
       </article>
 
-      <!-- PRACTICE AREA 1 / CARD 1 -->
       <article class="stack-card practice-1-card">
         <div class="stack-card-inner">
           <div class="stack-card-image main">
-            <img src="images/stock1.jpeg" alt="Inspection strategy">
+            <img src="images/stock1.jpeg" alt="Full vehicle wrap">
           </div>
 
           <div class="stack-card-title-wrap">
             <div class="stack-card-title-group">
-              <h3 class="stack-card-title">Technical Advisory &amp; NDT Leadership</h3>
+              <h3 class="stack-card-title">Full Color Change Wraps</h3>
               <ul class="stack-card-links">
-                <li>
-                  <a href="/technical-consulting/ndt-level-iii-consulting-support.html">
-                    <span>NDT Level III Consulting &amp; Support</span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M7 17L17 7M17 7H9M17 7V15" />
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a href="/technical-consulting/advanced-ndt-subject-matter-experts.html">
-                    <span>Advanced NDT Subject Matter Experts</span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M7 17L17 7M17 7H9M17 7V15" />
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a href="/technical-consulting/ndt-written-practice-review-development.html">
-                    <span>NDT Written Practice Review and Development</span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M7 17L17 7M17 7H9M17 7V15" />
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    <span>Advanced NDT Training Programs</span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M7 17L17 7M17 7H9M17 7V15" />
-                    </svg>
-                  </a>
-                </li>
+                <li><a href="#"><span>Gloss, Satin &amp; Matte Finishes</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
+                <li><a href="#"><span>Luxury &amp; Exotic Vehicle Wraps</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
+                <li><a href="#"><span>Custom Accent Packages</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
+                <li><a href="#"><span>Paint-Safe Vehicle Transformation</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
               </ul>
             </div>
           </div>
@@ -1572,10 +1937,10 @@ margin: 0 0 18px;
           <div class="stack-card-content">
             <div class="stack-card-text-wrap">
               <p class="stack-card-text">
-                Independent senior technical guidance for inspection programs, procedure qualification, compliance, and complex problem-solving. We help organizations strengthen inspection quality, technical defensibility, and long-term program performance.
+                Change the entire look of your vehicle without repainting it. Our full color change wraps give you a fresh, custom finish while helping protect the original paint underneath.
               </p>
 
-              <a href="/technical-consulting.html" class="stack-btn-inline">
+              <a href="#" class="stack-btn-inline">
                 Learn more
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M7 17L17 7M17 7H9M17 7V15" />
@@ -1584,39 +1949,26 @@ margin: 0 0 18px;
             </div>
 
             <div class="stack-card-image small">
-              <img src="images/stock2.jpeg" alt="Inspection detail">
+              <img src="images/stock2.jpeg" alt="Vehicle wrap detail">
             </div>
           </div>
         </div>
       </article>
 
-      <!-- PRACTICE AREA 1 / CARD 2 -->
       <article class="stack-card practice-1-card">
         <div class="stack-card-inner">
           <div class="stack-card-image main">
-            <img src="images/stock24.jpeg" alt="Advanced inspection technologies">
+            <img src="images/stock3.jpeg" alt="Commercial fleet wrap">
           </div>
 
           <div class="stack-card-title-wrap">
             <div class="stack-card-title-group">
-              <h3 class="stack-card-title">Advanced Inspection Technologies</h3>
+              <h3 class="stack-card-title">Commercial &amp; Fleet Wraps</h3>
               <ul class="stack-card-links">
-                <li>
-                  <a href="/technical-consulting/advanced-ndt-technology-programs-and-procedures.html">
-                    <span>Advanced NDT Technology Programs and Procedures</span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M7 17L17 7M17 7H9M17 7V15" />
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a href="/technical-consulting/automation-robotics-imaging-systems.html">
-                    <span>Automation, Robotics, and Advanced Imaging Systems</span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M7 17L17 7M17 7H9M17 7V15" />
-                    </svg>
-                  </a>
-                </li>
+                <li><a href="#"><span>Box Truck Wraps</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
+                <li><a href="#"><span>Van &amp; Truck Graphics</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
+                <li><a href="#"><span>Fleet Branding Packages</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
+                <li><a href="#"><span>Business Decals &amp; Lettering</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
               </ul>
             </div>
           </div>
@@ -1624,10 +1976,10 @@ margin: 0 0 18px;
           <div class="stack-card-content">
             <div class="stack-card-text-wrap">
               <p class="stack-card-text">
-                Development and review of inspection methodologies, qualification plans, and implementation strategies for advanced NDT applications. We help modernize inspection capabilities through the right mix of technology, procedure, and field execution.
+                Build brand visibility everywhere your vehicles go. We design and install commercial wraps that make your company look sharp, recognizable, and professional.
               </p>
 
-              <a href="/technical-consulting.html" class="stack-btn-inline">
+              <a href="#" class="stack-btn-inline">
                 Learn more
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M7 17L17 7M17 7H9M17 7V15" />
@@ -1636,68 +1988,37 @@ margin: 0 0 18px;
             </div>
 
             <div class="stack-card-image small">
-              <img src="images/stock2.jpeg" alt="Advanced technology detail">
+              <img src="images/stock4.jpeg" alt="Commercial wrap detail">
             </div>
           </div>
         </div>
       </article>
 
-      <!-- PRACTICE AREA 2 INTRO -->
       <article class="stack-card stack-card-practice practice-2-intro">
         <div class="stack-card-inner stack-card-inner-practice">
           <div class="stack-card-practice-content">
-            <!--<p class="stack-card-eyebrow">Practice Area 02</p>-->
-            <h2 class="stack-card-practice-title">Business Advisory Services</h2>
+            <h2 class="stack-card-practice-title">Protection &amp; Styling</h2>
             <p class="stack-card-practice-text">
-              Strategic advisory support for industrial service organizations, investors, and leadership teams operating in complex and highly regulated markets.
+              Protect your investment and complete your vehicle’s look with paint protection film, tint, ceramic coating, chrome deletes, and custom finish upgrades.
             </p>
           </div>
         </div>
       </article>
 
-      <!-- PRACTICE AREA 2 / CARD 3 -->
       <article class="stack-card practice-2-card">
         <div class="stack-card-inner">
           <div class="stack-card-image main">
-            <img src="images/stock5.jpeg" alt="Strategy growth and transactions">
+            <img src="images/stock5.jpeg" alt="Paint protection film installation">
           </div>
 
           <div class="stack-card-title-wrap">
             <div class="stack-card-title-group">
-              <h3 class="stack-card-title">Strategy, Growth &amp; Transactions</h3>
+              <h3 class="stack-card-title">Paint Protection Film</h3>
               <ul class="stack-card-links">
-                <li>
-                  <a href="/business-advisory/mergers-acquisitions-support.html">
-                    <span>Mergers &amp; Acquisition Support</span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M7 17L17 7M17 7H9M17 7V15" />
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a href="/business-advisory/corporate-development-strategic-planning.html">
-                    <span>Corporate Development &amp; Strategic Planning</span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M7 17L17 7M17 7H9M17 7V15" />
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a href="/business-advisory/business-development-client-strategies.html">
-                    <span>Business Development &amp; Client Strategies</span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M7 17L17 7M17 7H9M17 7V15" />
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a href="/business-advisory/capital-acquisition.html">
-                    <span>Capital Acquisition</span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M7 17L17 7M17 7H9M17 7V15" />
-                    </svg>
-                  </a>
-                </li>
+                <li><a href="#"><span>Full Front PPF</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
+                <li><a href="#"><span>Track Package Protection</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
+                <li><a href="#"><span>High-Impact Area Coverage</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
+                <li><a href="#"><span>Clear Paint Protection</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
               </ul>
             </div>
           </div>
@@ -1705,7 +2026,7 @@ margin: 0 0 18px;
           <div class="stack-card-content">
             <div class="stack-card-text-wrap">
               <p class="stack-card-text">
-                Strategic advisory support for acquisitions, growth planning, market positioning, and capital readiness. We help leadership teams and investors navigate high-impact decisions with stronger technical and commercial context.
+                Protect your vehicle’s paint from chips, scratches, road debris, and daily wear with clear film designed to preserve the finish while keeping your vehicle looking clean.
               </p>
 
               <a href="#" class="stack-btn-inline">
@@ -1717,31 +2038,26 @@ margin: 0 0 18px;
             </div>
 
             <div class="stack-card-image small">
-              <img src="images/stock3.jpeg" alt="Strategy detail">
+              <img src="images/stock6.jpeg" alt="PPF detail">
             </div>
           </div>
         </div>
       </article>
 
-      <!-- PRACTICE AREA 2 / CARD 4 -->
       <article class="stack-card practice-2-card">
         <div class="stack-card-inner">
           <div class="stack-card-image main">
-            <img src="images/stock19.jpeg" alt="Talent and workforce strategy">
+            <img src="images/stock7.jpeg" alt="Window tint and custom styling">
           </div>
 
           <div class="stack-card-title-wrap">
             <div class="stack-card-title-group">
-              <h3 class="stack-card-title">Talent &amp; Workforce Strategy</h3>
+              <h3 class="stack-card-title">Tint, Chrome Deletes &amp; Details</h3>
               <ul class="stack-card-links">
-                <li>
-                  <a href="/business-advisory/talent-acquisition-assessment.html">
-                    <span>Talent Acquisition &amp; Assessment</span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M7 17L17 7M17 7H9M17 7V15" />
-                    </svg>
-                  </a>
-                </li>
+                <li><a href="#"><span>Window Tint</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
+                <li><a href="#"><span>Chrome Delete Packages</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
+                <li><a href="#"><span>Roof Wraps &amp; Accents</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
+                <li><a href="#"><span>Custom Styling Upgrades</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15" /></svg></a></li>
               </ul>
             </div>
           </div>
@@ -1749,7 +2065,7 @@ margin: 0 0 18px;
           <div class="stack-card-content">
             <div class="stack-card-text-wrap">
               <p class="stack-card-text">
-                Advisory support for identifying, evaluating, and strengthening technical and leadership talent. We help organizations build the workforce capabilities needed to execute, scale, and compete effectively.
+                Finish the look with clean tint, blacked-out trim, custom accents, roof wraps, and detail upgrades that give your vehicle a sharper, more aggressive appearance.
               </p>
 
               <a href="#" class="stack-btn-inline">
@@ -1761,7 +2077,7 @@ margin: 0 0 18px;
             </div>
 
             <div class="stack-card-image small">
-              <img src="images/stock4.jpeg" alt="Talent strategy detail">
+              <img src="images/stock8.jpeg" alt="Custom styling detail">
             </div>
           </div>
         </div>
@@ -2289,1348 +2605,13 @@ margin: 0 0 18px;
 </style>
 
 
-<!--
-<section class="insight-grid-section" id="news">
-  <div class="insight-grid-shell">
-    <div class="insight-grid-head">
-      <p class="insight-grid-eyebrow">Who We Help</p>
-      <h2 class="insight-grid-title">Choose the Path That Fits Your Business</h2>
-      <p class="insight-grid-intro">
-        Griffin supports technical, operational, and strategic decisions across the inspection and asset integrity market. Select the pathway that best matches your organization and see how we help solve problems, reduce risk, and create measurable outcomes.
-      </p>
-    </div>
 
-    <div class="insight-grid-cards insight-grid-cards--four">
-      <article class="insight-card">
-        <div class="insight-card-box">
-          <div class="insight-card-media">
-            <img src="images/stock13.jpeg" alt="Inspection planning">
-          </div>
-          <div class="insight-card-body">
-            <h3 class="insight-card-title">For Inspection & NDT Service Providers
-              <span class="title-arrow">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-            </h3>
-            <p class="insight-card-text">
-              When delivery quality, technical leadership, training, or program consistency become limiting factors, we help strengthen your operation through Level III support, written practice development, advanced training, and inspection program guidance so you can improve execution, credibility, and growth readiness.
-            </p>
-          </div>
-        </div>
-      </article>
 
-      <article class="insight-card">
-        <div class="insight-card-box">
-          <div class="insight-card-media">
-            <img src="images/stock12.jpeg" alt="Asset reliability advisory">
-          </div>
-          <div class="insight-card-body">
-            <h3 class="insight-card-title">For Asset Owners & Operators
-              <span class="title-arrow">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-            </h3>
-            <p class="insight-card-text">
-              When you need more confidence in inspection strategy, vendor capability, or technical decisions, we provide independent advisory support that helps reduce risk, improve reliability, and ensure your inspection programs are aligned with operational performance.
-            </p>
-          </div>
-        </div>
-      </article>
 
-      <article class="insight-card">
-        <div class="insight-card-box">
-          <div class="insight-card-media">
-            <img src="images/stock22.jpeg" alt="Technology commercialization support">
-          </div>
-          <div class="insight-card-body">
-            <h3 class="insight-card-title">For Technology Companies
-              <span class="title-arrow">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-            </h3>
-            <p class="insight-card-text">
-              When innovative inspection technologies need real-world validation, market alignment, or industry adoption, we help bridge the gap between product capability and field application so you can sharpen positioning, improve usability, and accelerate commercial traction.
-            </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="insight-card">
-        <div class="insight-card-box">
-          <div class="insight-card-media">
-            <img src="images/stock25.jpeg" alt="Mergers and acquisitions strategy">
-          </div>
-          <div class="insight-card-body">
-            <h3 class="insight-card-title">For Investors, M&A & Strategic Buyers
-              <span class="title-arrow">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-            </h3>
-            <p class="insight-card-text">
-              When evaluating acquisitions, growth opportunities, or strategic investments in the inspection sector, we provide market, technical, and operational insight that helps you assess capability, identify risk, and make more informed transaction decisions.
-            </p>
-          </div>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<style>
-  .insight-grid-section{
-  background: #ffffff;
-  color: #052330;
-  padding: clamp(72px, 6vw, 120px) 0;
-}
-
-.insight-grid-shell{
-  width: min(1400px, calc(100% - 40px));
-  margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 60px);
-}
-
-.insight-grid-head{
-  max-width: 1080px;
-  margin: 0 auto clamp(34px, 5vw, 64px);
-  text-align: center;
-}
-
-.insight-grid-eyebrow{
-  margin: 0 0 14px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #052330;
-}
-
-.insight-grid-title{
-  margin: 0 0 18px;
-  font-size: clamp(2.4rem, 3.8vw, 3.5rem);
-  line-height: 0.97;
-  letter-spacing: -0.035em;
-  font-weight: 500;
-  color: #052330;
-  max-width: 28ch;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.insight-grid-intro{
-  margin: 0 auto;
-  max-width: 78ch;
-  font-size: 16px;
-  line-height: 1.65;
-  color: rgba(0, 0, 0, 0.7);
-}
-
-.insight-grid-cards,
-.insight-grid-cards--four{
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0;
-  align-items: stretch;
-}
-
-.insight-card{
-  display: flex;
-  min-width: 0;
-}
-
-.insight-card-box{
-  width: 100%;
-  background: #fff;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
-  cursor: pointer;
-  color: #052330;
-  height: 100%;
-}
-
-.insight-card-box:hover{
-  background: #052330;
-}
-
-.insight-card-media{
-  width: 100%;
-  height: 220px;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-}
-
-.insight-card-media img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.insight-card-body{
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  flex: 1;
-}
-
-.insight-card-title{
-  margin: 0;
-  font-size: clamp(18px, 1.2vw, 22px);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  font-weight: 400;
-  color: #052330;
-  transition: color 0.3s ease;
-
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-
-  /* 🔑 FIX */
-  flex-wrap: nowrap;
-}
-
-.insight-card-text{
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.65;
-  color: #052330;
-  transition: color 0.3s ease;
-}
-
-.insight-card-box:hover .insight-card-title,
-.insight-card-box:hover .insight-card-text{
-  color: rgba(255, 255, 255, 0.88);
-}
-
-.title-arrow{
-  display: inline-flex;
-  color: #052330;
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.title-arrow svg{
-  width: 22px;
-  height: 22px;
-  transition: transform 0.3s ease;
-}
-
-.insight-card-box:hover .title-arrow{
-  color: #F00303;
-  transform: translateX(6px);
-}
-
-.insight-card-box:hover .title-arrow svg{
-  transform: translateX(2px);
-}
-
-/* Optional subtle equal-height feel for longer copy */
-.insight-card-text{
-  max-width: 34ch;
-}
-
-/* 2-column tablet */
-@media (max-width: 1200px){
-  .insight-grid-cards,
-  .insight-grid-cards--four{
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .insight-card-box{
-    padding: 1.25rem;
-  }
-}
-
-/* 1-column mobile */
-@media (max-width: 760px){
-  .insight-grid-section{
-    padding: 60px 0;
-    margin-bottom: -4rem;
-  }
-
-  .insight-grid-shell{
-    width: min(1600px, calc(100% - 24px));
-    padding: 0 16px;
-  }
-
-  .insight-grid-title,
-  .insight-grid-intro{
-    max-width: 100%;
-  }
-
-  .insight-grid-cards,
-  .insight-grid-cards--four{
-    grid-template-columns: 1fr;
-  }
-
-  .insight-card{
-    padding: 0;
-  }
-
-  .insight-card-box{
-    padding: 1.5rem;
-  }
-
-  .insight-card-media{
-    min-height: 220px;
-    height: 220px;
-  }
-
-  .insight-card-title{
-    font-size: 1.3rem;
-  }
-
-  .insight-card-text{
-    font-size: 0.96rem;
-    line-height: 1.6;
-    max-width: 100%;
-  }
-}
-</style>-->
-
-
-<section class="why-griffin-section">
-  <div class="why-griffin-shell">
-    <div class="why-griffin-top">
-  
-  <div class="why-griffin-head">
-    <p class="why-griffin-eyebrow">Why Griffin Integrity Solutions</p>
-    <h2 class="why-griffin-title">Not a Traditional Consultancy</h2>
-    <p class="why-griffin-text">
-      We don’t deliver generic recommendations or theoretical frameworks.
-      We connect you with experienced professionals who provide practical, field-informed insight, and support you in making better decisions in high-stakes environments.
-    </p>
-  </div>
-
-  <div class="why-griffin-partners">
-    <div class="why-griffin-partner">
-      <div class="why-griffin-partner-image">
-        <img src="/images/professional1.jpeg" alt="Partner Logo 1">
-      </div>
-      <span>Technical Advisors</span>
-    </div>
-
-    <div class="why-griffin-partner">
-      <div class="why-griffin-partner-image">
-        <img src="/images/professional2.jpeg" alt="Partner Logo 1">
-      </div>
-      <span>Subject Matter Experts</span>
-    </div>
-  </div>
-
-</div>
-
-    <div class="why-griffin-grid">
-      <article class="why-griffin-card">
-        <h3>Strategic Advisory with Technical Depth</h3>
-        <p>
-          We bridge the gap between executive decision-making and technical reality, helping organizations navigate risk, growth, technology adoption, and market shifts with confidence.
-        </p>
-      </article>
-
-      <article class="why-griffin-card">
-        <h3>Industry Expertise</h3>
-        <p>
-          Led by professionals with deep experience across inspection, asset integrity, pipeline systems, and construction quality.
-        </p>
-      </article>
-
-      <article class="why-griffin-card">
-        <h3>Collaborative Expert Network</h3>
-        <p>
-          Access multidisciplinary expertise across NDT, fabrication quality, monitoring technologies, and corporate strategy without building a full-time team.
-        </p>
-      </article>
-    </div>
-  </div>
-</section>
-
-
-<section class="client-ecosystem-section">
-  <div class="client-ecosystem-shell">
-    <div class="client-ecosystem-head">
-      <p class="client-ecosystem-eyebrow">Who We Serve</p>
-      <h2 class="client-ecosystem-title">Supporting critical decisions across the industry</h2>
-    </div>
-
-    <div class="client-ecosystem-grid">
-      <article class="client-ecosystem-card">
-        <h3>Owner-Operators</h3>
-        <p>
-          Improve asset reliability, inspection performance, and risk management across critical infrastructure.
-        </p>
-      </article>
-
-      <article class="client-ecosystem-card">
-        <h3>Private Equity &amp; Strategic Investors</h3>
-        <p>
-          Gain independent technical insight for diligence, growth evaluation, and operational improvement in industrial service investments.
-        </p>
-      </article>
-
-      <article class="client-ecosystem-card">
-        <h3>Service Providers</h3>
-        <p>
-          Strengthen technical credibility, align operations, and position for differentiated growth in competitive markets.
-        </p>
-      </article>
-
-      <article class="client-ecosystem-card">
-        <h3>EPC / Fabrication Organizations</h3>
-        <p>
-          Enhance quality execution, inspection planning, and compliance across complex project environments.
-        </p>
-      </article>
-
-      <article class="client-ecosystem-card">
-        <h3>Technology Developers</h3>
-        <p>
-          Align solutions with real industry needs, accelerate adoption, and connect with the right commercial opportunities.
-        </p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<style>
-  .why-griffin-top{
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 40px;
-  align-items: start;
-  margin-bottom: clamp(32px, 4vw, 56px);
-}
-
-.why-griffin-partners{
-  display: flex;
-  gap: 18px;
-}
-
-.why-griffin-partner{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  text-align: center;
-}
-
-.why-griffin-partner-image{
-  width: clamp(175px, 12vw, 420px);
-  aspect-ratio: 1 / 1;
-  background: #f6f3ee;
-  border-radius: 10px;
-  border: 1px solid rgba(0,0,0,0.08);
-  overflow: hidden;
-}
-
-.why-griffin-partner-image img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.why-griffin-partner span{
-  font-size: 0.8rem;
-  color: rgba(17,17,17,0.8);
-}
-  /* =========================
-   WHY GRIFFIN
-========================= */
-.why-griffin-section{
-  background: #fff;
-  padding: clamp(72px, 8vw, 120px) 0;
-}
-
-.why-griffin-shell{
-  width: min(1400px, calc(100% - 40px));
-  margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 60px);
-}
-
-.why-griffin-head{
-  max-width: 980px;
-  margin-bottom: clamp(32px, 4vw, 56px);
-}
-
-.why-griffin-eyebrow{
-  margin: 0 0 14px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #777;
-}
-
-.why-griffin-title{
-  margin: 0 0 18px;
-  font-size: clamp(2rem, 4.2vw, 4.5rem);
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  font-weight: 300;
-  color: #111;
-  max-width: 17ch;
-}
-
-.why-griffin-text{
-  margin: 0;
-  max-width: 48ch;
-  font-size: clamp(1rem, 1.15vw, 1.15rem);
-  line-height: 1.7;
-  color: rgba(17,17,17,0.78);
-}
-
-.why-griffin-grid{
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
-}
-
-.why-griffin-card{
-  position: relative;
-  min-height: 280px;
-  padding: 28px 26px 24px;
-  background: #f6f3ee;
-  color: #111;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  clip-path: polygon(
-    0 0,
-    calc(100% - 28px) 0,
-    100% 28px,
-    100% 100%,
-    28px 100%,
-    0 calc(100% - 28px)
-  );
-  box-shadow: 0 18px 40px rgba(0,0,0,0.05);
-}
-
-.why-griffin-card:nth-child(2){
-  margin-top: 36px;
-}
-
-.why-griffin-card h3{
-  margin: 0 0 18px;
-  font-size: clamp(1.25rem, 1.5vw, 1.7rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  font-weight: 600;
-  color: #111;
-  max-width: 14ch;
-}
-
-.why-griffin-card p{
-  margin: 0;
-  max-width: 28ch;
-  font-size: 0.98rem;
-  line-height: 1.55;
-  color: rgba(17,17,17,0.82);
-}
-
-/* =========================
-   CLIENT ECOSYSTEM
-========================= */
-.client-ecosystem-section{
-  background: #052330;
-  padding: 0 0 clamp(72px, 8vw, 120px);
-  padding-top:clamp(72px, 4vw, 120px);
-}
-
-.client-ecosystem-shell{
-  width: min(1400px, calc(100% - 40px));
-  margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 60px);
-}
-
-.client-ecosystem-head{
-  max-width: 980px;
-  margin-bottom: clamp(32px, 4vw, 56px);
-}
-
-.client-ecosystem-eyebrow{
-  margin: 0 0 14px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #ffffff;
-}
-
-.client-ecosystem-title{
-  margin: 0;
-  font-size: clamp(2rem, 4.2vw, 4.5rem);
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  font-weight: 300;
-  color: #ffffff;
-}
-
-.client-ecosystem-grid{
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 18px;
-  align-items: start;
-}
-
-.client-ecosystem-card{
-  min-height: 220px;
-  padding: 24px 22px 20px;
-  background: #0d2b38;
-  color: #fff;
-  clip-path: polygon(
-    0 0,
-    calc(100% - 24px) 0,
-    100% 24px,
-    100% 100%,
-    24px 100%,
-    0 calc(100% - 24px)
-  );
-  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.client-ecosystem-card:nth-child(2),
-.client-ecosystem-card:nth-child(4){
-  margin-top: 34px;
-}
-
-.client-ecosystem-card:nth-child(3){
-  background: #f00303;
-}
-
-.client-ecosystem-card:nth-child(5){
-  background: #f5f1ea;
-  color: #111;
-}
-
-.client-ecosystem-card h3{
-  margin: 0 0 18px;
-  font-size: clamp(1.05rem, 1.2vw, 1.35rem);
-  line-height: 1.05;
-  letter-spacing: -0.025em;
-  font-weight: 600;
-  max-width: 12ch;
-}
-
-.client-ecosystem-card p{
-  margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.5;
-  opacity: 0.92;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 1200px){
-  .why-griffin-grid{
-    grid-template-columns: 1fr;
-  }
-
-  .why-griffin-card:nth-child(2){
-    margin-top: 0;
-  }
-
-  .client-ecosystem-grid{
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .client-ecosystem-card:nth-child(2),
-  .client-ecosystem-card:nth-child(4){
-    margin-top: 0;
-  }
-}
-
-@media (max-width: 760px){
-  .why-griffin-section{
-    padding: 64px 0;
-  }
-
-  .client-ecosystem-section{
-    padding: 0 0 64px;
-    padding-top:clamp(72px, 4vw, 120px);
-  }
-
-  .why-griffin-shell,
-  .client-ecosystem-shell{
-    width: min(1600px, calc(100% - 24px));
-    padding: 0 16px;
-  }
-
-  .why-griffin-title,
-  .client-ecosystem-title{
-    max-width: 100%;
-  }
-
-  .why-griffin-card,
-  .client-ecosystem-card{
-    min-height: auto;
-  }
-
-  .client-ecosystem-grid{
-    grid-template-columns: 1fr;
-  }
-}
-@media (max-width: 760px){
-  .why-griffin-top{
-    grid-template-columns: 1fr;
-  }
-
-  .why-griffin-partners{
-    margin-top: -20px;
-    display: flex;
-    gap: 12px;
-    width: 100%;
-  }
-
-  .why-griffin-partner{
-    flex: 1;
-  }
-
-  .why-griffin-partner-image{
-    width: 100%;
-    max-width: none; /* remove clamp restriction */
-  }
-}
-</style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<section class="industries-split-section">
-  <div class="industries-split-shell">
-
-    <!-- LEFT CONTENT -->
-    <div class="industries-split-left">
-      <p class="industries-eyebrow">Industries We Serve</p>
-      <h2 class="industries-title">
-        Critical Infrastructure
-      </h2>
-      <p class="industries-intro">
-        We support asset-intensive industries where inspection, integrity, and risk management are critical to safe operation, regulatory compliance, and sustained performance.
-      </p>
-    </div>
-
-    <!-- RIGHT GRID -->
-    <div class="industries-split-right">
-
-  <div class="industry-group">
-    <div class="industry-group-head">
-      <div class="industry-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-          <path d="M12 2C12 2 6 9 6 13a6 6 0 0 0 12 0c0-4-6-11-6-11z"/>
-        </svg>
-      </div>
-      <h3>Energy</h3>
-    </div>
-    <ul>
-      <li>Oil &amp; Gas</li>
-      <li>LNG</li>
-      <li>Petrochemical</li>
-      <li>Pipelines</li>
-    </ul>
-  </div>
-
-  <div class="industry-group">
-    <div class="industry-group-head">
-      <div class="industry-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-          <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/>
-        </svg>
-      </div>
-      <h3>Power Generation</h3>
-    </div>
-    <ul>
-      <li>Fossil Power</li>
-      <li>Nuclear</li>
-      <li>Renewable Energy</li>
-    </ul>
-  </div>
-
-  <div class="industry-group">
-    <div class="industry-group-head">
-      <div class="industry-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-  <!-- main horizontal vessel -->
-  <rect x="3" y="7" width="18" height="10" rx="5"/>
-
-  <!-- internal bands / weld seams -->
-  <path d="M9 7v10M15 7v10"/>
-
-  <!-- inlet / outlet nozzles -->
-  <path d="M3 12H1M23 12h-2"/>
-
-  <!-- support legs -->
-  <path d="M8 17v2M16 17v2"/>
-</svg>
-      </div>
-      <h3>Industrial Manufacturing</h3>
-    </div>
-    <ul>
-      <li>Heavy Fabrication</li>
-      <li>Pressure Vessels</li>
-      <li>Process Equipment</li>
-    </ul>
-  </div>
-
-  <div class="industry-group">
-    <div class="industry-group-head">
-      <div class="industry-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-          <path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/>
-        </svg>
-      </div>
-      <h3>Infrastructure &amp; Defense</h3>
-    </div>
-    <ul>
-      <li>Shipbuilding</li>
-      <li>Aerospace</li>
-      <li>Transportation Infrastructure</li>
-    </ul>
-  </div>
-
-</div>
-
-  </div>
-</section>
-
-<style>
-.industries-split-section{
-  padding: clamp(72px, 8vw, 120px) 0;
-  background: #ffffff;
-}
-
-.industries-split-shell{
-  width: min(1400px, calc(100% - 40px));
-  margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 60px);
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(40px, 6vw, 80px);
-  align-items: start;
-}
-
-/* LEFT */
-.industries-eyebrow{
-  margin: 0 0 14px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #777;
-}
-
-.industries-title{
- margin: 0;
-  font-size: clamp(2rem, 4.2vw, 4.5rem);
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  font-weight: 300;
-  color: #111;
-}
-
-.industries-intro{
-  font-size: 16px;
-  line-height: 1.65;
-  color: rgba(0,0,0,0.7);
-  max-width: 46ch;
-}
-
-/* RIGHT */
-.industries-split-right{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px 28px;
-}
-
-.industry-group{
-  padding: 0 0 18px;
-  border-top: 1px solid rgba(5,35,48,0.1);
-}
-
-.industry-group-head{
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 18px 0 12px;
-}
-
-.industry-group h3{
-  margin: 0;
-  font-size: 1.05rem;
-  letter-spacing: -0.02em;
-  color: #052330;
-}
-
-.industry-group ul{
-  margin: 0;
-  padding: 0 0 0 42px;
-  list-style: none;
-}
-
-.industry-group li{
-  position: relative;
-  margin: 0 0 8px;
-  color: rgba(5,35,48,0.78);
-  line-height: 1.5;
-}
-
-.industry-group li::before{
-  content: "";
-  position: absolute;
-  left: -14px;
-  top: 0.68em;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: rgba(240,3,3,0.9);
-}
-
-@media (max-width: 900px){
-  .industries-split-right{
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ICON */
-.industry-icon{
-  width: 28px;
-  height: 28px;
-  color: #052330;
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-}
-
-.industry-icon svg{
-  width: 100%;
-  height: 100%;
-}
-
-/* TEXT */
-.industry-row span{
-  font-size: 16px;
-  letter-spacing: -0.02em;
-  color: #052330;
-}
-
-/* Responsive */
-@media (max-width: 900px){
-  .industries-split-shell{
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-
-  .industries-title{
-    max-width: 100%;
-  }
-
-  .industries-intro{
-    max-width: 100%;
-  }
-}
-</style>
-
-
-<section class="image-left-feature-section">
-  <div class="image-left-feature-shell">
-
-    <div class="image-left-feature-grid">
-
-      <!-- LEFT: IMAGE STACK -->
-      <div class="image-left-feature-media">
-        <div class="image-left-feature-bg"></div>
-        <div class="image-left-feature-image">
-          <img src="/images/stock27.jpeg" alt="Feature Image">
-        </div>
-      </div>
-
-      <!-- RIGHT: CONTENT -->
-      <div class="image-left-feature-content">
-        <p class="image-left-feature-eyebrow">Next-Generation Inspection</p>
-        <h2 class="image-left-feature-title">Inspection 4.0 Technology Stack</h2>
-        <p class="image-left-feature-text">
-          Advanced NDT, automation, and AI are transforming how inspection is performed and how decisions are made. We connect organizations with experts who understand how these technologies work together in real-world environments.
-        </p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<style>
-/* =========================
-   IMAGE LEFT FEATURE
-========================= */
-.image-left-feature-section{
-  background: #fff;
-  padding: clamp(72px, 8vw, 120px) 0;
-}
-
-.image-left-feature-shell{
-  width: min(1400px, calc(100% - 40px));
-  margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 60px);
-}
-
-.image-left-feature-grid{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(40px, 6vw, 100px);
-  align-items: center;
-}
-
-/* =========================
-   MEDIA (LEFT)
-========================= */
-.image-left-feature-media{
-  position: relative;
-  width: 100%;
-  max-width: 520px;
-}
-
-/* BLUE OFFSET BOX */
-.image-left-feature-bg{
-  position: absolute;
-  top: -14px;
-  left: -24px;
-  width: 100%;
-  height: 100%;
-  background: #0d2b38;
-  z-index: 0;
-
-  clip-path: polygon(
-    0 0,
-    calc(100% - 28px) 0,
-    100% 28px,
-    100% 100%,
-    28px 100%,
-    0 calc(100% - 28px)
-  );
-}
-
-/* IMAGE */
-.image-left-feature-image{
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-
-  clip-path: polygon(
-    0 0,
-    calc(100% - 28px) 0,
-    100% 28px,
-    100% 100%,
-    28px 100%,
-    0 calc(100% - 28px)
-  );
-
-  box-shadow: 0 20px 50px rgba(0,0,0,0.12);
-}
-
-.image-left-feature-image img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* =========================
-   CONTENT (RIGHT)
-========================= */
-.image-left-feature-eyebrow{
-  margin: 0 0 14px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #777;
-}
-
-.image-left-feature-title{
-  margin: 0 0 18px;
-  font-size: clamp(2rem, 4.2vw, 4rem);
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  font-weight: 300;
-  color: #111;
-  max-width: 16ch;
-}
-
-.image-left-feature-text{
-  margin: 0;
-  max-width: 60ch;
-  font-size: clamp(1rem, 1.1vw, 1.1rem);
-  line-height: 1.7;
-  color: rgba(17,17,17,0.78);
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 900px){
-  .image-left-feature-grid{
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-
-  .image-left-feature-media{
-    max-width: 100%;
-  }
-
-  .image-left-feature-bg{
-    top: -16px;
-    left: -16px;
-  }
-}
-</style>
-
-<!--
-<section class="why-firm-feature">
-  <img class="why-firm-feature__image" src="/images/stock8.jpeg" alt="Industrial inspection and strategy background">
-
-  <div class="why-firm-feature__overlay">
-    <div class="why-firm-feature__card">
-      <p class="why-firm-feature__eyebrow">Why Partner With Griffin Integrity Solutions?</p>
-      <h2>Positioned at the Intersection of Strategy, Technical Insight, and Industry Reality</h2>
-      <p class="why-firm-feature__intro">
-        Griffin Integrity Solutions combines deep technical expertise with real-world industry experience and strategic advisory.
-
-While most consulting firms focus on asset owners, Griffin is uniquely positioned to support inspection service providers—a critical but often overlooked segment of the market.
-
-By aligning technical insight with market realities, we deliver practical guidance that helps inspection organizations grow, compete, and operate more effectively.
-      </p>
-
-      <div class="why-firm-feature__points">
-
-        <div class="why-firm-feature__point">
-          <div class="why-firm-feature__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="11" cy="11" r="7"></circle>
-              <path d="M21 21l-4.3-4.3"></path>
-              <path d="M8 11h6"></path>
-              <path d="M11 8v6"></path>
-            </svg>
-          </div>
-          <div class="why-firm-feature__point-text">
-            <h3>Technical fluency in advanced NDT</h3>
-            <p>Deep familiarity with modern inspection methods, technical standards, and field realities.</p>
-          </div>
-        </div>
-
-        <div class="why-firm-feature__point">
-          <div class="why-firm-feature__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="5" cy="12" r="2"></circle>
-              <circle cx="19" cy="5" r="2"></circle>
-              <circle cx="19" cy="19" r="2"></circle>
-              <path d="M7 12h10"></path>
-              <path d="M17 6l-5 5"></path>
-              <path d="M17 18l-5-5"></path>
-            </svg>
-          </div>
-          <div class="why-firm-feature__point-text">
-            <h3>Strategic understanding of inspection markets</h3>
-            <p>Insight into how service providers, asset owners, and technology players intersect.</p>
-          </div>
-        </div>
-
-        <div class="why-firm-feature__point">
-          <div class="why-firm-feature__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z"></path>
-              <path d="M9.5 12l2 2 3-4"></path>
-            </svg>
-          </div>
-          <div class="why-firm-feature__point-text">
-            <h3>Practical, execution-focused guidance</h3>
-            <p>Recommendations grounded in implementation realities, risk, compliance, and long-term value.</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>
-
-<style>
-.why-firm-feature{
-  position: relative;
-  min-height: clamp(520px, 58vw, 780px);
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  background: #ffffff;
-}
-
-.why-firm-feature__image{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
-}
-
-.why-firm-feature::after{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(5,35,48,0.62) 0%,
-    rgba(5,35,48,0.48) 28%,
-    rgba(5,35,48,0.18) 58%,
-    rgba(255,255,255,0.00) 100%
-  );
-  z-index: 1;
-}
-
-.why-firm-feature__overlay{
-  position: relative;
-  z-index: 2;
-  width: min(1200px, calc(100% - 40px));
-  margin: 0 auto;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.why-firm-feature__card{
-  width: min(560px, 52%);
-  background: rgba(255,255,255,0.95);
-  padding: clamp(28px, 4vw, 42px);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.14);
-}
-
-.why-firm-feature__eyebrow{
-  margin: 0 0 14px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #052330;
-}
-
-.why-firm-feature__card h2{
-  margin: 0 0 16px;
-  color: #111111;
-  font-size: clamp(1.9rem, 2.5vw, 2.5rem);
-  line-height: 1.02;
-  letter-spacing: -0.04em;
-  font-weight: 400;
-  max-width: 20ch;
-}
-
-.why-firm-feature__intro{
-  margin: 0 0 28px;
-  color: rgba(17,17,17,0.74);
-  font-size: 1rem;
-  line-height: 1.72;
-  max-width: 52ch;
-}
-
-.why-firm-feature__points{
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.why-firm-feature__point{
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(5,35,48,0.10);
-}
-
-.why-firm-feature__point:first-child{
-  padding-top: 0;
-  border-top: none;
-}
-
-.why-firm-feature__icon{
-  flex: 0 0 38px;
-  width: 38px;
-  height: 38px;
-  color: #052330;
-}
-
-.why-firm-feature__icon svg{
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.why-firm-feature__point-text h3{
-  margin: 0 0 6px;
-  color: #111111;
-  font-size: 22px;
-  line-height: 1.18;
-  letter-spacing: -0.02em;
-  font-weight: 400;
-}
-
-.why-firm-feature__point-text p{
-  margin: 0;
-  color: rgba(17,17,17,0.74);
-  font-size: 15px;
-  line-height: 1.65;
-}
-
-@media (max-width: 900px){
-  .why-firm-feature{
-    min-height: 680px;
-    align-items: end;
-    padding-bottom: 28px;
-  }
-
-  .why-firm-feature::after{
-    background: linear-gradient(
-      180deg,
-      rgba(5,35,48,0.50) 0%,
-      rgba(5,35,48,0.24) 34%,
-      rgba(255,255,255,0.88) 100%
-    );
-  }
-
-  .why-firm-feature__card{
-    width: 100%;
-    max-width: 100%;
-  }
-}
-</style>-->
-
-
-<!--
 <section class="image-scroller-section">
   <div class="image-scroller-inner">
     <div class="image-scroller-head">
-      <div class="image-scroller-eyebrow">Industry Insights & Intelligence</div>
+      <div class="image-scroller-eyebrow">Wrap Services & Vehicle Protection</div>
 
       <div class="image-scroller-controls">
         <button class="scroller-arrow scroller-prev is-disabled" aria-label="Previous">
@@ -3663,59 +2644,59 @@ By aligning technical insight with market realities, we deliver practical guidan
 
       <article class="scroller-card scroller-card--red">
         <div class="scroller-copy">
-          <div class="card-eyebrow"><span>The Shift Toward Automated Inspection</span><span>01</span></div>
-          <p>Certified Level III expertise supporting inspection programs, procedure development, compliance strategies, and technical decision-making. Our consultants work directly with your teams to ensure inspections meet industry standards while improving reliability, documentation, and operational confidence.</p>
+          <div class="card-eyebrow"><span>Full Color Change Wraps</span><span>01</span></div>
+          <p>Transform the look of your vehicle with a complete color change wrap. Choose from gloss, satin, matte, metallic, textured, and specialty finishes designed to give your car a custom look without committing to a permanent paint job.</p>
         </div>
       </article>
 
       <article class="scroller-card scroller-card--image">
         <div class="scroller-image-wrap">
-          <img src="images/stock2.jpeg" alt="">
+          <img src="images/stock2.jpeg" alt="Commercial vehicle wrap">
         </div>
         <div class="scroller-copy">
-          <div class="card-eyebrow"><span>Advanced NDT Experts</span><span>02</span></div>
-          <p>Experienced NDT subject matter experts providing guidance on advanced inspection technologies, complex inspection challenges, and system implementation. We help organizations improve inspection performance, reduce uncertainty, and build stronger technical capabilities.</p>
+          <div class="card-eyebrow"><span>Commercial Wraps</span><span>02</span></div>
+          <p>Promote your business everywhere you drive with professional commercial wraps, decals, and branded graphics. From work trucks to vans and full fleets, we help turn your vehicles into clean, high-impact advertising.</p>
         </div>
       </article>
 
       <article class="scroller-card scroller-card--red">
         <div class="scroller-copy">
-          <div class="card-eyebrow"><span>NDT Written Practice</span><span>03</span></div>
-          <p>Comprehensive review and development of written practices designed to meet industry standards and regulatory requirements. Our team ensures documentation is clear, compliant, and aligned with your operational workflows and inspection programs.</p>
+          <div class="card-eyebrow"><span>Fleet Branding</span><span>03</span></div>
+          <p>Create a consistent brand presence across every company vehicle. Fleet wraps help your team look professional, build local recognition, and make your business easier to remember on the road.</p>
         </div>
       </article>
 
       <article class="scroller-card scroller-card--image">
         <div class="scroller-image-wrap">
-          <img src="images/stock4.jpeg" alt="">
+          <img src="images/stock4.jpeg" alt="Paint protection film">
         </div>
         <div class="scroller-copy">
-          <div class="card-eyebrow"><span>Advanced NDT Training</span><span>04</span></div>
-          <p>Structured training programs designed to advance technician knowledge and practical capability in modern inspection methods. Our courses combine technical theory with real-world application to strengthen both individual expertise and organizational competency.</p>
+          <div class="card-eyebrow"><span>Paint Protection Film</span><span>04</span></div>
+          <p>Protect high-impact areas from rock chips, scratches, road debris, and everyday wear with clear paint protection film. PPF helps preserve your factory paint while keeping your vehicle looking clean longer.</p>
         </div>
       </article>
 
       <article class="scroller-card scroller-card--red">
         <div class="scroller-copy">
-          <div class="card-eyebrow"><span>NDT Technology Programs</span><span>05</span></div>
-          <p>Implementation and optimization of advanced nondestructive testing technologies and procedures. We help organizations integrate modern inspection tools that improve detection capability, increase efficiency, and strengthen the reliability of inspection results.</p>
+          <div class="card-eyebrow"><span>Custom Graphics</span><span>05</span></div>
+          <p>Make your vehicle stand out with custom graphics, stripes, accents, racing-inspired designs, roof wraps, and unique styling details built around your vision and the body lines of your vehicle.</p>
         </div>
       </article>
 
       <article class="scroller-card scroller-card--image">
         <div class="scroller-image-wrap">
-          <img src="images/stock3.jpeg" alt="">
+          <img src="images/stock3.jpeg" alt="Chrome delete vehicle styling">
         </div>
         <div class="scroller-copy">
-          <div class="card-eyebrow"><span>Automation & Robotics</span><span>06</span></div>
-          <p>Development and integration of robotic and automated inspection systems that enhance safety, repeatability, and productivity. These systems reduce manual risk while enabling consistent, high-precision inspection across complex assets and environments.</p>
+          <div class="card-eyebrow"><span>Chrome Deletes</span><span>06</span></div>
+          <p>Give your vehicle a cleaner, more aggressive look by blacking out chrome trim, badges, window surrounds, and accent pieces. Chrome delete packages are a simple upgrade with a major visual impact.</p>
         </div>
       </article>
 
       <article class="scroller-card scroller-card--red">
         <div class="scroller-copy">
-          <div class="card-eyebrow"><span>Advanced Imaging Systems</span><span>07</span></div>
-          <p>Deployment of high-resolution imaging and advanced inspection visualization systems that improve defect detection and analysis. These technologies provide clearer inspection data and support more confident decision-making during asset evaluation and maintenance planning.</p>
+          <div class="card-eyebrow"><span>Window Tint & Finish Details</span><span>07</span></div>
+          <p>Complete your vehicle’s look with window tint, detail accents, and finish upgrades that improve style, comfort, and overall presentation. Every detail works together to create a sharper final result.</p>
         </div>
       </article>
 
@@ -3938,727 +2919,9 @@ By aligning technical insight with market realities, we deliver practical guidan
     padding-right:var(--section-pad);
   }
 }
-</style>-->
-
-
-<!--
-  <section class="blue-cta">
-  <h2 class="display-heading">
-    Precision That <span class="text-highlight">Performs</span>.
-  </h2>
-</section>
-
-
-<style>
- .blue-cta{
-  height: 80vh;
-  min-height: 600px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-
-  padding: 0 20px;
-
-  position: relative;
-  overflow: hidden;
-
-  background-image: url("images/bluebg3.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  /* ✅ makes the image stay “locked” while content scrolls */
-  background-attachment: fixed;
-  will-change: background-position;
-}
-#heroTitle,
-#criticalTitle{
-  will-change: transform;
-}
-
-/* overlay for readability */
-.blue-cta::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background: rgba(0,0,0,0.25);
-  z-index:0;
-}
-
-.blue-cta > *{
-  position: relative;
-  z-index:1;
-  color:#fff;
-}
 </style>
 
-<section class="white-cta">
-  <h2 class="display-heading">
-  <span class="text-highlight">Safety, Integrity, and Performance</span><br> Through Proven Evaluation.
-  </h2>
-</section>
 
-<style>
-  .white-cta{
-  height: 80vh;
-  min-height: 600px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-
-  padding: 0 20px;
-
-  position: relative;
-  overflow: hidden;
-
-  background:#ffffff;
-}
-
-.white-cta > *{
-  position: relative;
-  z-index:1;
-  color:#111;
-}
-
-/* accent word
-.text-accent{
-  position: relative;
-  display: inline-block;
-}
-
-.text-accent::after{
-  content:"";
-  position:absolute;
-  left:0;
-  bottom:0.12em;
-  width:100%;
-  height:0.35em;
-  background:#3b82f6;
-  z-index:-1;
-  transform: skewX(-8deg);
-}
-*/
-</style>-->
-
-<!--
-<section class="ndt-grid-section">
-  <h2 class="display-heading ndt-grid-title">
-    Our Partners in Industrial Inspection & Asset Integrity
-  </h2>
-
-  <div class="ndt-box-row">
-
-    <div class="ndt-box">
-      <span class="box-glow"></span>
-      <span class="fade-right"></span>
-     <img src="images/partner-logo1.png" alt="Partner Logo 1" class="partner-logo is-blur">
-    </div>
-
-    <div class="ndt-box">
-      <span class="box-glow"></span>
-      <span class="fade-right"></span>
-      <img src="images/partner-logo2.png" alt="Partner Logo 2" class="partner-logo is-blur">
-    </div>
-
-    <div class="ndt-box">
-      <span class="box-glow"></span>
-      <span class="fade-right"></span>
-      <img src="images/partner-logo1.png" alt="Partner Logo 1" class="partner-logo">
-    </div>
-
-    <div class="ndt-box">
-      <span class="box-glow"></span>
-      <span class="fade-right"></span>
-      <img src="images/partner-logo2.png" alt="Partner Logo 2" class="partner-logo">
-    </div>
-
-    <div class="ndt-box">
-      <span class="box-glow"></span>
-      <span class="fade-right"></span>
-      <img src="images/partner-logo1.png" alt="Partner Logo 1" class="partner-logo is-blur">
-    </div>
-
-    <div class="ndt-box">
-      <span class="box-glow"></span>
-      <span class="fade-right"></span>
-      <span class="right-edge"></span>
-      <img src="images/partner-logo2.png" alt="Partner Logo 2" class="partner-logo is-blur">
-    </div>
-
-    <span class="dot" style="--x:0%; --y:0%;"></span>
-    <span class="dot" style="--x:16.6667%; --y:0%;"></span>
-    <span class="dot" style="--x:33.3333%; --y:0%;"></span>
-    <span class="dot" style="--x:50%; --y:0%;"></span>
-    <span class="dot" style="--x:66.6667%; --y:0%;"></span>
-    <span class="dot" style="--x:83.3333%; --y:0%;"></span>
-    <span class="dot" style="--x:100%; --y:0%;"></span>
-
-
-    <span class="dot" style="--x:0%; --y:100%;"></span>
-    <span class="dot" style="--x:16.6667%; --y:100%;"></span>
-    <span class="dot" style="--x:33.3333%; --y:100%;"></span>
-    <span class="dot" style="--x:50%; --y:100%;"></span>
-    <span class="dot" style="--x:66.6667%; --y:100%;"></span>
-    <span class="dot" style="--x:83.3333%; --y:100%;"></span>
-    <span class="dot" style="--x:100%; --y:100%;"></span>
-
-  </div>
-</section>
-
-<style>
-.ndt-grid-section{
-  background:#fff;
-  padding:80px 24px 120px;
-}
-
-.ndt-grid-title{
-  text-align:center;
-  max-width:1000px;
-  margin:0 auto 170px;
-  font-size:clamp(2.4rem, 3.8vw, 3.5rem);
-  line-height:0.97;
-  letter-spacing:-0.035em;
-  font-weight:500;
-  color:#052330;
-}
-
-.ndt-box-row{
-  --line:2px;
-  --dot:10px;
-  --box-h:180px;
-  --fade-h:130px;
-  --idle:#111;
-  --active:#0b3a59;
-  --edge-idle:rgba(17,17,17,0.24);
-  --edge-active:rgba(17, 94, 146, 0.38);
-
-  width:1200px;
-  max-width:none;
-  display:grid;
-  grid-template-columns:repeat(6, 1fr);
-  position:relative;
-  left:50%;
-  transform:translateX(-50%);
-}
-
-/* keep your bottom ghost horizontal row */
-.ndt-box-row::after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:calc(var(--fade-h) * -1);
-  height:var(--line);
-  background:rgba(17,17,17,0.28);
-  mask-image:linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(0,0,0,0.55) 14%,
-    rgba(0,0,0,1) 50%,
-    rgba(0,0,0,0.55) 86%,
-    transparent 100%
-  );
-  -webkit-mask-image:linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(0,0,0,0.55) 14%,
-    rgba(0,0,0,1) 50%,
-    rgba(0,0,0,0.55) 86%,
-    transparent 100%
-  );
-  pointer-events:none;
-}
-
-.ndt-box{
-  --ink: var(--idle);
-  --edge-ink: var(--edge-idle);
-  --box-glow-x:50%;
-  --box-glow-y:50%;
-
-  position:relative;
-  height:var(--box-h);
-  border-top:var(--line) solid var(--ink);
-  border-bottom:var(--line) solid var(--ink);
-  border-left:var(--line) solid var(--ink);
-  background:none;
-  overflow:visible; /* important: keep top/bottom ghost fades visible */
-  isolation:isolate;
-}
-
-/* local glow, clipped so it does NOT spill outside the box */
-.box-glow{
-  position:absolute;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-  opacity:0;
-  overflow:hidden;
-  border-radius:0;
-}
-
-.box-glow::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(
-      circle 220px at var(--box-glow-x) var(--box-glow-y),
-      rgba(143,211,255,0.34) 0%,
-      rgba(143,211,255,0.18) 30%,
-      rgba(143,211,255,0.08) 48%,
-      transparent 70%
-    );
-}
-
-/* logos */
-.partner-logo{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  width:auto;
-  height:auto;
-  max-width:82%;
-  max-height:62px;
-  object-fit:contain;
-  z-index:3;
-  pointer-events:none;
-}
-
-.partner-logo.is-blur{
-  filter:blur(4px);
-  opacity:0.7;
-}
-
-/* left side ghost verticals */
-.ndt-box::before{
-  content:"";
-  position:absolute;
-  left:calc(var(--line) * -1);
-  top:calc(var(--fade-h) * -1);
-  width:var(--line);
-  height:var(--fade-h);
-  background:linear-gradient(
-    to top,
-    var(--ink) 0%,
-    rgba(17,17,17,0) 100%
-  );
-  z-index:2;
-  pointer-events:none;
-}
-
-.ndt-box::after{
-  content:"";
-  position:absolute;
-  left:calc(var(--line) * -1);
-  bottom:calc(var(--fade-h) * -1);
-  width:var(--line);
-  height:var(--fade-h);
-  background:linear-gradient(
-    to bottom,
-    var(--ink) 0%,
-    rgba(17,17,17,0) 100%
-  );
-  z-index:2;
-  pointer-events:none;
-}
-
-/* right side ghost verticals */
-.fade-right{
-  position:absolute;
-  inset:0;
-  z-index:2;
-  pointer-events:none;
-}
-
-.fade-right::before{
-  content:"";
-  position:absolute;
-  right:calc(var(--line) * -1);
-  top:calc(var(--fade-h) * -1);
-  width:var(--line);
-  height:var(--fade-h);
-  background:linear-gradient(
-    to top,
-    var(--ink) 0%,
-    rgba(17,17,17,0) 100%
-  );
-}
-
-.fade-right::after{
-  content:"";
-  position:absolute;
-  right:calc(var(--line) * -1);
-  bottom:calc(var(--fade-h) * -1);
-  width:var(--line);
-  height:var(--fade-h);
-  background:linear-gradient(
-    to bottom,
-    var(--ink) 0%,
-    rgba(17,17,17,0) 100%
-  );
-}
-
-/* final right edge */
-.right-edge{
-  position:absolute;
-  top:0;
-  right:0;
-  width:var(--line);
-  height:100%;
-  background:var(--ink);
-  z-index:5;
-  pointer-events:none;
-}
-
-/* dots */
-.dot{
-  position:absolute;
-  width:var(--dot);
-  height:var(--dot);
-  border-radius:50%;
-  background:var(--idle);
-  left:var(--x);
-  top:var(--y);
-  transform:translate(-50%,-50%);
-  z-index:10;
-  pointer-events:none;
-  box-shadow:0 0 0 0 rgba(143,211,255,0);
-}
-
-/* LEFT SIDE special box */
-.ndt-box:first-child{
-  border-left:var(--line) solid var(--edge-ink);
-  border-top:none;
-  border-bottom:none;
-  background:
-    linear-gradient(to right, var(--edge-ink) 0px, var(--ink) 25vw) top left / 100% var(--line) no-repeat,
-    linear-gradient(to right, var(--edge-ink) 0px, var(--ink) 25vw) bottom left / 100% var(--line) no-repeat;
-}
-
-.ndt-box:first-child::before{
-  background:linear-gradient(
-    to top,
-    var(--edge-ink) 0%,
-    rgba(17,17,17,0) 100%
-  );
-}
-
-.ndt-box:first-child::after{
-  background:linear-gradient(
-    to bottom,
-    var(--edge-ink) 0%,
-    rgba(17,17,17,0) 100%
-  );
-}
-
-/* RIGHT SIDE special box */
-.ndt-box:last-of-type{
-  border-top:none !important;
-  border-bottom:none !important;
-  border-right:none !important;
-  background-image:
-    linear-gradient(to left, var(--edge-ink) 0px, var(--ink) 25vw),
-    linear-gradient(to left, var(--edge-ink) 0px, var(--ink) 25vw) !important;
-  background-position:
-    top right,
-    bottom right !important;
-  background-size:
-    100% var(--line),
-    100% var(--line) !important;
-  background-repeat:
-    no-repeat,
-    no-repeat !important;
-}
-
-.ndt-box:last-of-type .fade-right::before{
-  background:linear-gradient(
-    to top,
-    var(--edge-ink) 0%,
-    rgba(17,17,17,0) 100%
-  ) !important;
-}
-
-.ndt-box:last-of-type .fade-right::after{
-  background:linear-gradient(
-    to bottom,
-    var(--edge-ink) 0%,
-    rgba(17,17,17,0) 100%
-  ) !important;
-}
-
-.ndt-box:last-of-type .right-edge{
-  background:var(--edge-ink) !important;
-}
-
-@media (max-width:1024px){
-  .ndt-box-row{
-    --line:1px;
-    --dot:5px;
-    --box-h:160px;
-    --fade-h:80px;
-    width:1000px;
-    margin:0;
-    padding:0;
-  }
-
-  .ndt-grid-title{
-    margin:0 auto 100px;
-    font-size:clamp(2rem, 3.2vw, 3.2rem);
-  }
-
-  .partner-logo{
-    max-width:78%;
-    max-height:54px;
-  }
-
-  .box-glow::before{
-    background:
-      radial-gradient(
-        circle 90px at var(--box-glow-x) var(--box-glow-y),
-        rgba(143,211,255,0.34) 0%,
-        rgba(143,211,255,0.18) 30%,
-        rgba(143,211,255,0.08) 48%,
-        transparent 70%
-      );
-  }
-}
-.ndt-box-row::after{
-  content:none;
-}
-</style>-->
-
-
-<section class="partner-network-section">
-  <div class="partner-network-shell">
-    <div class="partner-network-head">
-      <p class="partner-network-eyebrow">Our Partner Network</p>
-      <h2 class="partner-network-title">
-        Trusted partners across industrial inspection and asset integrity
-      </h2>
-      <p class="partner-network-text">
-        We collaborate with specialized organizations that strengthen technical delivery,
-        expand field capability, and support better outcomes across high-stakes inspection environments.
-      </p>
-    </div>
-
-    <div class="partner-network-grid">
-      <article class="partner-card">
-        <div class="partner-card-logo-wrap">
-          <img src="images/partner-logo1.png" alt="Partner Name 1" class="partner-card-logo">
-        </div>
-        <h3>Sound NDT Solutions</h3>
-        <p></p>
-      </article>
-
-      <article class="partner-card">
-        <div class="partner-card-logo-wrap">
-          <img src="images/partner-logo2.png" alt="Partner Name 2" class="partner-card-logo">
-        </div>
-        <h3>Top Notch NDT</h3>
-        <p></p>
-      </article>
-
-      <article class="partner-card">
-        <div class="partner-card-logo-wrap">
-          <img src="images/partner-logo3.png" alt="Partner Name 3" class="partner-card-logo">
-        </div>
-        <h3>ATCO Automated Scanning Systems</h3>
-        <p></p>
-      </article>
-
-      <article class="partner-card">
-        <div class="partner-card-logo-wrap">
-          <img src="images/partner-logo4.png" alt="Partner Name 4" class="partner-card-logo">
-        </div>
-        <h3>Halo NDT Techologies</h3>
-        <p></p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<style>
-.partner-network-section{
-  background:#fff;
-
-}
-
-.partner-network-shell{
-  width:min(1400px, calc(100% - 40px));
-  margin:0 auto;
-  padding:0 clamp(20px, 4vw, 60px);
-}
-
-.partner-network-head{
-  max-width:1200px;
-  margin:0 auto clamp(36px, 5vw, 56px);
-  text-align:center;
-}
-
-.partner-network-eyebrow{
-  margin:0 0 14px;
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:0.18em;
-  text-transform:uppercase;
-  color:#6d7880;
-}
-
-.partner-network-title{
-  margin:0 0 18px;
-  font-size:clamp(2.2rem, 4.4vw, 4.25rem);
-  line-height:0.96;
-  letter-spacing:-0.04em;
-  font-weight:300;
-  color:#052330;
-}
-
-.partner-network-text{
-  margin:0 auto;
-  max-width:68ch;
-  font-size:clamp(1rem, 1.1vw, 1.1rem);
-  line-height:1.7;
-  color:rgba(5,35,48,0.74);
-}
-
-.partner-network-grid{
-  display:grid;
-  grid-template-columns:repeat(4, minmax(0, 1fr));
-  gap:22px;
-  align-items:stretch;
-}
-
-.partner-card{
-  position:relative;
-  padding:28px 24px 24px;
-  background:#f6f8fa;
-  border:1px solid rgba(5,35,48,0.08);
-  min-height:280px;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start;
-  transition:
-    transform 220ms ease,
-    box-shadow 220ms ease,
-    border-color 220ms ease,
-    background 220ms ease;
-  clip-path:polygon(
-    0 0,
-    calc(100% - 22px) 0,
-    100% 22px,
-    100% 100%,
-    22px 100%,
-    0 calc(100% - 22px)
-  );
-}
-/*
-.partner-card::before{
-  content:"";
-  position:absolute;
-  top:-1px;
-  left:-1px;
-  width:72px;
-  height:72px;
-  background:linear-gradient(135deg, rgba(18,102,163,0.14), rgba(18,102,163,0));
-  pointer-events:none;
-}
-*/
-.partner-card:hover{
-  transform:translateY(-6px);
-  border-color:rgba(18,102,163,0.22);
-  box-shadow:0 20px 40px rgba(0,0,0,0.08);
-  background:#fbfcfd;
-}
-
-.partner-card-logo-wrap{
-  height:72px;
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  margin-bottom:24px;
-  padding-bottom:18px;
-  border-bottom:1px solid rgba(5,35,48,0.08);
-}
-
-.partner-card-logo{
-  max-width:160px;
-  max-height:42px;
-  width:auto;
-  height:auto;
-  object-fit:contain;
-  display:block;
-}
-
-.partner-card h3{
-  margin:0 0 12px;
-  font-size:1.2rem;
-  line-height:1.1;
-  letter-spacing:-0.02em;
-  font-weight:600;
-  color:#052330;
-}
-
-.partner-card p{
-  margin:0;
-  font-size:0.97rem;
-  line-height:1.6;
-  color:rgba(5,35,48,0.76);
-}
-
-/* Optional stagger for desktop */
-.partner-card:nth-child(2),
-.partner-card:nth-child(4){
-  margin-top:28px;
-}
-
-@media (max-width:1100px){
-  .partner-network-grid{
-    grid-template-columns:repeat(2, minmax(0, 1fr));
-  }
-
-  .partner-card:nth-child(2),
-  .partner-card:nth-child(4){
-    margin-top:0;
-  }
-}
-
-@media (max-width:680px){
-  .partner-network-section{
-    padding:64px 0;
-  }
-
-  .partner-network-shell{
-    width:min(1600px, calc(100% - 24px));
-    padding:0 16px;
-  }
-
-  .partner-network-grid{
-    grid-template-columns:1fr;
-    gap:16px;
-  }
-
-  .partner-card{
-    min-height:auto;
-    padding:24px 20px 20px;
-  }
-
-  .partner-card-logo-wrap{
-    height:64px;
-    margin-bottom:18px;
-    padding-bottom:14px;
-  }
-
-  .partner-card-logo{
-    max-width:140px;
-    max-height:38px;
-  }
-}
-</style>
 
 
 <style>
@@ -4955,11 +3218,10 @@ gsap.ticker.add(drawSmoke);
 
 
 
-
 <section class="contact-section">
   <div class="contact-header">
     <h2>
-      <span class="text-highlight">Contact</span> Us
+      <span class="text-highlight">Get In</span> Touch
     </h2>
     <div class="contact-divider"></div>
   </div>
@@ -4968,17 +3230,18 @@ gsap.ticker.add(drawSmoke);
 
     <!-- LEFT SIDE -->
     <div class="contact-left">
-      <h3>Reach Out to Learn More About Griffin Integrity Solutions</h3>
+      <h3>Ready to Transform or Protect Your Vehicle?</h3>
       <p>
-        If you’d like to learn more about Griffin Integrity Solutions, our technical advisory capabilities, or how we can support your organization, we’d be glad to connect.
-
-        Our team provides clear, practical guidance tailored to your operational and strategic needs.
+        Whether you're interested in a full color change wrap, commercial fleet branding,
+        paint protection film, window tint, or custom vehicle styling, our team is here
+        to help. Tell us about your vehicle and your goals, and we'll recommend the
+        right solution to bring your vision to life.
       </p>
     </div>
 
     <!-- RIGHT SIDE -->
     <div class="contact-right">
-      <h3>Tell Us a Bit About You</h3>
+      <h3>Request a Free Quote</h3>
 
       <form class="contact-form">
 
@@ -4994,30 +3257,33 @@ gsap.ticker.add(drawSmoke);
 
         <label>
           Email Address
-          <input type="email" name="email" placeholder="john@company.com" required>
+          <input type="email" name="email" placeholder="john@example.com" required>
         </label>
 
         <label>
-          Company Name
-          <input type="text" name="company" placeholder="Your Company Name">
+          Vehicle Make & Model
+          <input type="text" name="vehicle" placeholder="Ford F-150, Tesla Model Y, Porsche 911">
         </label>
 
         <label>
-          How Can We Help?
-          <textarea name="message" rows="5" placeholder="Tell us more about your project or needs..."></textarea>
+          Service Interested In
+          <input type="text" name="service" placeholder="Color Change Wrap, Commercial Wrap, PPF, Tint, etc.">
+        </label>
+
+        <label>
+          Tell Us About Your Project
+          <textarea name="message" rows="5" placeholder="Tell us about your vehicle, preferred color, design ideas, protection needs, or any questions you have..."></textarea>
         </label>
 
         <button type="submit" class="contact-btn">
-          Submit Inquiry
+          Get My Free Quote
         </button>
 
       </form>
     </div>
 
   </div>
-
 </section>
-
 
 
 <style>
@@ -5219,8 +3485,8 @@ html, body{
 
     <!-- Column 1 (Logo - spans 50%) -->
     <div class="footer-col footer-col--logo">
-      <img src="images/Griffin Integrity Logo wt.png" 
-           alt="Griffin Integrity Solutions" 
+      <img src="images/logo-icon.png" 
+           alt="Performante Wraps" 
            class="footer-logo">
     </div>
 
@@ -5228,9 +3494,10 @@ html, body{
     <div class="footer-col">
       <h4 class="footer-title">Services</h4>
       <ul class="footer-links">
-        <li><a href="#">Technical Consulting</a></li>
-        <li><a href="#">Advisory Services</a></li>
-        <li><a href="#">Affiliate Organizations</a></li>
+        <li><a href="#">Commercial Wraps</a></li>
+        <li><a href="#">Full Color Change Wraps</a></li>
+        <li><a href="#">Paint Protection Film</a></li>
+        <li><a href="#">Window Tint</a></li>
       </ul>
     </div>
 
@@ -5239,7 +3506,8 @@ html, body{
       <h4 class="footer-title">Company</h4>
       <ul class="footer-links">
         <li><a href="#">About</a></li>
-        <li><a href="#">News</a></li>
+        <li><a href="#">Gallery</a></li>
+        <li><a href="#">Our Process</a></li>
         <li><a href="#">Contact</a></li>
       </ul>
     </div>
@@ -5247,17 +3515,29 @@ html, body{
     <!-- Column 4 -->
     <div class="footer-col">
       <h4 class="footer-title">Reach Us</h4>
+      <ul class="footer-links">
+        <li><a href="tel:+10000000000">(000) 000-0000</a></li>
+        <li><a href="mailto:info@performantewraps.com">info@performantewraps.com</a></li>
+        <li><a href="#">Houston, TX</a></li>
+      </ul>
+
       <div class="footer-socials">
-        <a href="#" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24"><path d="M6 9h3v12H6zM7.5 4a1.75 1.75 0 110 3.5A1.75 1.75 0 017.5 4zM12 9h3v1.7c.4-.8 1.5-1.9 3.4-1.9 3.6 0 4.6 2.3 4.6 5.3V21h-3v-6.1c0-1.6-.6-2.7-2.1-2.7-1.3 0-2.1.9-2.4 1.7-.1.3-.1.7-.1 1V21h-3z" fill="currentColor"/></svg>
+        <a href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24">
+            <path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm0 2a3 3 0 00-3 3v10a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H7zm5 3.5A4.5 4.5 0 1112 16.5 4.5 4.5 0 0112 7.5zm0 2A2.5 2.5 0 1014.5 12 2.5 2.5 0 0012 9.5zM17.8 6.4a1.1 1.1 0 11-1.1 1.1 1.1 1.1 0 011.1-1.1z" fill="currentColor"/>
+          </svg>
         </a>
 
         <a href="#" aria-label="Facebook">
-          <svg viewBox="0 0 24 24"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v6h3v-6h3l1-3h-4v-2c0-.6.4-1 1-1z" fill="currentColor"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v6h3v-6h3l1-3h-4v-2c0-.6.4-1 1-1z" fill="currentColor"/>
+          </svg>
         </a>
 
-        <a href="#" aria-label="X">
-          <svg viewBox="0 0 24 24"><path d="M3 3l7 9-7 9h3l5-6 5 6h5l-7-9 7-9h-3l-5 6-5-6z" fill="currentColor"/></svg>
+        <a href="#" aria-label="TikTok">
+          <svg viewBox="0 0 24 24">
+            <path d="M16.5 2c.4 2.8 2 4.6 4.5 4.9v3.1c-1.7.1-3.2-.4-4.5-1.3v6.6c0 4-2.7 6.7-6.5 6.7-3.4 0-6-2.5-6-5.8 0-3.5 2.8-6 6.5-5.8.4 0 .8.1 1.1.2v3.3c-.4-.2-.8-.3-1.3-.3-1.6 0-2.8 1-2.8 2.5s1.1 2.5 2.6 2.5c1.7 0 2.8-1.1 2.8-3V2h3.6z" fill="currentColor"/>
+          </svg>
         </a>
       </div>
     </div>
@@ -5267,11 +3547,11 @@ html, body{
   <!-- Bottom Row -->
   <div class="footer-bottom">
     <div class="footer-copy">
-      © 2026 Griffin Integrity Solutions, LLC. All Rights Reserved
+      © 2026 Performante Wraps. All Rights Reserved
     </div>
 
     <div class="footer-credit">
-      Website by <a href="https://mcvdesign.com" target="_blank">MCVDesign</a>
+      Website by <a href="https://mcvdesign.com" target="_blank">MCVdesign</a>
     </div>
   </div>
 
@@ -5291,7 +3571,7 @@ html, body{
   background-position: center;
   background-repeat: no-repeat;
 
-  color:#fff;
+  color:#000000;
   padding: clamp(60px, 8vw, 100px) clamp(18px, 4vw, 70px) 30px;
 
 
@@ -5322,8 +3602,9 @@ html, body{
   width:200px;
   height:auto;
   object-fit:contain;
-}
 
+  filter: brightness(0) saturate(100%);
+}
 /* Titles */
 .footer-title{
   font-size:16px;
@@ -5332,7 +3613,7 @@ html, body{
   margin-bottom:18px;
   font-weight:400;
   opacity:.5;
-  color:rgb(255, 255, 255);
+  color:rgb(0, 0, 0);
 }
 
 /* Links */
@@ -5348,7 +3629,7 @@ html, body{
 
 .footer-links a{
   text-decoration:none;
-  color:#ffffff;
+  color:#000000;
   font-size:16px;
   transition: color .2s ease;
 }
@@ -5367,7 +3648,7 @@ html, body{
 .footer-socials a{
   width:24px;
   height:24px;
-  color:#ffffffcc;
+  color:#000000cc;
   transition: color .2s ease, transform .2s ease;
 }
 
@@ -5392,10 +3673,10 @@ html, body{
   border-top: 1px solid rgba(255, 255, 255, 0);
 
   font-size:16px;
-  color:#ffffff99;
+  color:#00000099;
 }
 .footer-credit a{
-  color:#ffffffcc;
+  color:#000000cc;
   text-decoration:none;
   font-weight:600;
   transition: color .2s ease;
@@ -6537,7 +4818,7 @@ document.addEventListener("DOMContentLoaded", () => {
       filter: "grayscale(100%) contrast(1.15) brightness(0.85) blur(0px)",
       ease: "none"
     },
-    0
+    0.1
   );
 
   if (stackflowMain) {
