@@ -2838,7 +2838,7 @@ if (symbolContainer) {
               child.material.color
             ){
               child.material.color.set(
-                "#3a3a3a"
+                "#4a4a4a"
               );
             }
 
@@ -2847,7 +2847,7 @@ if (symbolContainer) {
               child.material
             ){
               child.material.metalness =
-                0.35;
+                0.75;
             }
 
             if(
@@ -2855,12 +2855,13 @@ if (symbolContainer) {
               child.material
             ){
               child.material.roughness =
-                0.55;
+                0.38;
             }
           }
 
           const originalPosition =
             child.position.clone();
+            
 
           const partBox =
             new THREE.Box3()
