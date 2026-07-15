@@ -505,6 +505,8 @@
   z-index: 2;
   pointer-events: none;
 
+  opacity: 0.08!important;
+
   filter: grayscale(100%) contrast(1.15) brightness(0.8);
 
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
@@ -918,55 +920,7 @@
   </main>
 </div>
 
-<style>
-  /* The parent section must be positioned */
-.hero,
-.terrain-section{
-  position: relative;
-  min-height: 100vh;
-  overflow: hidden;
-  background: #050505;
-}
 
-/* Full-screen terrain layer */
-.terrain-background{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  z-index: 1;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-/* Three.js container */
-#terrain3d{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  pointer-events: none;
-}
-
-/* Generated Three.js canvas */
-#terrain3d canvas{
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-  pointer-events: none;
-
-  /*
-    Optional final CSS opacity.
-    Keep this at 1 unless you need the entire
-    terrain canvas to become more transparent.
-  */
-  opacity: 1;
-}
-</style>
 
 
 <script type="importmap">
@@ -978,170 +932,166 @@
 }
 </script>
 
+<style>
+.hero-3d-center{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 4;
+  pointer-events: none;
+}
+
+#cube3d{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 100vw;
+  min-height: 100vh;
+  pointer-events: none;
+}
+
+#cube3d canvas{
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+}
+
+@media (max-width: 760px){
+  #cube3d{
+    width: 100%;
+    height: 100%;
+    min-width: 100vw;
+    min-height: 100vh;
+  }
+}
+</style>
+
 <script type="module">
 import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-/* =====================================================
-   TERRAIN CONTAINER
-===================================================== */
+const container = document.getElementById("cube3d");
 
-const terrainContainer =
-  document.getElementById("terrain3d");
+if (container) {
+  /* =========================
+     BASIC SCENE
+  ========================= */
 
-if (terrainContainer) {
+  const scene = new THREE.Scene();
 
-  /* =====================================================
-     SCENE
-  ===================================================== */
-
-  const terrainScene =
-    new THREE.Scene();
-
-  /*
-    Transparent background so any video, image,
-    gradient or color behind the terrain remains visible.
-  */
-  terrainScene.background =
-    null;
-
-  /* =====================================================
-     CAMERA
-  ===================================================== */
-
-  const terrainCamera =
-    new THREE.PerspectiveCamera(
-      42,
-      Math.max(
-        terrainContainer.clientWidth,
-        1
-      ) /
-      Math.max(
-        terrainContainer.clientHeight,
-        1
-      ),
-      0.1,
-      320
-    );
-
-  /*
-    Normal resting camera position.
-  */
-  const cameraStart = {
-    x: 0,
-    y: 3.2,
-    z: 12.5
-  };
-
-  /*
-    Camera position near the end of the hero scroll.
-  */
-  const cameraTarget = {
-    x: 0,
-    y: 1.9,
-    z: 4.5
-  };
-
-  /*
-    Start the camera slightly higher so it can
-    gently come down during the intro.
-  */
-  const cameraIntroHeight =
-    1.15;
-
-  terrainCamera.position.set(
-    cameraStart.x,
-    cameraStart.y +
-      cameraIntroHeight,
-    cameraStart.z
+  const camera = new THREE.PerspectiveCamera(
+    42,
+    Math.max(container.clientWidth, 1) /
+      Math.max(container.clientHeight, 1),
+    0.1,
+    300
   );
 
-  terrainCamera.lookAt(
-    0,
-    -0.05,
-    -15
+  /*
+    Low, slightly elevated camera looking toward
+    the horizon rather than directly downward.
+  */
+  camera.position.set(0, 3.2, 12.5);
+  camera.lookAt(0, -0.6, -12);
+
+  const renderer = new THREE.WebGLRenderer({
+    alpha: true,
+    antialias: true,
+    powerPreference: "high-performance"
+  });
+
+  renderer.setClearColor(0x000000, 0);
+
+  renderer.setSize(
+    Math.max(container.clientWidth, 1),
+    Math.max(container.clientHeight, 1)
   );
 
-  /* =====================================================
-     RENDERER
-  ===================================================== */
-
-  const terrainRenderer =
-    new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: true,
-      powerPreference:
-        "high-performance"
-    });
-
-  terrainRenderer.setClearColor(
-    0x000000,
-    0
+  renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio || 1, 2)
   );
 
-  terrainRenderer.setPixelRatio(
-    Math.min(
-      window.devicePixelRatio || 1,
-      2
-    )
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  container.appendChild(renderer.domElement);
+
+  /* =========================
+     LIGHTING
+  ========================= */
+
+  const ambientLight = new THREE.AmbientLight(
+    0xffffff,
+    0.85
   );
 
-  terrainRenderer.outputColorSpace =
-    THREE.SRGBColorSpace;
+  scene.add(ambientLight);
 
-  terrainRenderer.toneMapping =
-    THREE.ACESFilmicToneMapping;
+  const keyLight = new THREE.DirectionalLight(
+    0xffffff,
+    7
+  );
+
+  keyLight.position.set(5, 7, 10);
+  scene.add(keyLight);
+
+  const frontLight = new THREE.DirectionalLight(
+    0xffffff,
+    4
+  );
+
+  frontLight.position.set(0, 1, 12);
+  scene.add(frontLight);
+
+  const rimLight = new THREE.DirectionalLight(
+    0xffffff,
+    5
+  );
+
+  rimLight.position.set(-4, 7, -10);
+  scene.add(rimLight);
+
+  /* =========================
+     ALIEN TERRAIN GROUP
+  ========================= */
+
+  const terrainGroup = new THREE.Group();
+
+  terrainGroup.position.set(0, 0, 0);
+
+  scene.add(terrainGroup);
 
   /*
-    Increase this to brighten the terrain.
+    Wide plane with enough depth to stretch
+    far beyond the camera horizon.
   */
-  terrainRenderer.toneMappingExposure =
-    1.55;
+  const terrainWidth = 130;
+  const terrainDepth = 190;
 
-  terrainContainer.appendChild(
-    terrainRenderer.domElement
+  const terrainSegmentsX = 150;
+  const terrainSegmentsY = 220;
+
+  const terrainGeometry = new THREE.PlaneGeometry(
+    terrainWidth,
+    terrainDepth,
+    terrainSegmentsX,
+    terrainSegmentsY
   );
-
-  /* =====================================================
-     TERRAIN GEOMETRY
-  ===================================================== */
-
-  const terrainWidth =
-    150;
-
-  const terrainDepth =
-    220;
-
-  const terrainGeometry =
-    new THREE.PlaneGeometry(
-      terrainWidth,
-      terrainDepth,
-      170,
-      250
-    );
-
-  terrainGeometry.rotateX(
-    -Math.PI / 2
-  );
-
-  /* =====================================================
-     TERRAIN BASE POSITIONS
-  ===================================================== */
-
-  const terrainBaseY =
-    -3.3;
-
-  const terrainBaseZ =
-    -40;
 
   /*
-    Terrain begins lower during page-load intro.
+    PlaneGeometry begins vertically in XY space.
+    Rotate it into an X/Z landscape.
   */
-  const terrainIntroRise =
-    1.05;
+  terrainGeometry.rotateX(-Math.PI / 2);
 
-  /* =====================================================
-     TERRAIN UNIFORMS
-  ===================================================== */
+  /* =========================
+     TERRAIN WIREFRAME SHADER
+  ========================= */
 
   const terrainUniforms = {
     uTime: {
@@ -1149,628 +1099,322 @@ if (terrainContainer) {
     },
 
     uNearColor: {
-      value:
-        new THREE.Color(
-          0x858585
-        )
+      value: new THREE.Color(0x6a6a6a)
     },
 
     uFarColor: {
-      value:
-        new THREE.Color(
-          0x292929
-        )
+      value: new THREE.Color(0x171717)
     },
 
     uPeakColor: {
-      value:
-        new THREE.Color(
-          0xc0c0c0
-        )
+      value: new THREE.Color(0x989898)
     },
 
-    /*
-      Final wireframe opacity.
-    */
-    uWireOpacity: {
-      value: 0
+    uOpacity: {
+      value: 0.42
     }
   };
 
-  const surfaceUniforms = {
-    uTime:
-      terrainUniforms.uTime,
+  const terrainVertexShader = `
+    uniform float uTime;
 
-    uRockDark: {
-      value:
-        new THREE.Color(
-          0x181818
-        )
-    },
+    varying float vHeight;
+    varying float vDepth;
+    varying vec3 vWorldPosition;
 
-    uRockMid: {
-      value:
-        new THREE.Color(
-          0x5c5c5c
-        )
-    },
-
-    uRockLight: {
-      value:
-        new THREE.Color(
-          0xaaaaaa
-        )
-    },
-
-    /*
-      Final terrain surface opacity.
-    */
-    uSurfaceOpacity: {
-      value: 0
-    }
-  };
-
-  /*
-    Final opacity values after the intro finishes.
-  */
-  const finalWireOpacity =
-    0;
-
-  const finalSurfaceOpacity =
-    0.58;
-
-  /*
-    The terrain begins at this percentage
-    of its final opacity.
-  */
-  const introStartOpacity =
-    0.02;
-
-  /* =====================================================
-     TERRAIN HEIGHT FUNCTION
-  ===================================================== */
-
-  const terrainHeightShader = `
-    float hill(
-      vec2 point,
-      vec2 center,
-      vec2 spread,
-      float elevation
-    ){
-      vec2 difference =
-        (point - center) /
-        spread;
-
-      return
-        exp(
-          -dot(
-            difference,
-            difference
-          )
-        ) *
-        elevation;
-    }
-
-    float terrainHeight(
-      vec2 point
-    ){
-      float x =
-        point.x;
-
-      float z =
-        point.y;
-
-      float height =
-        0.0;
+    float terrainHeight(vec2 point) {
+      float x = point.x;
+      float z = point.y;
 
       /*
-        Broad rolling landscape.
+        Large rolling formations.
       */
-      height +=
+      float largeHills =
+        sin(x * 0.095 + z * 0.035) * 1.65;
+
+      /*
+        Hills crossing in another direction.
+      */
+      float crossingHills =
+        cos(x * 0.055 - z * 0.072) * 1.15;
+
+      /*
+        Smaller alien ridges.
+      */
+      float ridges =
+        sin(x * 0.24 + z * 0.13) * 0.34;
+
+      /*
+        Additional detail that stops the terrain
+        from looking like uniform ocean waves.
+      */
+      float detail =
+        cos(x * 0.42 - z * 0.17) * 0.16;
+
+      /*
+        Very subtle animated motion.
+      */
+      float movement =
         sin(
-          x * 0.075 +
-          z * 0.032
-        ) *
-        1.25;
-
-      height +=
-        cos(
-          x * 0.052 -
-          z * 0.061
-        ) *
-        0.92;
-
-      height +=
-        sin(
-          x * 0.145 +
-          z * 0.098
-        ) *
-        0.4;
+          z * 0.055 -
+          uTime * 0.18 +
+          x * 0.035
+        ) * 0.24;
 
       /*
-        Wide natural hills.
-      */
-      height +=
-        hill(
-          point,
-          vec2(
-            -34.0,
-            -24.0
-          ),
-          vec2(
-            28.0,
-            40.0
-          ),
-          2.4
-        );
-
-      height +=
-        hill(
-          point,
-          vec2(
-            36.0,
-            -30.0
-          ),
-          vec2(
-            30.0,
-            44.0
-          ),
-          2.7
-        );
-
-      height +=
-        hill(
-          point,
-          vec2(
-            -48.0,
-            -78.0
-          ),
-          vec2(
-            36.0,
-            54.0
-          ),
-          3.0
-        );
-
-      height +=
-        hill(
-          point,
-          vec2(
-            48.0,
-            -84.0
-          ),
-          vec2(
-            38.0,
-            58.0
-          ),
-          3.2
-        );
-
-      height +=
-        hill(
-          point,
-          vec2(
-            -18.0,
-            -118.0
-          ),
-          vec2(
-            44.0,
-            62.0
-          ),
-          2.2
-        );
-
-      height +=
-        hill(
-          point,
-          vec2(
-            25.0,
-            -135.0
-          ),
-          vec2(
-            48.0,
-            68.0
-          ),
-          2.4
-        );
-
-      /*
-        Rocky variation.
-      */
-      height +=
-        abs(
-          sin(
-            x * 0.11 +
-            z * 0.052
-          )
-        ) *
-        0.38;
-
-      height +=
-        abs(
-          cos(
-            x * 0.074 -
-            z * 0.094
-          )
-        ) *
-        0.27;
-
-      /*
-        Small surface detail.
-      */
-      height +=
-        sin(
-          x * 0.29 +
-          z * 0.21
-        ) *
-        0.15;
-
-      height +=
-        cos(
-          x * 0.47 -
-          z * 0.35
-        ) *
-        0.08;
-
-      /*
-        Very subtle terrain motion.
-      */
-      height +=
-        sin(
-          z * 0.045 -
-          uTime * 0.035 +
-          x * 0.022
-        ) *
-        0.05;
-
-      /*
-        Keep center lower behind content.
+        Create a lower central valley where the
+        logo sits, while preserving hills at sides.
       */
       float sideStrength =
-        smoothstep(
-          5.0,
-          30.0,
-          abs(x)
-        );
+        smoothstep(3.0, 24.0, abs(x));
 
-      height *=
-        mix(
-          0.58,
-          1.0,
-          sideStrength
-        );
+      float height =
+        largeHills +
+        crossingHills +
+        ridges +
+        detail +
+        movement;
+
+      height *= mix(0.38, 1.05, sideStrength);
 
       /*
-        Reduce foreground obstruction.
+        Reduce terrain nearest the camera so it
+        does not obscure the primary model.
       */
-      float foregroundStrength =
-        smoothstep(
-          2.0,
-          38.0,
-          -z
-        );
+      float distanceStrength =
+        smoothstep(-18.0, 50.0, z);
 
-      height *=
-        mix(
-          0.48,
-          1.0,
-          foregroundStrength
-        );
-
-      /*
-        Flatten the far horizon.
-      */
-      float horizonFlatten =
-        1.0 -
-        smoothstep(
-          75.0,
-          125.0,
-          -z
-        );
-
-      height *=
-        mix(
-          0.34,
-          1.0,
-          horizonFlatten
-        );
+      height *= mix(0.55, 1.2, distanceStrength);
 
       return height;
     }
+
+    void main() {
+      vec3 displaced = position;
+
+      float height = terrainHeight(
+        vec2(position.x, position.z)
+      );
+
+      displaced.y += height;
+
+      vec4 worldPosition =
+        modelMatrix *
+        vec4(displaced, 1.0);
+
+      vec4 viewPosition =
+        viewMatrix *
+        worldPosition;
+
+      vHeight = height;
+      vDepth = -viewPosition.z;
+      vWorldPosition = worldPosition.xyz;
+
+      gl_Position =
+        projectionMatrix *
+        viewPosition;
+    }
   `;
 
-  /* =====================================================
-     WIREFRAME MATERIAL
-  ===================================================== */
+  const terrainFragmentShader = `
+    uniform vec3 uNearColor;
+    uniform vec3 uFarColor;
+    uniform vec3 uPeakColor;
+    uniform float uOpacity;
+
+    varying float vHeight;
+    varying float vDepth;
+    varying vec3 vWorldPosition;
+
+    void main() {
+      float distanceFade =
+        smoothstep(8.0, 115.0, vDepth);
+
+      vec3 color =
+        mix(
+          uNearColor,
+          uFarColor,
+          distanceFade
+        );
+
+      float peakAmount =
+        smoothstep(0.8, 3.4, vHeight);
+
+      color =
+        mix(
+          color,
+          uPeakColor,
+          peakAmount * 0.28
+        );
+
+      /*
+        Fade the grid before the far edge becomes
+        visible and fade the very nearest portion.
+      */
+      float farFade =
+        1.0 -
+        smoothstep(
+          82.0,
+          130.0,
+          vDepth
+        );
+
+      float nearFade =
+        smoothstep(
+          5.0,
+          14.0,
+          vDepth
+        );
+
+      /*
+        Fade the side edges too.
+      */
+      float sideFade =
+        1.0 -
+        smoothstep(
+          46.0,
+          64.0,
+          abs(vWorldPosition.x)
+        );
+
+      float alpha =
+        uOpacity *
+        farFade *
+        nearFade *
+        sideFade;
+
+      if (alpha < 0.01) {
+        discard;
+      }
+
+      gl_FragColor =
+        vec4(color, alpha);
+    }
+  `;
 
   const terrainWireMaterial =
     new THREE.ShaderMaterial({
-      uniforms:
-        terrainUniforms,
-
-      transparent:
-        true,
-
-      depthWrite:
-        false,
-
-      side:
-        THREE.DoubleSide,
-
-      wireframe:
-        true,
-
-      vertexShader: `
-        uniform float uTime;
-
-        varying float vHeight;
-        varying float vDepth;
-        varying vec3 vWorldPosition;
-
-        ${terrainHeightShader}
-
-        void main(){
-          vec3 displaced =
-            position;
-
-          float height =
-            terrainHeight(
-              vec2(
-                position.x,
-                position.z
-              )
-            );
-
-          displaced.y +=
-            height;
-
-          vec4 worldPosition =
-            modelMatrix *
-            vec4(
-              displaced,
-              1.0
-            );
-
-          vec4 viewPosition =
-            viewMatrix *
-            worldPosition;
-
-          vHeight =
-            height;
-
-          vDepth =
-            -viewPosition.z;
-
-          vWorldPosition =
-            worldPosition.xyz;
-
-          gl_Position =
-            projectionMatrix *
-            viewPosition;
-        }
-      `,
-
-      fragmentShader: `
-        uniform vec3 uNearColor;
-        uniform vec3 uFarColor;
-        uniform vec3 uPeakColor;
-        uniform float uWireOpacity;
-
-        varying float vHeight;
-        varying float vDepth;
-        varying vec3 vWorldPosition;
-
-        void main(){
-          float distanceFade =
-            smoothstep(
-              8.0,
-              120.0,
-              vDepth
-            );
-
-          vec3 color =
-            mix(
-              uNearColor,
-              uFarColor,
-              distanceFade
-            );
-
-          float peakAmount =
-            smoothstep(
-              0.7,
-              3.5,
-              vHeight
-            );
-
-          color =
-            mix(
-              color,
-              uPeakColor,
-              peakAmount *
-              0.38
-            );
-
-          float farFade =
-            1.0 -
-            smoothstep(
-              88.0,
-              145.0,
-              vDepth
-            );
-
-          float nearFade =
-            smoothstep(
-              4.0,
-              13.0,
-              vDepth
-            );
-
-          float sideFade =
-            1.0 -
-            smoothstep(
-              52.0,
-              72.0,
-              abs(
-                vWorldPosition.x
-              )
-            );
-
-          float alpha =
-            uWireOpacity *
-            farFade *
-            nearFade *
-            sideFade;
-
-          if(
-            alpha <
-            0.01
-          ){
-            discard;
-          }
-
-          gl_FragColor =
-            vec4(
-              color,
-              alpha
-            );
-        }
-      `
+      uniforms: terrainUniforms,
+      vertexShader: terrainVertexShader,
+      fragmentShader: terrainFragmentShader,
+      wireframe: true,
+      transparent: true,
+      depthWrite: false,
+      side: THREE.DoubleSide
     });
 
-  const terrainWire =
-    new THREE.Mesh(
-      terrainGeometry,
-      terrainWireMaterial
-    );
-
-  terrainWire.position.set(
-    0,
-    terrainBaseY -
-      terrainIntroRise,
-    terrainBaseZ
+  const terrainWire = new THREE.Mesh(
+    terrainGeometry,
+    terrainWireMaterial
   );
 
-  terrainScene.add(
-    terrainWire
-  );
+  /*
+    The plane extends from approximately -95 to +95
+    in local Z. Moving its center backward puts most
+    of it behind the model and toward the horizon.
+  */
+  terrainWire.position.set(0, -3.15, -42);
 
-  /* =====================================================
-     ROCK SURFACE MATERIAL
-  ===================================================== */
+  terrainGroup.add(terrainWire);
 
-  const terrainSurfaceMaterial =
+  /* =========================
+     DARK TERRAIN SURFACE
+  ========================= */
+
+  const surfaceUniforms = {
+    uTime: terrainUniforms.uTime,
+    uColor: {
+      value: new THREE.Color(0x030303)
+    },
+    uOpacity: {
+      value: 0.5
+    }
+  };
+
+  const surfaceMaterial =
     new THREE.ShaderMaterial({
-      uniforms:
-        surfaceUniforms,
-
-      transparent:
-        true,
-
-      depthWrite:
-        false,
-
-      side:
-        THREE.DoubleSide,
+      uniforms: surfaceUniforms,
 
       vertexShader: `
         uniform float uTime;
 
-        varying float vHeight;
         varying float vDepth;
         varying vec3 vWorldPosition;
-        varying vec3 vTerrainNormal;
 
-        ${terrainHeightShader}
+        float terrainHeight(vec2 point) {
+          float x = point.x;
+          float z = point.y;
 
-        void main(){
-          vec3 displaced =
-            position;
+          float largeHills =
+            sin(x * 0.095 + z * 0.035) * 1.65;
+
+          float crossingHills =
+            cos(x * 0.055 - z * 0.072) * 1.15;
+
+          float ridges =
+            sin(x * 0.24 + z * 0.13) * 0.34;
+
+          float detail =
+            cos(x * 0.42 - z * 0.17) * 0.16;
+
+          float movement =
+            sin(
+              z * 0.055 -
+              uTime * 0.18 +
+              x * 0.035
+            ) * 0.24;
+
+          float sideStrength =
+            smoothstep(3.0, 24.0, abs(x));
 
           float height =
-            terrainHeight(
-              vec2(
-                position.x,
-                position.z
-              )
+            largeHills +
+            crossingHills +
+            ridges +
+            detail +
+            movement;
+
+          height *=
+            mix(
+              0.38,
+              1.05,
+              sideStrength
             );
 
-          displaced.y +=
-            height;
-
-          float sampleDistance =
-            0.42;
-
-          float nextHeightX =
-            terrainHeight(
-              vec2(
-                position.x +
-                sampleDistance,
-                position.z
-              )
+          float distanceStrength =
+            smoothstep(
+              -18.0,
+              50.0,
+              z
             );
 
-          float nextHeightZ =
-            terrainHeight(
-              vec2(
-                position.x,
-                position.z +
-                sampleDistance
-              )
+          height *=
+            mix(
+              0.55,
+              1.2,
+              distanceStrength
             );
 
-          vec3 tangentX =
-            normalize(
-              vec3(
-                sampleDistance,
-                nextHeightX -
-                height,
-                0.0
-              )
-            );
+          return height;
+        }
 
-          vec3 tangentZ =
-            normalize(
-              vec3(
-                0.0,
-                nextHeightZ -
-                height,
-                sampleDistance
-              )
-            );
+        void main() {
+          vec3 displaced = position;
 
-          vec3 terrainNormal =
-            normalize(
-              cross(
-                tangentZ,
-                tangentX
-              )
-            );
+          displaced.y += terrainHeight(
+            vec2(position.x, position.z)
+          );
 
           vec4 worldPosition =
             modelMatrix *
-            vec4(
-              displaced,
-              1.0
-            );
+            vec4(displaced, 1.0);
 
           vec4 viewPosition =
             viewMatrix *
             worldPosition;
 
-          vHeight =
-            height;
-
-          vDepth =
-            -viewPosition.z;
-
-          vWorldPosition =
-            worldPosition.xyz;
-
-          vTerrainNormal =
-            normalize(
-              normalMatrix *
-              terrainNormal
-            );
+          vDepth = -viewPosition.z;
+          vWorldPosition = worldPosition.xyz;
 
           gl_Position =
             projectionMatrix *
@@ -1779,312 +1423,113 @@ if (terrainContainer) {
       `,
 
       fragmentShader: `
-        uniform vec3 uRockDark;
-        uniform vec3 uRockMid;
-        uniform vec3 uRockLight;
-        uniform float uSurfaceOpacity;
+        uniform vec3 uColor;
+        uniform float uOpacity;
 
-        varying float vHeight;
         varying float vDepth;
         varying vec3 vWorldPosition;
-        varying vec3 vTerrainNormal;
 
-        float hash(
-          vec2 point
-        ){
-          return fract(
-            sin(
-              dot(
-                point,
-                vec2(
-                  127.1,
-                  311.7
-                )
-              )
-            ) *
-            43758.5453
-          );
-        }
-
-        float noise(
-          vec2 point
-        ){
-          vec2 cell =
-            floor(
-              point
-            );
-
-          vec2 local =
-            fract(
-              point
-            );
-
-          local =
-            local *
-            local *
-            (
-              3.0 -
-              2.0 *
-              local
-            );
-
-          float a =
-            hash(
-              cell
-            );
-
-          float b =
-            hash(
-              cell +
-              vec2(
-                1.0,
-                0.0
-              )
-            );
-
-          float c =
-            hash(
-              cell +
-              vec2(
-                0.0,
-                1.0
-              )
-            );
-
-          float d =
-            hash(
-              cell +
-              vec2(
-                1.0,
-                1.0
-              )
-            );
-
-          return mix(
-            mix(
-              a,
-              b,
-              local.x
-            ),
-            mix(
-              c,
-              d,
-              local.x
-            ),
-            local.y
-          );
-        }
-
-        void main(){
-          vec3 normal =
-            normalize(
-              vTerrainNormal
-            );
-
-          vec3 mainLight =
-            normalize(
-              vec3(
-                -0.48,
-                0.86,
-                0.30
-              )
-            );
-
-          vec3 secondaryLight =
-            normalize(
-              vec3(
-                0.72,
-                0.36,
-                0.40
-              )
-            );
-
-          float diffuse =
-            max(
-              dot(
-                normal,
-                mainLight
-              ),
-              0.0
-            );
-
-          float secondary =
-            max(
-              dot(
-                normal,
-                secondaryLight
-              ),
-              0.0
-            );
-
-          float broadNoise =
-            noise(
-              vWorldPosition.xz *
-              0.18
-            );
-
-          float fineNoise =
-            noise(
-              vWorldPosition.xz *
-              0.85
-            );
-
-          float heightAmount =
-            smoothstep(
-              -1.5,
-              5.0,
-              vHeight
-            );
-
-          vec3 rockColor =
-            mix(
-              uRockDark,
-              uRockMid,
-              0.28 +
-              diffuse *
-              0.88
-            );
-
-          rockColor =
-            mix(
-              rockColor,
-              uRockLight,
-              heightAmount *
-              0.30
-            );
-
-          rockColor +=
-            secondary *
-            0.11;
-
-          rockColor *=
-            0.92 +
-            broadNoise *
-            0.30 +
-            fineNoise *
-            0.09;
-
+        void main() {
           float farFade =
             1.0 -
             smoothstep(
-              88.0,
-              145.0,
+              80.0,
+              130.0,
               vDepth
             );
 
           float nearFade =
             smoothstep(
               4.0,
-              13.0,
+              14.0,
               vDepth
             );
 
           float sideFade =
             1.0 -
             smoothstep(
-              52.0,
-              72.0,
-              abs(
-                vWorldPosition.x
-              )
+              45.0,
+              65.0,
+              abs(vWorldPosition.x)
             );
 
           float alpha =
-            uSurfaceOpacity *
+            uOpacity *
             farFade *
             nearFade *
             sideFade;
 
-          if(
-            alpha <
-            0.01
-          ){
+          if (alpha < 0.01) {
             discard;
           }
 
           gl_FragColor =
-            vec4(
-              rockColor,
-              alpha
-            );
+            vec4(uColor, alpha);
         }
-      `
+      `,
+
+      transparent: true,
+      depthWrite: false,
+      side: THREE.DoubleSide
     });
 
-  const terrainSurface =
-    new THREE.Mesh(
-      terrainGeometry,
-      terrainSurfaceMaterial
-    );
-
-  terrainSurface.position.set(
-    0,
-    terrainBaseY -
-      terrainIntroRise -
-      0.04,
-    terrainBaseZ
+  const terrainSurface = new THREE.Mesh(
+    terrainGeometry,
+    surfaceMaterial
   );
 
-  terrainScene.add(
-    terrainSurface
+  terrainSurface.position.copy(
+    terrainWire.position
   );
 
-  /* =====================================================
+  /*
+    Move the dark surface slightly beneath the
+    wireframe to prevent depth flickering.
+  */
+  terrainSurface.position.y -= 0.035;
+
+  terrainGroup.add(terrainSurface);
+
+  /* =========================
      HORIZON GLOW
-  ===================================================== */
+  ========================= */
 
   const glowGeometry =
     new THREE.PlaneGeometry(
-      130,
-      28
+      100,
+      26
     );
 
   const glowMaterial =
     new THREE.ShaderMaterial({
-      transparent:
-        true,
-
-      depthWrite:
-        false,
+      transparent: true,
+      depthWrite: false,
 
       uniforms: {
         uGlowColor: {
           value:
-            new THREE.Color(
-              0x707070
-            )
-        },
-
-        uGlowOpacity: {
-          value:
-            0
+            new THREE.Color(0x343434)
         }
       },
 
       vertexShader: `
         varying vec2 vUv;
 
-        void main(){
-          vUv =
-            uv;
+        void main() {
+          vUv = uv;
 
           gl_Position =
             projectionMatrix *
             modelViewMatrix *
-            vec4(
-              position,
-              1.0
-            );
+            vec4(position, 1.0);
         }
       `,
 
       fragmentShader: `
         varying vec2 vUv;
-
         uniform vec3 uGlowColor;
-        uniform float uGlowOpacity;
 
-        void main(){
+        void main() {
           float vertical =
             smoothstep(
               0.0,
@@ -2103,13 +1548,13 @@ if (terrainContainer) {
           float horizontal =
             smoothstep(
               0.0,
-              0.18,
+              0.22,
               vUv.x
             ) *
             (
               1.0 -
               smoothstep(
-                0.82,
+                0.78,
                 1.0,
                 vUv.x
               )
@@ -2118,7 +1563,7 @@ if (terrainContainer) {
           float alpha =
             vertical *
             horizontal *
-            uGlowOpacity;
+            0.22;
 
           gl_FragColor =
             vec4(
@@ -2129,563 +1574,22 @@ if (terrainContainer) {
       `
     });
 
-  const horizonGlow =
-    new THREE.Mesh(
-      glowGeometry,
-      glowMaterial
-    );
+  const horizonGlow = new THREE.Mesh(
+    glowGeometry,
+    glowMaterial
+  );
 
   horizonGlow.position.set(
     0,
-    -1.0,
-    -88
+    -0.7,
+    -72
   );
 
-  terrainScene.add(
-    horizonGlow
-  );
-
-  /* =====================================================
-     POINTER PARALLAX
-  ===================================================== */
-
-  let targetTerrainX =
-    0;
-
-  let targetTerrainRotation =
-    0;
-
-  window.addEventListener(
-    "pointermove",
-    function(event){
-      const normalizedX =
-        event.clientX /
-        Math.max(
-          window.innerWidth,
-          1
-        ) -
-        0.5;
-
-      /*
-        Reduce these for less pointer movement.
-      */
-      targetTerrainX =
-        normalizedX *
-        -0.55;
-
-      targetTerrainRotation =
-        normalizedX *
-        0.006;
-    }
-  );
-
-  /* =====================================================
-     SCROLL PROGRESS
-  ===================================================== */
-
-  let scrollProgress =
-    0;
-
-  function updateScrollProgress(){
-    const section =
-      terrainContainer.closest(
-        ".hero, .terrain-section, .intro-wrap"
-      );
-
-    if(
-      !section
-    ){
-      scrollProgress =
-        0;
-
-      return;
-    }
-
-    const rect =
-      section.getBoundingClientRect();
-
-    const scrollDistance =
-      Math.max(
-        section.offsetHeight -
-        window.innerHeight,
-        window.innerHeight
-      );
-
-    scrollProgress =
-      THREE.MathUtils.clamp(
-        -rect.top /
-        Math.max(
-          scrollDistance,
-          1
-        ),
-        0,
-        1
-      );
-  }
-
-  window.addEventListener(
-    "scroll",
-    updateScrollProgress,
-    {
-      passive: true
-    }
-  );
-
-  updateScrollProgress();
-
-  /* =====================================================
-     PAGE-LOAD INTRO
-  ===================================================== */
-
-  const terrainIntroDuration =
-    2.3;
-
-  let introProgress =
-    0;
-
-  /*
-    Prevent the entrance from beginning before the
-    page is ready.
-  */
-  let introStarted =
-    false;
-
-  window.addEventListener(
-    "load",
-    function(){
-      introStarted =
-        true;
-    }
-  );
-
-  /*
-    Also allow it to run when script loads after
-    the page has already completed loading.
-  */
-  if(
-    document.readyState ===
-    "complete"
-  ){
-    introStarted =
-      true;
-  }
-
-  /* =====================================================
-     ANIMATION
-  ===================================================== */
-
-  const terrainClock =
-    new THREE.Clock();
-
-  function animateTerrain(){
-    requestAnimationFrame(
-      animateTerrain
-    );
-
-    const deltaTime =
-      Math.min(
-        terrainClock.getDelta(),
-        0.05
-      );
-
-    const elapsedTime =
-      terrainClock.elapsedTime;
-
-    terrainUniforms.uTime.value =
-      elapsedTime;
-
-    /* ===================================================
-       INTRO PROGRESS
-    =================================================== */
-
-    if(
-      introStarted
-    ){
-      introProgress +=
-        deltaTime /
-        terrainIntroDuration;
-    }
-
-    introProgress =
-      THREE.MathUtils.clamp(
-        introProgress,
-        0,
-        1
-      );
-
-    /*
-      Smooth cubic ease-out.
-    */
-    const introEase =
-      1 -
-      Math.pow(
-        1 -
-        introProgress,
-        3
-      );
-
-    /*
-      Terrain fades in while it rises.
-    */
-    const introOpacity =
-      THREE.MathUtils.lerp(
-        introStartOpacity,
-        1,
-        introEase
-      );
-
-    terrainUniforms
-      .uWireOpacity
-      .value =
-        finalWireOpacity *
-        introOpacity;
-
-    surfaceUniforms
-      .uSurfaceOpacity
-      .value =
-        finalSurfaceOpacity *
-        introOpacity;
-
-    glowMaterial
-      .uniforms
-      .uGlowOpacity
-      .value =
-        0.22 *
-        introOpacity;
-
-    /*
-      Terrain starts lower and rises into place.
-    */
-    const introTerrainOffset =
-      THREE.MathUtils.lerp(
-        -terrainIntroRise,
-        0,
-        introEase
-      );
-
-    /* ===================================================
-       POINTER MOVEMENT
-    =================================================== */
-
-    terrainWire.position.x +=
-      (
-        targetTerrainX -
-        terrainWire.position.x
-      ) *
-      0.018;
-
-    terrainSurface.position.x =
-      terrainWire.position.x;
-
-    terrainWire.rotation.y +=
-      (
-        targetTerrainRotation -
-        terrainWire.rotation.y
-      ) *
-      0.018;
-
-    terrainSurface.rotation.y =
-      terrainWire.rotation.y;
-
-    /* ===================================================
-       TERRAIN INTRO RISE
-    =================================================== */
-
-    const targetWireY =
-      terrainBaseY +
-      introTerrainOffset;
-
-    const targetSurfaceY =
-      terrainBaseY -
-      0.04 +
-      introTerrainOffset;
-
-    terrainWire.position.y +=
-      (
-        targetWireY -
-        terrainWire.position.y
-      ) *
-      0.085;
-
-    terrainSurface.position.y +=
-      (
-        targetSurfaceY -
-        terrainSurface.position.y
-      ) *
-      0.085;
-
-    /* ===================================================
-       SCROLL CAMERA
-    =================================================== */
-
-    const scrollCameraY =
-      THREE.MathUtils.lerp(
-        cameraStart.y,
-        cameraTarget.y,
-        scrollProgress
-      );
-
-    const scrollCameraZ =
-      THREE.MathUtils.lerp(
-        cameraStart.z,
-        cameraTarget.z,
-        scrollProgress
-      );
-
-    /*
-      Camera begins higher, then comes downward.
-    */
-    const introCameraOffsetY =
-      THREE.MathUtils.lerp(
-        cameraIntroHeight,
-        0,
-        introEase
-      );
-
-    const targetCameraY =
-      scrollCameraY +
-      introCameraOffsetY;
-
-    terrainCamera.position.y +=
-      (
-        targetCameraY -
-        terrainCamera.position.y
-      ) *
-      0.06;
-
-    terrainCamera.position.z +=
-      (
-        scrollCameraZ -
-        terrainCamera.position.z
-      ) *
-      0.06;
-
-    /*
-      Camera view begins slightly higher and then
-      settles toward the terrain.
-    */
-    const scrollLookY =
-      THREE.MathUtils.lerp(
-        -0.6,
-        -1.45,
-        scrollProgress
-      );
-
-    const introLookOffsetY =
-      THREE.MathUtils.lerp(
-        0.55,
-        0,
-        introEase
-      );
-
-    const lookTargetY =
-      scrollLookY +
-      introLookOffsetY;
-
-    const lookTargetZ =
-      THREE.MathUtils.lerp(
-        -15,
-        -25,
-        scrollProgress
-      );
-
-    terrainCamera.lookAt(
-      0,
-      lookTargetY,
-      lookTargetZ
-    );
-
-    terrainRenderer.render(
-      terrainScene,
-      terrainCamera
-    );
-  }
-
-  animateTerrain();
-
-  /* =====================================================
-     RESIZE
-  ===================================================== */
-
-  function resizeTerrain(){
-    const width =
-      Math.max(
-        terrainContainer.clientWidth,
-        window.innerWidth,
-        1
-      );
-
-    const height =
-      Math.max(
-        terrainContainer.clientHeight,
-        window.innerHeight,
-        1
-      );
-
-    terrainCamera.aspect =
-      width /
-      height;
-
-    terrainCamera
-      .updateProjectionMatrix();
-
-    terrainRenderer.setSize(
-      width,
-      height,
-      false
-    );
-
-    terrainRenderer.setPixelRatio(
-      Math.min(
-        window.devicePixelRatio || 1,
-        2
-      )
-    );
-  }
-
-  window.addEventListener(
-    "resize",
-    resizeTerrain
-  );
-
-  window.addEventListener(
-    "load",
-    resizeTerrain
-  );
-
-  resizeTerrain();
-}
-</script>
-<script type="module">
-import * as THREE from "three";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-
-
-
-/* =====================================================
-   FOREGROUND SYMBOL SCENE
-===================================================== */
-
-const symbolContainer =
-  document.getElementById("cube3d");
-
-let symbolRenderer = null;
-let symbolCamera = null;
-
-if (symbolContainer) {
-  const symbolScene =
-    new THREE.Scene();
-
-  symbolCamera =
-    new THREE.PerspectiveCamera(
-      35,
-      symbolContainer.clientWidth /
-        symbolContainer.clientHeight,
-      0.1,
-      100
-    );
-
-  symbolCamera.position.set(
-    0,
-    0,
-    10
-  );
-
-  symbolCamera.lookAt(
-    0,
-    0,
-    0
-  );
-
-  symbolRenderer =
-    new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: true,
-      powerPreference:
-        "high-performance"
-    });
-
-  symbolRenderer.setClearColor(
-    0x000000,
-    0
-  );
-
-  symbolRenderer.setSize(
-    symbolContainer.clientWidth,
-    symbolContainer.clientHeight
-  );
-
-  symbolRenderer.setPixelRatio(
-    Math.min(
-      window.devicePixelRatio,
-      2
-    )
-  );
-
-  symbolRenderer.outputColorSpace =
-    THREE.SRGBColorSpace;
-
-  symbolContainer.appendChild(
-    symbolRenderer.domElement
-  );
-
-  const ambientLight =
-    new THREE.AmbientLight(
-      0xffffff,
-      0.8
-    );
-
-  symbolScene.add(
-    ambientLight
-  );
-
-  const keyLight =
-    new THREE.DirectionalLight(
-      0xffffff,
-      8
-    );
-
-  keyLight.position.set(
-    5,
-    5,
-    10
-  );
-
-  symbolScene.add(
-    keyLight
-  );
-
-  const frontLight =
-    new THREE.DirectionalLight(
-      0xffffff,
-      5
-    );
-
-  frontLight.position.set(
-    0,
-    0,
-    8
-  );
-
-  symbolScene.add(
-    frontLight
-  );
-
-  const rimLight =
-    new THREE.DirectionalLight(
-      0xffffff,
-      6
-    );
-
-  rimLight.position.set(
-    0,
-    4,
-    -8
-  );
-
-  symbolScene.add(
-    rimLight
-  );
+  scene.add(horizonGlow);
+
+  /* =========================
+     MODEL SETTINGS
+  ========================= */
 
   let model = null;
 
@@ -2694,26 +1598,24 @@ if (symbolContainer) {
   const startRotationX = 0;
   const startRotationY = 0;
 
-  let targetRotationX =
-    startRotationX;
+  let targetRotationX = startRotationX;
+  let targetRotationY = startRotationY;
 
-  let targetRotationY =
-    startRotationY;
+  /*
+    Subtle mesh separation.
+  */
+  const expansionDistance = 0.2;
 
-  const expansionDistance =
-    0.2;
+  /*
+    Increase this to make pieces react from
+    farther away.
+  */
+  const influenceRadius = 280;
 
-  const influenceRadius =
-    280;
+  const fullStrengthRadius = 48;
 
-  const fullStrengthRadius =
-    48;
-
-  const expansionSmoothing =
-    0.075;
-
-  const rotationSmoothing =
-    0.08;
+  const expansionSmoothing = 0.075;
+  const rotationSmoothing = 0.08;
 
   const pointer = {
     x: window.innerWidth / 2,
@@ -2721,259 +1623,196 @@ if (symbolContainer) {
     active: false
   };
 
-  const loader =
-    new GLTFLoader();
+  const loader = new GLTFLoader();
 
   loader.load(
-    "/images/icon2.glb",
+    "/images/icon.glb",
 
-    function(gltf){
+    function (gltf) {
       model = gltf.scene;
 
-      /*
-        The foreground camera is separate,
-        so zero is truly centered.
-      */
-      model.position.set(
-        0,
-        0,
-        0
-      );
+      model.position.set(0, 0.15, 0);
+      model.scale.set(1, 1, 1);
 
-      model.scale.set(
-        1,
-        1,
-        1
-      );
+      model.rotation.x = startRotationX;
+      model.rotation.y = startRotationY;
 
-      symbolScene.add(
-        model
-      );
+      scene.add(model);
 
-      model.updateMatrixWorld(
-        true
-      );
+      model.updateMatrixWorld(true);
 
       const modelBox =
-        new THREE.Box3()
-          .setFromObject(model);
+        new THREE.Box3().setFromObject(model);
 
-      const modelCenter =
+      const modelWorldCenter =
         new THREE.Vector3();
 
-      modelBox.getCenter(
-        modelCenter
-      );
+      modelBox.getCenter(modelWorldCenter);
 
-      /*
-        Center the actual geometry, not just
-        the GLB object's origin.
-      */
-      model.position.sub(
-        modelCenter
-      );
+      model.traverse((child) => {
+        if (!child.isMesh) return;
 
-      model.updateMatrixWorld(
-        true
-      );
+        /*
+          Handle both single materials and material arrays.
+        */
+        if (Array.isArray(child.material)) {
+          child.material =
+            child.material.map((material) => {
+              const cloned = material.clone();
 
-      const centeredBox =
-        new THREE.Box3()
-          .setFromObject(model);
+              if (cloned.color) {
+                cloned.color.set("#3a3a3a");
+              }
 
-      const centeredModelCenter =
-        new THREE.Vector3();
+              if ("metalness" in cloned) {
+                cloned.metalness = 0.35;
+              }
 
-      centeredBox.getCenter(
-        centeredModelCenter
-      );
+              if ("roughness" in cloned) {
+                cloned.roughness = 0.55;
+              }
 
-      model.traverse(
-        function(child){
-          if(!child.isMesh) return;
+              if (cloned.emissive) {
+                cloned.emissive.set("#000000");
+                cloned.emissiveIntensity = 0;
+              }
 
-          if(
-            Array.isArray(
-              child.material
-            )
-          ){
-            child.material =
-              child.material.map(
-                function(material){
-                  const clone =
-                    material.clone();
+              cloned.needsUpdate = true;
 
-                  if(clone.color){
-                    clone.color.set(
-                      "#3a3a3a"
-                    );
-                  }
+              return cloned;
+            });
+        } else if (child.material) {
+          child.material =
+            child.material.clone();
 
-                  if(
-                    "metalness" in clone
-                  ){
-                    clone.metalness =
-                      0.35;
-                  }
-
-                  if(
-                    "roughness" in clone
-                  ){
-                    clone.roughness =
-                      0.55;
-                  }
-
-                  return clone;
-                }
-              );
-          } else if(
-            child.material
-          ){
-            child.material =
-              child.material.clone();
-
-            if(
-              child.material.color
-            ){
-              child.material.color.set(
-                "#3a3a3a"
-              );
-            }
-
-            if(
-              "metalness" in
-              child.material
-            ){
-              child.material.metalness =
-                0.35;
-            }
-
-            if(
-              "roughness" in
-              child.material
-            ){
-              child.material.roughness =
-                0.55;
-            }
+          if (child.material.color) {
+            child.material.color.set(
+              "#3a3a3a"
+            );
           }
 
-          const originalPosition =
-            child.position.clone();
+          if ("metalness" in child.material) {
+            child.material.metalness = 0.35;
+          }
 
-          const partBox =
-            new THREE.Box3()
-              .setFromObject(child);
+          if ("roughness" in child.material) {
+            child.material.roughness = 0.55;
+          }
 
-          const partWorldCenter =
-            new THREE.Vector3();
+          if (child.material.emissive) {
+            child.material.emissive.set(
+              "#000000"
+            );
 
-          partBox.getCenter(
-            partWorldCenter
+            child.material.emissiveIntensity = 0;
+          }
+
+          child.material.needsUpdate = true;
+        }
+
+        const originalPosition =
+          child.position.clone();
+
+        const partBox =
+          new THREE.Box3().setFromObject(child);
+
+        const partWorldCenter =
+          new THREE.Vector3();
+
+        partBox.getCenter(partWorldCenter);
+
+        const localCenter =
+          child.worldToLocal(
+            partWorldCenter.clone()
           );
 
-          const localCenter =
-            child.worldToLocal(
-              partWorldCenter.clone()
-            );
+        const worldDirection =
+          partWorldCenter
+            .clone()
+            .sub(modelWorldCenter);
 
-          const worldDirection =
-            partWorldCenter
-              .clone()
-              .sub(
-                centeredModelCenter
-              );
-
-          if(
-            worldDirection.lengthSq() <
-            0.00001
-          ){
-            worldDirection.set(
-              0,
-              1,
-              0
-            );
-          }
-
-          worldDirection.normalize();
-
-          const localDirection =
-            worldDirection.clone();
-
-          if(child.parent){
-            const parentQuaternion =
-              new THREE.Quaternion();
-
-            child.parent
-              .getWorldQuaternion(
-                parentQuaternion
-              );
-
-            parentQuaternion.invert();
-
-            localDirection
-              .applyQuaternion(
-                parentQuaternion
-              );
-          }
-
-          localDirection.normalize();
-
-          const partIndex =
-            modelParts.length;
-
-          const variation =
-            new THREE.Vector3(
-              Math.sin(
-                partIndex * 2.17
-              ) * 0.34,
-
-              Math.cos(
-                partIndex * 1.73
-              ) * 0.27,
-
-              Math.sin(
-                partIndex * 3.11 +
-                0.8
-              ) * 0.58
-            );
-
-          const movementDirection =
-            localDirection
-              .clone()
-              .multiplyScalar(0.76)
-              .add(variation)
-              .normalize();
-
-          const distanceVariation =
-            0.8 +
-            Math.abs(
-              Math.sin(
-                partIndex * 1.91
-              )
-            ) * 0.24;
-
-          modelParts.push({
-            mesh: child,
-            originalPosition,
-            localCenter,
-            movementDirection,
-            distanceVariation,
-            currentInfluence: 0,
-            targetInfluence: 0,
-            worldCenter:
-              new THREE.Vector3(),
-            projectedCenter:
-              new THREE.Vector3(),
-            targetPosition:
-              new THREE.Vector3()
-          });
+        if (
+          worldDirection.lengthSq() <
+          0.00001
+        ) {
+          worldDirection.set(0, 1, 0);
         }
-      );
+
+        worldDirection.normalize();
+
+        const localDirection =
+          worldDirection.clone();
+
+        if (child.parent) {
+          const parentQuaternion =
+            new THREE.Quaternion();
+
+          child.parent.getWorldQuaternion(
+            parentQuaternion
+          );
+
+          parentQuaternion.invert();
+
+          localDirection.applyQuaternion(
+            parentQuaternion
+          );
+        }
+
+        localDirection.normalize();
+
+        const partIndex =
+          modelParts.length;
+
+        /*
+          Stable unique 3D direction for every piece.
+        */
+        const variation =
+          new THREE.Vector3(
+            Math.sin(partIndex * 2.17) * 0.34,
+            Math.cos(partIndex * 1.73) * 0.27,
+            Math.sin(
+              partIndex * 3.11 + 0.8
+            ) * 0.58
+          );
+
+        const movementDirection =
+          localDirection
+            .clone()
+            .multiplyScalar(0.76)
+            .add(variation)
+            .normalize();
+
+        const distanceVariation =
+          0.8 +
+          Math.abs(
+            Math.sin(partIndex * 1.91)
+          ) * 0.24;
+
+        modelParts.push({
+          mesh: child,
+          originalPosition,
+          localCenter,
+          movementDirection,
+          distanceVariation,
+
+          currentInfluence: 0,
+          targetInfluence: 0,
+
+          worldCenter:
+            new THREE.Vector3(),
+
+          projectedCenter:
+            new THREE.Vector3(),
+
+          targetPosition:
+            new THREE.Vector3()
+        });
+      });
     },
 
     undefined,
 
-    function(error){
+    function (error) {
       console.error(
         "GLB Load Failed:",
         error
@@ -2981,45 +1820,33 @@ if (symbolContainer) {
     }
   );
 
+  /* =========================
+     POINTER INTERACTION
+  ========================= */
+
   window.addEventListener(
     "pointermove",
-    function(event){
-      pointer.x =
-        event.clientX;
-
-      pointer.y =
-        event.clientY;
+    function (event) {
+      pointer.x = event.clientX;
+      pointer.y = event.clientY;
 
       const rect =
-        symbolContainer
-          .getBoundingClientRect();
+        container.getBoundingClientRect();
+
+      const padding = influenceRadius;
 
       pointer.active =
-        pointer.x >=
-          rect.left -
-          influenceRadius &&
-
-        pointer.x <=
-          rect.right +
-          influenceRadius &&
-
-        pointer.y >=
-          rect.top -
-          influenceRadius &&
-
-        pointer.y <=
-          rect.bottom +
-          influenceRadius;
+        pointer.x >= rect.left - padding &&
+        pointer.x <= rect.right + padding &&
+        pointer.y >= rect.top - padding &&
+        pointer.y <= rect.bottom + padding;
 
       const normalizedX =
         (
           event.clientX -
           rect.left
         ) /
-        Math.max(
-          rect.width,
-          1
-        ) -
+        Math.max(rect.width, 1) -
         0.5;
 
       const normalizedY =
@@ -3027,144 +1854,139 @@ if (symbolContainer) {
           event.clientY -
           rect.top
         ) /
-        Math.max(
-          rect.height,
-          1
-        ) -
+        Math.max(rect.height, 1) -
         0.5;
 
       targetRotationY =
         startRotationY +
-        normalizedX * 0.15;
+        normalizedX * 0.65;
 
       targetRotationX =
         startRotationX +
-        normalizedY * 0.18;
+        normalizedY * 0.48;
     }
   );
 
   document.addEventListener(
     "mouseleave",
-    function(){
+    function () {
       pointer.active = false;
 
-      targetRotationX =
-        startRotationX;
-
-      targetRotationY =
-        startRotationY;
+      targetRotationX = startRotationX;
+      targetRotationY = startRotationY;
     }
   );
 
-  function updateParts(){
-    if(!model) return;
+  /* =========================
+     INDIVIDUAL MESH MOVEMENT
+  ========================= */
+
+  function updatePartInfluence() {
+    if (!model) return;
 
     const rect =
-      symbolRenderer.domElement
+      renderer.domElement
         .getBoundingClientRect();
 
-    model.updateMatrixWorld(
-      true
-    );
+    model.updateMatrixWorld(true);
 
-    modelParts.forEach(
-      function(part){
-        part.worldCenter.copy(
-          part.localCenter
+    modelParts.forEach((part) => {
+      part.worldCenter.copy(
+        part.localCenter
+      );
+
+      part.mesh.localToWorld(
+        part.worldCenter
+      );
+
+      part.projectedCenter
+        .copy(part.worldCenter)
+        .project(camera);
+
+      const screenX =
+        rect.left +
+        (
+          part.projectedCenter.x *
+          0.5 +
+          0.5
+        ) *
+        rect.width;
+
+      const screenY =
+        rect.top +
+        (
+          -part.projectedCenter.y *
+          0.5 +
+          0.5
+        ) *
+        rect.height;
+
+      const distanceX =
+        pointer.x - screenX;
+
+      const distanceY =
+        pointer.y - screenY;
+
+      const cursorDistance =
+        Math.sqrt(
+          distanceX * distanceX +
+          distanceY * distanceY
         );
 
-        part.mesh.localToWorld(
-          part.worldCenter
-        );
+      let influence = 0;
 
-        part.projectedCenter
-          .copy(
-            part.worldCenter
-          )
-          .project(
-            symbolCamera
+      if (pointer.active) {
+        influence =
+          1 -
+          THREE.MathUtils.smoothstep(
+            cursorDistance,
+            fullStrengthRadius,
+            influenceRadius
           );
-
-        const screenX =
-          rect.left +
-          (
-            part.projectedCenter.x *
-            0.5 +
-            0.5
-          ) *
-          rect.width;
-
-        const screenY =
-          rect.top +
-          (
-            -part.projectedCenter.y *
-            0.5 +
-            0.5
-          ) *
-          rect.height;
-
-        const dx =
-          pointer.x -
-          screenX;
-
-        const dy =
-          pointer.y -
-          screenY;
-
-        const distance =
-          Math.sqrt(
-            dx * dx +
-            dy * dy
-          );
-
-        let influence = 0;
-
-        if(pointer.active){
-          influence =
-            1 -
-            THREE.MathUtils
-              .smoothstep(
-                distance,
-                fullStrengthRadius,
-                influenceRadius
-              );
-        }
-
-        part.targetInfluence =
-          influence;
-
-        part.currentInfluence +=
-          (
-            part.targetInfluence -
-            part.currentInfluence
-          ) *
-          expansionSmoothing;
-
-        part.targetPosition
-          .copy(
-            part.originalPosition
-          )
-          .addScaledVector(
-            part.movementDirection,
-            expansionDistance *
-            part.distanceVariation *
-            part.currentInfluence
-          );
-
-        part.mesh.position.lerp(
-          part.targetPosition,
-          expansionSmoothing
-        );
       }
-    );
+
+      part.targetInfluence =
+        influence;
+
+      part.currentInfluence +=
+        (
+          part.targetInfluence -
+          part.currentInfluence
+        ) *
+        expansionSmoothing;
+
+      part.targetPosition
+        .copy(part.originalPosition)
+        .addScaledVector(
+          part.movementDirection,
+          expansionDistance *
+          part.distanceVariation *
+          part.currentInfluence
+        );
+
+      part.mesh.position.lerp(
+        part.targetPosition,
+        expansionSmoothing
+      );
+    });
   }
 
-  function animateSymbol(){
-    requestAnimationFrame(
-      animateSymbol
-    );
+  /* =========================
+     ANIMATION
+  ========================= */
 
-    if(model){
+  const clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    const elapsedTime =
+      clock.getElapsedTime();
+
+    terrainUniforms.uTime.value =
+      elapsedTime;
+
+    if (model) {
       model.rotation.x +=
         (
           targetRotationX -
@@ -3179,95 +2001,84 @@ if (symbolContainer) {
         ) *
         rotationSmoothing;
 
-      updateParts();
+      updatePartInfluence();
     }
 
-    symbolRenderer.render(
-      symbolScene,
-      symbolCamera
+    /*
+      Slight landscape parallax.
+    */
+    terrainGroup.position.x +=
+      (
+        -targetRotationY * 0.45 -
+        terrainGroup.position.x
+      ) *
+      0.012;
+
+    terrainGroup.rotation.y +=
+      (
+        targetRotationY * 0.018 -
+        terrainGroup.rotation.y
+      ) *
+      0.012;
+
+    renderer.render(
+      scene,
+      camera
     );
   }
 
-  animateSymbol();
-}
+  animate();
 
-/* =====================================================
-   RESIZE BOTH SCENES
-===================================================== */
+  /* =========================
+     RESIZE
+  ========================= */
 
-function resizeScenes(){
-  if(
-    terrainContainer &&
-    terrainRenderer &&
-    terrainCamera
-  ){
+  function resizeThreeScene() {
     const width =
       Math.max(
-        terrainContainer.clientWidth,
+        container.clientWidth,
+        window.innerWidth,
         1
       );
 
     const height =
       Math.max(
-        terrainContainer.clientHeight,
+        container.clientHeight,
+        window.innerHeight,
         1
       );
 
-    terrainCamera.aspect =
+    camera.aspect =
       width / height;
 
-    terrainCamera
-      .updateProjectionMatrix();
+    camera.updateProjectionMatrix();
 
-    terrainRenderer.setSize(
+    renderer.setSize(
       width,
       height,
       false
     );
-  }
 
-  if(
-    symbolContainer &&
-    symbolRenderer &&
-    symbolCamera
-  ){
-    const width =
-      Math.max(
-        symbolContainer.clientWidth,
-        1
-      );
-
-    const height =
-      Math.max(
-        symbolContainer.clientHeight,
-        1
-      );
-
-    symbolCamera.aspect =
-      width / height;
-
-    symbolCamera
-      .updateProjectionMatrix();
-
-    symbolRenderer.setSize(
-      width,
-      height,
-      false
+    renderer.setPixelRatio(
+      Math.min(
+        window.devicePixelRatio || 1,
+        2
+      )
     );
   }
+
+  window.addEventListener(
+    "resize",
+    resizeThreeScene
+  );
+
+  window.addEventListener(
+    "load",
+    resizeThreeScene
+  );
+
+  resizeThreeScene();
 }
-
-window.addEventListener(
-  "resize",
-  resizeScenes
-);
-
-window.addEventListener(
-  "load",
-  resizeScenes
-);
-
-resizeScenes();
 </script>
 
 
@@ -3418,19 +2229,14 @@ window.addEventListener("load", () => {
           <img src="images/GriffinIcon.png" alt="Griffin Integrity">
         </div>-->
       </div>
-<div class="terrain-background">
-  <div id="terrain3d"></div>
-</div>
+
          <!--<img id="heroBottomIcon" src="images/GriffinText.png" alt="" aria-hidden="true">-->
         <div class="stackflow-shell">
           <div class="stackflow-main">
-   <div class="hero-3d-background">
-  <div id="terrain3d"></div>
-</div>
-
-<div class="hero-3d-center">
+            <div class="hero-3d-center">
   <div id="cube3d"></div>
 </div>
+
 <div class="hero-bottom-title">
   <h1>The Next Wave <br>of Surface Design</h1>
 </div>
