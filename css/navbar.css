@@ -171,7 +171,7 @@ body.pw-menu-open{ overflow:visible; }
 .pw-menu__label{ font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:rgba(0,0,0,.48); }
 .pw-menu__close{ border:0; padding:0; background:none; color:#111; cursor:pointer; font:inherit; font-size:11px; letter-spacing:.14em; text-transform:uppercase; }
 .pw-menu__links{ display:flex; flex-direction:column; margin-top:64px; }
-.pw-menu__links a{ position:relative; display:flex; gap:2px; align-items:baseline; padding:5px 0; color:#111; text-decoration:none; font-size:clamp(17px,1.55vw,26px); font-weight:400; letter-spacing:-.045em; border-bottom:0; overflow:visible; will-change:transform,filter,letter-spacing; }
+.pw-menu__links a{ position:relative; display:flex; gap:2px; align-items:baseline; padding:5px 0; color:#111; text-decoration:none; font-size:clamp(25px,1.95vw,32px); font-weight:500; letter-spacing:-.045em; border-bottom:0; overflow:visible; will-change:transform,filter,letter-spacing; }
 .pw-menu__links a::after{ display:none; content:none; }
 
 .pw-menu__footer{
@@ -288,4 +288,30 @@ body.pw-menu-open{ overflow:visible; }
 .pw-nav.pw-nav--light-bg .pw-pill-fill,
 .pw-nav.pw-nav--menu-open .pw-pill-fill{
   background:#111;
+}
+
+
+
+
+@media (min-width:761px) and (max-width:1400px){
+.pw-nav{
+  position:fixed;
+  inset:clamp(12px,1.5vw,22px) 0 auto 0;
+  z-index:1200;
+  height:74px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 clamp(18px,2.8vw,32px);
+  pointer-events:none;
+  mix-blend-mode:normal;
+}
+.pw-nav__logo,.pw-nav__actions{ pointer-events:auto; }
+.pw-nav__logo img{
+  display:block;
+  width:auto;
+  height:clamp(34px,1.5vw,48px);
+  filter:brightness(1.08);
+  transition:filter .46s cubic-bezier(.22,1,.36,1), opacity .3s ease;
+}
 }

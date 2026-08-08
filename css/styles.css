@@ -201,9 +201,9 @@
 
 .selected-project-card__copy p{
   max-width:42ch;
-  margin:10px 0 0;
-  color:#666;
-  font-size:clamp(11px,.9vw,14px);
+  margin:15px 0 0;
+  color:#131313;
+  font-size:clamp(11px,1vw,15px);
   line-height:1.5;
 }
 
@@ -406,7 +406,7 @@
   height:100%;
   object-fit:cover;
   display:block;
-  filter:grayscale(1);
+  /*filter:grayscale(1);*/
   transition:transform .6s cubic-bezier(.2,.7,.2,1), filter .5s ease;
 }
 
@@ -2488,7 +2488,7 @@ html{
 .wrap-about-panel{
   min-height:120dvh;
   display:grid;
-  grid-template-columns:minmax(180px,.2fr) minmax(0,1.5fr);
+  grid-template-columns:minmax(0px,.2fr) minmax(0,1.9fr);
   gap:clamp(10px,2vw,40px);
   align-content:center;
   align-items:start;
@@ -4208,4 +4208,114 @@ html{
 .pw-lightbox__close svg{
   width:18px;
   height:18px;
+}
+
+
+@media (min-width:761px) and (max-width:1400px){
+
+  .wrap-about-panel{
+    grid-template-columns:minmax(0px,.14fr) minmax(0,1.3fr);
+    gap:clamp(8px,1.6vw,24px);
+    padding-top:12vh;
+    padding-bottom:12vh;
+  }
+
+  .wrap-about-panel__label span{
+    font-size:12px;
+  }
+
+  .wrap-about-panel__lower{
+    margin-top:clamp(48px,3vw,90px);
+  }
+
+  .wrap-about-panel__columns{
+    grid-template-columns:minmax(0,1.5fr) minmax(220px,.9fr);
+    gap:clamp(32px,5vw,80px);
+  }
+
+  .wrap-about-panel__motto-media{
+    width:min(300px,100%);
+  }
+
+  .wrap-about-panel__snippet p{
+    font-size:clamp(.85rem,1.4vw,1rem);
+    max-width:36ch;
+  }
+
+  .wrap-about-panel__button{
+    margin-top:36px;
+    min-height:44px;
+    padding:0 16px;
+    gap:24px;
+    font-size:10px;
+  }
+
+  .wrap-about-panel__philosophy{
+    font-size:clamp(0.5rem,1.4vw,0.8rem);
+    max-width:22ch;
+    padding-top:10rem;
+  }
+
+.wrap-branding-card{
+
+  height:clamp(440px,34vw,540px);
+}
+
+  .wrap-branding-card__top h3{
+      font-size:clamp(0.6rem,1.2vw,1.1rem);
+    }
+    .wrap-branding-card__btn{
+  flex:0 0 auto;
+  min-height:42px;
+  width:fit-content;
+  display:inline-flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+  padding:0 16px;
+  text-decoration:none;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.selected-project-card{
+  width:100%;
+  height:100%;
+
+  display:flex;
+  flex-direction:column;
+
+  /* centers image + text together vertically */
+  justify-content:center;
+
+  gap:clamp(18px,1.7vw,30px);
+  
+  padding:0;
+  overflow:hidden;
+}
+
+.selected-project-card__media{
+  width:100%;
+  height:40vh;
+  max-height:60vh;
+  
+  flex:none;
+
+  overflow:hidden;
+  background:#ddd;
+}
+.selected-works-panel{
+  flex:0 0 50vw;
+  width:50vw;
+  height:100vh;
+  padding:clamp(26px,2.8vw,54px);
+  display:flex;
+  align-items:stretch;
+  background:var(--off-white);
+  border-left: 1px solid #6968684c;
+}
+
 }

@@ -1595,15 +1595,13 @@ window.addEventListener("load", () => {
   };
 
   const DRAG_THRESHOLD = 6;
-  const DRAG_SENSITIVITY_DESKTOP = 0.9; // mouse — less sensitive
-  const DRAG_SENSITIVITY_TABLET = 2.2; // touch/pen — more sensitive
+  const DRAG_SENSITIVITY = 1.6; // px of scroll per px of horizontal drag
 
   let pointerId = null;
   let startX = 0;
   let startY = 0;
   let startScroll = 0;
   let direction = null; // "x" | "y" | null (undecided)
-  let dragSensitivity = DRAG_SENSITIVITY_DESKTOP;
 
   stage.addEventListener("pointerdown", (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
@@ -1614,7 +1612,6 @@ window.addEventListener("load", () => {
     startY = e.clientY;
     startScroll = st.scroll();
     direction = null;
-    dragSensitivity = e.pointerType === "mouse" ? DRAG_SENSITIVITY_DESKTOP : DRAG_SENSITIVITY_TABLET;
   });
 
   stage.addEventListener("pointermove", (e) => {
@@ -1635,7 +1632,7 @@ window.addEventListener("load", () => {
     if (direction !== "x") return;
 
     e.preventDefault();
-    setScroll(startScroll - dx * dragSensitivity);
+    setScroll(startScroll - dx * DRAG_SENSITIVITY);
   }, { passive: false });
 
   const endDrag = (e) => {
