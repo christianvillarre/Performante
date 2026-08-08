@@ -74,14 +74,21 @@
     <a href="/contact.html">Contact</a>
   </nav>
 
-  <div class="pw-menu__footer">
-    <p>Houston, Texas</p>
-    <a href="tel:3462445833">(346) 244-5833</a>
-    <a href="mailto:info@performantewraps.com">info@performantewraps.com</a>
+   <div class="pw-menu__footer">
+    <div class="pw-menu__footer-block">
+      <p class="pw-menu__footer-label">Business Inquiry</p>
+      <a href="mailto:enrico@performantewraps.com"><span class="pw-menu__footer-tag">E:</span> enrico@performantewraps.com</a>
+      <a href="tel:8328014675"><span class="pw-menu__footer-tag">P:</span> (832) 801-4675</a>
+    </div>
+
     <div class="pw-menu__socials">
-      <a href="#">Instagram</a>
-      <a href="#">Facebook</a>
-      <a href="#">YouTube</a>
+      <p class="pw-menu__footer-label">Social</p>
+      <div class="pw-menu__socials-grid">
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Tiktok</a>
+        <a href="#">LinkedIn</a>
+      </div>
     </div>
   </div>
 </aside>
@@ -127,9 +134,13 @@
           <div class="wrap-hero-copy">
             <!--<p class="wrap-scroll-copy__eyebrow">Performante Wraps</p>-->
             <h1>The Next Wave of Surface Design</h1>
-            <a class="wrap-project-button" href="/contact.html">
-              <span>Start a Project</span>
-              <span aria-hidden="true">↗</span>
+            <a class="wrap-project-button pw-btn" href="/contact.html">
+              <span class="pw-btn__label">Start a Project</span>
+              <span class="pw-btn__arrow" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
             </a>
           </div>
 
@@ -193,7 +204,7 @@
 
         <div class="wrap-about-panel__motto">
           <div class="wrap-about-panel__motto-media">
-            <img src="/images/Untitled.jpg" alt="Performante Wraps detail shot" loading="lazy">
+            <img src="/images/DSC07534.jpeg" alt="Performante Wraps detail shot" loading="lazy">
           </div>
         </div>
 
@@ -204,10 +215,14 @@
             of how design should function in the real world.
           </p>
 
-          <a href="/about.html" class="wrap-about-panel__button">
-            <span>More About Us</span>
-            <span aria-hidden="true">↗</span>
-          </a>
+          <a class="wrap-project-button pw-btn" href="/contact.html">
+              <span class="pw-btn__label">More About Us</span>
+              <span class="pw-btn__arrow" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </a>
         </div>
 
       </div>
@@ -245,108 +260,158 @@
 <section class="wrap-light-section wrap-light-section--intro">
   <div class="wrap-light-section__inner wrap-white-showcase">
     <!--<p class="wrap-light-section__kicker">The craft of wrapping</p>-->
-    <h2>Vehicle Showcase</h2>
-    <!--<p class="wrap-light-section__lead">
-      From the first layout line to the final tucked edge, every decision is made around shape, movement, visibility and durability.
-    </p>-->
-
-    <div class="wrap-showcase-stage" id="showcaseStage">
-     <div class="wrap-showcase-stage__sticky">
-      <div class="wrap-showcase-stage__track" id="showcaseTrack">
-        <article class="wrap-showcase-stage__panel" data-index="0">
-         <div class="wrap-showcase-stage__box">
-          <img src="/images/Untitled-2-2.jpg" alt="Color change vehicle wrap">
-          <div class="wrap-showcase-stage__caption">
-            <span class="wrap-showcase-stage__count">01</span>
-            <h3>Full Body Wraps</h3>
-            <p>Full-body gloss &amp; matte wraps</p>
-          </div>
-         </div>
-        </article>
-
-        <article class="wrap-showcase-stage__panel" data-index="1">
-         <div class="wrap-showcase-stage__box">
-          <img src="/images/Untitled-4.jpg" alt="Commercial fleet wrap">
-          <div class="wrap-showcase-stage__caption">
-            <span class="wrap-showcase-stage__count">02</span>
-            <h3>Commercial Fleets</h3>
-            <p>Branded fleet-wide graphics</p>
-          </div>
-         </div>
-        </article>
-
-        <article class="wrap-showcase-stage__panel" data-index="2">
-         <div class="wrap-showcase-stage__box">
-          <img src="/images/Untitled-5.jpg" alt="Architectural wrap">
-          <div class="wrap-showcase-stage__caption">
-            <span class="wrap-showcase-stage__count">03</span>
-            <h3>Custom Designs</h3>
-            <p>Building &amp; storefront finishes</p>
-          </div>
-         </div>
-        </article>
-
-        <article class="wrap-showcase-stage__panel" data-index="3">
-         <div class="wrap-showcase-stage__box">
-          <img src="/images/Untitled-3.png" alt="Paint protection film">
-          <div class="wrap-showcase-stage__caption">
-            <span class="wrap-showcase-stage__count">04</span>
-            <h3>Paint Protection</h3>
-            <p>Self-healing PPF coverage</p>
-          </div>
-         </div>
-        </article>
-      </div>
-
-      <div class="wrap-showcase-stage__progress">
-        <span data-dot="0" class="is-active"></span>
-        <span data-dot="1"></span>
-        <span data-dot="2"></span>
-        <span data-dot="3"></span>
-      </div>
-     </div>
-    </div>
-
     <div class="wrap-branding-intro">
-      <h2>Physical Branding</h2>
-      <p class="wrap-branding-intro__subtitle">Architecture, Signage &amp; More</p>
-      <p class="wrap-branding-intro__desc">
+      <h2>Luxury & Branding</h2>
+      <!--<p class="wrap-branding-intro__subtitle">Architecture, Signage &amp; More</p>-->
+      <!--<p class="wrap-branding-intro__desc">
         Beyond the vehicle, we bring brands into physical spaces — from
         architectural building wraps to storefront signage and luxury
         interior finishes, built for durability and detail.
-      </p>
+      </p>-->
     </div>
 
     <div class="wrap-branding-grid">
       <article class="wrap-branding-card">
         <div class="wrap-branding-card__media">
-          <img src="/images/IMG_6870.jpg" alt="Architectural building wrap">
-          <div class="wrap-branding-card__caption">
-            <h3>Architectural</h3>
-            <p>Building &amp; storefront wraps</p>
-          </div>
+          <img src="/images/_DSC7177.jpg" alt="Architectural building wrap">
         </div>
+          <div class="wrap-branding-card__caption">
+            <h3>Luxury & Vehicles</h3>
+            <p>Color Change, Paint Protection &amp; Detail</p>
+          </div>
+        
       </article>
 
       <article class="wrap-branding-card">
         <div class="wrap-branding-card__media">
-          <img src="/images/IMG_5067.jpg" alt="Branded signage graphics">
-          <div class="wrap-branding-card__caption">
-            <h3>Signage</h3>
-            <p>Wayfinding &amp; branded graphics</p>
-          </div>
+          <img src="/images/Untitled-2.jpg" alt="Branded signage graphics">
         </div>
+          <div class="wrap-branding-card__caption">
+            <h3>Architectural Wraps & Signage</h3>
+            <p>Streetfront &amp; interior finishes</p>
+          </div>
+        
       </article>
 
       <article class="wrap-branding-card">
         <div class="wrap-branding-card__media">
-          <img src="/images/stock3.jpeg" alt="Luxury vehicle styling detail">
-          <div class="wrap-branding-card__caption">
-            <h3>Luxury</h3>
-            <p>Premium finishes &amp; detailing</p>
-          </div>
+          <img src="/images/IMG_7646.jpg" alt="Luxury vehicle styling detail">
         </div>
+          <div class="wrap-branding-card__caption">
+            <h3>Commercial Fleets & Branding</h3>
+            <p>Fleets, PPF &amp; more</p>
+          </div>
+        
       </article>
+    </div>
+
+
+    <div class="selected-works-stage" id="performanteGalleryFlowStage">
+      <div class="selected-works-sticky">
+        <div class="selected-works-track" id="performanteGalleryFlowTrack">
+
+          <article class="selected-works-panel selected-works-panel--intro">
+            <div class="selected-works-text-card">
+              <div class="selected-works-text-card__center">
+                <h2>Selected Work<br>& Custom Designs</h2>
+                <p>A selection of automotive and commercial projects built around finish, detail and presence.</p>
+              </div>
+              <a class="selected-works-button pw-btn" href="/gallery.html">
+                <span class="pw-btn__label">View All Projects</span>
+                <span class="pw-btn__arrow" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </a>
+            </div>
+          </article>
+
+          <article class="selected-works-panel selected-works-panel--project">
+            <div class="selected-project-card">
+              <div class="selected-project-card__media">
+                <img src="/images/Untitled-2-2.jpg" alt="Color change vehicle wrap">
+              </div>
+              <div class="selected-project-card__meta">
+                <div class="selected-project-card__copy">
+                  <h3>Tiger Gas</h3>
+                  <p>Commercial full body wrap, custom design.</p>
+                </div>
+                <a href="/gallery.html" class="selected-project-card__link pw-btn">
+                  <span class="pw-btn__label">View Project</span>
+                  <span class="pw-btn__arrow" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <article class="selected-works-panel selected-works-panel--project">
+            <div class="selected-project-card">
+              <div class="selected-project-card__media">
+                <img src="/images/Untitled-4.jpg" alt="Commercial fleet wrap">
+              </div>
+              <div class="selected-project-card__meta">
+                <div class="selected-project-card__copy">
+                  <h3>Bold Vision SEO</h3>
+                  <p>Consistent, high-impact branding designed to move across an entire fleet.</p>
+                </div>
+                <a href="/gallery.html" class="selected-project-card__link pw-btn">
+                  <span class="pw-btn__label">View Project</span>
+                  <span class="pw-btn__arrow" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <article class="selected-works-panel selected-works-panel--project">
+            <div class="selected-project-card">
+              <div class="selected-project-card__media">
+                <img src="/images/Untitled-5.jpg" alt="Custom vehicle graphics">
+              </div>
+              <div class="selected-project-card__meta">
+                <div class="selected-project-card__copy">
+                  <h3>Corvette 2021 Stringray</h3>
+                  <p>Purpose-built graphics that turn the vehicle into a complete visual system.</p>
+                </div>
+                <a href="/gallery.html" class="selected-project-card__link pw-btn">
+                  <span class="pw-btn__label">View Project</span>
+                  <span class="pw-btn__arrow" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <article class="selected-works-panel selected-works-panel--outro">
+            <div class="selected-works-text-card selected-works-text-card--outro">
+              <div class="selected-works-text-card__center">
+                <h2>Explore More</h2>
+                <p>See more vehicle wraps, fleet graphics, architectural work and surface design.</p>
+              </div>
+              <a class="selected-works-button pw-btn" href="/gallery.html">
+                <span class="pw-btn__label">View All Projects</span>
+                <span class="pw-btn__arrow" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </a>
+            </div>
+          </article>
+
+        </div>
+      </div>
     </div>
 
     <div class="wrap-filmstrip" id="pwFilmstrip" aria-label="Vehicle wrap photo gallery">
@@ -755,7 +820,7 @@
 
 <script src="js/navbar.js" defer></script>
 <script type="module" src="js/animations.js"></script>
-<script src="js/gsap-animations.js" defer></script>
+<script src="js/gsap.js" defer></script>
 
 </body>
 </html>
