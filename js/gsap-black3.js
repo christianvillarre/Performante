@@ -1567,6 +1567,34 @@ window.addEventListener("load", () => {
     duration: 0.75
   });
 
+  /* Selected Works image lift: every project image after the first rises
+     slightly as its horizontal panel enters the viewport. */
+  const selectedProjectMedia = gsap.utils.toArray(
+    stage.querySelectorAll(".selected-works-panel--project .selected-project-card__media img")
+  );
+
+  selectedProjectMedia.slice(1).forEach((img) => {
+    const panel = img.closest(".selected-works-panel");
+    if (!panel) return;
+
+    gsap.fromTo(
+      img,
+      { y: 52 },
+      {
+        y: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: panel,
+          containerAnimation: selectedWorksTimeline,
+          start: "left 92%",
+          end: "left 58%",
+          scrub: true,
+          invalidateOnRefresh: true
+        }
+      }
+    );
+  });
+
   window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
 
   /* --------------------------------------------------------
@@ -1938,3 +1966,255 @@ document.addEventListener("DOMContentLoaded", () => {
 /* ============================================================================
    END — PW INFINITE GALLERY
    ============================================================================ */
+
+
+/* ============================================================================
+   GLOBAL TYPOGRAPHY + CARD REVEALS
+   - headings: letter-by-letter blur / fade / rise
+   - about statement: typography-safe scroll-driven white fill
+   - Wraps & Branding cards: top-hinged fold-in, staggered
+   ============================================================================ */
+document.addEventListener("DOMContentLoaded", () => {
+  if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Split titles by WORD first, then by character.
+     This keeps normal word wrapping intact and prevents letters from being
+     clipped or scattered across lines while preserving the same reveal look. */
+  function splitHeadingIntoChars(el) {
+    if (!el || el.dataset.pwSplit === "true") return [];
+
+    const originalLabel = el.textContent.replace(/\s+/g, " ").trim();
+    const chars = [];
+
+    function processTextNode(node) {
+      const value = node.nodeValue || "";
+      const frag = document.createDocumentFragment();
+      const parts = value.split(/(\s+)/);
+
+      parts.forEach((part) => {
+        if (!part) return;
+
+        if (/^\s+$/.test(part)) {
+          frag.appendChild(document.createTextNode(part));
+          return;
+        }
+
+        const word = document.createElement("span");
+        word.className = "pw-title-word";
+        word.setAttribute("aria-hidden", "true");
+
+        [...part].forEach((char) => {
+          const span = document.createElement("span");
+          span.className = "pw-title-char";
+          span.textContent = char;
+          chars.push(span);
+          word.appendChild(span);
+        });
+
+        frag.appendChild(word);
+      });
+
+      node.replaceWith(frag);
+    }
+
+    function walk(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        processTextNode(node);
+        return;
+      }
+
+      if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== "BR") {
+        [...node.childNodes].forEach(walk);
+      }
+    }
+
+    [...el.childNodes].forEach(walk);
+    if (originalLabel) el.setAttribute("aria-label", originalLabel);
+    el.classList.add("pw-title-reveal");
+    el.dataset.pwSplit = "true";
+    return chars;
+  }
+
+  /* 1) Special about statement — line-by-line white fill.
+        The original heading remains completely untouched. We stack clipped
+        white copies over the muted original, one clip per rendered line, so
+        each line fills left-to-right before the next line begins. */
+  const aboutTitle = document.querySelector(".wrap-about-panel__content h2");
+  if (aboutTitle) {
+    aboutTitle.classList.remove("pw-scroll-fill-text");
+    aboutTitle.classList.add("pw-line-fill-source");
+
+    const buildLineFill = () => {
+      aboutTitle.querySelectorAll(":scope > .pw-line-fill-overlay").forEach(el => el.remove());
+
+      const range = document.createRange();
+      range.selectNodeContents(aboutTitle);
+      const titleRect = aboutTitle.getBoundingClientRect();
+      const rawRects = Array.from(range.getClientRects()).filter(r => r.width > 2 && r.height > 2);
+
+      /* Merge fragments that belong to the same rendered line. */
+      const lines = [];
+      rawRects.forEach(r => {
+        const existing = lines.find(line => Math.abs(line.top - r.top) < 3);
+        if (existing) {
+          existing.left = Math.min(existing.left, r.left);
+          existing.right = Math.max(existing.right, r.right);
+          existing.top = Math.min(existing.top, r.top);
+          existing.bottom = Math.max(existing.bottom, r.bottom);
+        } else {
+          lines.push({ left:r.left, right:r.right, top:r.top, bottom:r.bottom });
+        }
+      });
+      lines.sort((a,b) => a.top - b.top);
+
+      const overlays = lines.map((line) => {
+        const clone = document.createElement("span");
+        clone.className = "pw-line-fill-overlay";
+        clone.setAttribute("aria-hidden", "true");
+        clone.textContent = aboutTitle.textContent;
+        aboutTitle.appendChild(clone);
+
+        const left = Math.max(0, line.left - titleRect.left);
+        const right = Math.max(0, titleRect.right - line.right);
+        const top = Math.max(0, line.top - titleRect.top);
+        const bottom = Math.max(0, titleRect.bottom - line.bottom);
+
+        gsap.set(clone, {
+          clipPath: `inset(${top}px ${titleRect.width - left}px ${bottom}px ${left}px)`
+        });
+
+        clone.dataset.pwClipTop = top;
+        clone.dataset.pwClipRight = right;
+        clone.dataset.pwClipBottom = bottom;
+        clone.dataset.pwClipLeft = left;
+        return clone;
+      });
+
+      if (reduceMotion) {
+        overlays.forEach(clone => {
+          gsap.set(clone, {
+            clipPath: `inset(${clone.dataset.pwClipTop}px ${clone.dataset.pwClipRight}px ${clone.dataset.pwClipBottom}px ${clone.dataset.pwClipLeft}px)`
+          });
+        });
+        return;
+      }
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".wrap-about-panel",
+          start: "top 78%",
+          end: "bottom 38%",
+          scrub: 0.55,
+          invalidateOnRefresh: true
+        }
+      });
+
+      overlays.forEach((clone, i) => {
+        tl.to(clone, {
+          clipPath: `inset(${clone.dataset.pwClipTop}px ${clone.dataset.pwClipRight}px ${clone.dataset.pwClipBottom}px ${clone.dataset.pwClipLeft}px)`,
+          ease: "none",
+          duration: 1
+        }, i);
+      });
+    };
+
+    requestAnimationFrame(buildLineFill);
+    window.addEventListener("load", buildLineFill, { once:true });
+  }
+
+  /* 2) General title reveal — same blur/fade/up style, but safer layout and
+        earlier trigger points so lower-page headings are visible in time. */
+  gsap.utils.toArray("h1,h2,h3").forEach((title) => {
+    if (title === aboutTitle) return;
+    if (title.closest(".wrap-branding-card")) return;
+    if (title.closest(".pw-menu")) return;
+
+    const chars = splitHeadingIntoChars(title);
+    if (!chars.length) return;
+
+    if (reduceMotion) {
+      gsap.set(chars, { autoAlpha: 1, y: 0, filter: "blur(0px)" });
+      return;
+    }
+
+    gsap.fromTo(
+      chars,
+      {
+        autoAlpha: 0,
+        y: 20,
+        filter: "blur(9px)"
+      },
+      {
+        autoAlpha: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 0.68,
+        stagger: 0.018,
+        ease: "power3.out",
+        scrollTrigger: (() => {
+          const selectedWorksPanel = title.closest(".selected-works-panel");
+          const selectedWorksST = ScrollTrigger.getById("performanteGalleryFlow");
+
+          if (selectedWorksPanel && selectedWorksST?.animation) {
+            return {
+              trigger: selectedWorksPanel,
+              containerAnimation: selectedWorksST.animation,
+              start: "left 97%",
+              once: true
+            };
+          }
+
+          return {
+            trigger: title,
+            start: "top 97%",
+            once: true
+          };
+        })()
+      }
+    );
+  });
+
+  /* 3) Wraps & Branding cards — top edge remains anchored while the bottom
+        folds forward into place, one card after another. */
+  const brandingGrid = document.querySelector(".wrap-branding-grid");
+  const brandingCards = brandingGrid
+    ? gsap.utils.toArray(brandingGrid.querySelectorAll(".wrap-branding-card"))
+    : [];
+
+  if (brandingGrid && brandingCards.length) {
+    gsap.set(brandingGrid, { perspective: 1400 });
+
+    if (reduceMotion) {
+      gsap.set(brandingCards, { autoAlpha: 1, rotateX: 0 });
+    } else {
+      gsap.fromTo(
+        brandingCards,
+        {
+          autoAlpha: 0,
+          rotateX: -72,
+          transformOrigin: "50% 0%",
+          transformPerspective: 1400
+        },
+        {
+          autoAlpha: 1,
+          rotateX: 0,
+          duration: 1.1,
+          stagger: 0.14,
+          ease: "power3.out",
+          clearProps: "transform-origin",
+          scrollTrigger: {
+            trigger: brandingGrid.closest(".wrap-light-section--intro") || brandingGrid,
+            start: "top 96%",
+            once: true
+          }
+        }
+      );
+    }
+  }
+
+  window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
+});

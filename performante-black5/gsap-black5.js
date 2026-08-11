@@ -1567,6 +1567,34 @@ window.addEventListener("load", () => {
     duration: 0.75
   });
 
+  /* Selected Works image lift: every project image after the first rises
+     slightly as its horizontal panel enters the viewport. */
+  const selectedProjectMedia = gsap.utils.toArray(
+    stage.querySelectorAll(".selected-works-panel--project .selected-project-card__media img")
+  );
+
+  selectedProjectMedia.slice(1).forEach((img) => {
+    const panel = img.closest(".selected-works-panel");
+    if (!panel) return;
+
+    gsap.fromTo(
+      img,
+      { y: 52 },
+      {
+        y: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: panel,
+          containerAnimation: selectedWorksTimeline,
+          start: "left 102%",
+          end: "left 66%",
+          scrub: true,
+          invalidateOnRefresh: true
+        }
+      }
+    );
+  });
+
   window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
 
   /* --------------------------------------------------------
@@ -1937,4 +1965,439 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 /* ============================================================================
    END — PW INFINITE GALLERY
+   ============================================================================ */
+
+
+/* ============================================================================
+   GLOBAL TYPOGRAPHY + CARD REVEALS
+   - headings: letter-by-letter blur / fade / rise
+   - about statement: typography-safe scroll-driven white fill
+   - Wraps & Branding cards: top-hinged fold-in, staggered
+   ============================================================================ */
+document.addEventListener("DOMContentLoaded", () => {
+  if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Split titles by WORD first, then by character.
+     This keeps normal word wrapping intact and prevents letters from being
+     clipped or scattered across lines while preserving the same reveal look. */
+  function splitHeadingIntoChars(el) {
+    if (!el || el.dataset.pwSplit === "true") return [];
+
+    const originalLabel = el.textContent.replace(/\s+/g, " ").trim();
+    const chars = [];
+
+    function processTextNode(node) {
+      const value = node.nodeValue || "";
+      const frag = document.createDocumentFragment();
+      const parts = value.split(/(\s+)/);
+
+      parts.forEach((part) => {
+        if (!part) return;
+
+        if (/^\s+$/.test(part)) {
+          frag.appendChild(document.createTextNode(part));
+          return;
+        }
+
+        const word = document.createElement("span");
+        word.className = "pw-title-word";
+        word.setAttribute("aria-hidden", "true");
+
+        [...part].forEach((char) => {
+          const span = document.createElement("span");
+          span.className = "pw-title-char";
+          span.textContent = char;
+          chars.push(span);
+          word.appendChild(span);
+        });
+
+        frag.appendChild(word);
+      });
+
+      node.replaceWith(frag);
+    }
+
+    function walk(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        processTextNode(node);
+        return;
+      }
+
+      if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== "BR") {
+        [...node.childNodes].forEach(walk);
+      }
+    }
+
+    [...el.childNodes].forEach(walk);
+    if (originalLabel) el.setAttribute("aria-label", originalLabel);
+    el.classList.add("pw-title-reveal");
+    el.dataset.pwSplit = "true";
+    return chars;
+  }
+
+  /* 1) Special about statement — line-by-line white fill.
+        The original heading remains completely untouched. We stack clipped
+        white copies over the muted original, one clip per rendered line, so
+        each line fills left-to-right before the next line begins. */
+  const aboutTitle = document.querySelector(".wrap-about-panel__content h2");
+  if (aboutTitle) {
+    aboutTitle.classList.remove("pw-scroll-fill-text");
+    aboutTitle.classList.add("pw-line-fill-source");
+
+    const buildLineFill = () => {
+      aboutTitle.querySelectorAll(":scope > .pw-line-fill-overlay").forEach(el => el.remove());
+
+      const range = document.createRange();
+      range.selectNodeContents(aboutTitle);
+      const titleRect = aboutTitle.getBoundingClientRect();
+      const rawRects = Array.from(range.getClientRects()).filter(r => r.width > 2 && r.height > 2);
+
+      /* Merge fragments that belong to the same rendered line. */
+      const lines = [];
+      rawRects.forEach(r => {
+        const existing = lines.find(line => Math.abs(line.top - r.top) < 3);
+        if (existing) {
+          existing.left = Math.min(existing.left, r.left);
+          existing.right = Math.max(existing.right, r.right);
+          existing.top = Math.min(existing.top, r.top);
+          existing.bottom = Math.max(existing.bottom, r.bottom);
+        } else {
+          lines.push({ left:r.left, right:r.right, top:r.top, bottom:r.bottom });
+        }
+      });
+      lines.sort((a,b) => a.top - b.top);
+
+      const overlays = lines.map((line) => {
+        const clone = document.createElement("span");
+        clone.className = "pw-line-fill-overlay";
+        clone.setAttribute("aria-hidden", "true");
+        clone.textContent = aboutTitle.textContent;
+        aboutTitle.appendChild(clone);
+
+        const left = Math.max(0, line.left - titleRect.left);
+        const right = Math.max(0, titleRect.right - line.right);
+        const top = Math.max(0, line.top - titleRect.top);
+        const bottom = Math.max(0, titleRect.bottom - line.bottom);
+
+        gsap.set(clone, {
+          clipPath: `inset(${top}px ${titleRect.width - left}px ${bottom}px ${left}px)`
+        });
+
+        clone.dataset.pwClipTop = top;
+        clone.dataset.pwClipRight = right;
+        clone.dataset.pwClipBottom = bottom;
+        clone.dataset.pwClipLeft = left;
+        return clone;
+      });
+
+      if (reduceMotion) {
+        overlays.forEach(clone => {
+          gsap.set(clone, {
+            clipPath: `inset(${clone.dataset.pwClipTop}px ${clone.dataset.pwClipRight}px ${clone.dataset.pwClipBottom}px ${clone.dataset.pwClipLeft}px)`
+          });
+        });
+        return;
+      }
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".wrap-about-panel",
+          start: "top 78%",
+          end: "+=640",
+          scrub: 0.30,
+          invalidateOnRefresh: true
+        }
+      });
+
+      overlays.forEach((clone, i) => {
+        tl.to(clone, {
+          clipPath: `inset(${clone.dataset.pwClipTop}px ${clone.dataset.pwClipRight}px ${clone.dataset.pwClipBottom}px ${clone.dataset.pwClipLeft}px)`,
+          ease: "none",
+          duration: 1
+        }, i);
+      });
+    };
+
+    requestAnimationFrame(buildLineFill);
+    window.addEventListener("load", buildLineFill, { once:true });
+  }
+
+  /* 2) General title reveal.
+        IMPORTANT: the first light section changes real layout (margin-top) while
+        the marquee transition is scrubbed. ScrollTrigger positions created for
+        descendants can therefore become stale. For Wraps & Branding and normal
+        titles below it, use actual viewport intersection instead. Selected Works
+        keeps its existing containerAnimation because that timing is already right. */
+  const brandingSection = document.querySelector(".wrap-light-section--intro");
+
+  function isAtOrAfterBranding(el) {
+    if (!brandingSection || !el) return false;
+    return el === brandingSection ||
+      !!(brandingSection.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) ||
+      brandingSection.contains(el);
+  }
+
+  /* Direct viewport watcher.
+     This page has pinned/scrubbed sections that change layout while scrolling,
+     so we deliberately avoid IntersectionObserver/normal ScrollTrigger for
+     headings at and below Wraps & Branding. getBoundingClientRect() gives the
+     element's real rendered position every frame. */
+  const manualTitleReveals = new Map();
+
+  function queueManualTitleReveal(title, chars, lead = 1.14) {
+    gsap.set(chars, { autoAlpha: 0, y: 20, filter: "blur(9px)" });
+    manualTitleReveals.set(title, { chars, lead });
+  }
+
+  function runManualViewportReveals() {
+    if (!manualTitleReveals.size) return;
+
+    manualTitleReveals.forEach((item, title) => {
+      const rect = title.getBoundingClientRect();
+      const triggerY = window.innerHeight * item.lead;
+
+      /* Start before it enters the viewport, but only after it has approached
+         from below. This makes the animation visible right as the title arrives. */
+      if (rect.top <= triggerY && rect.bottom >= -80) {
+        manualTitleReveals.delete(title);
+        gsap.to(item.chars, {
+          autoAlpha: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.68,
+          stagger: 0.018,
+          ease: "power3.out",
+          overwrite: true
+        });
+      }
+    });
+  }
+
+  if (!reduceMotion) gsap.ticker.add(runManualViewportReveals);
+
+  gsap.utils.toArray("h1,h2,h3").forEach((title) => {
+    if (title === aboutTitle) return;
+    if (title.closest(".wrap-branding-card")) return;
+    if (title.closest(".pw-menu")) return;
+
+    const chars = splitHeadingIntoChars(title);
+    if (!chars.length) return;
+
+    if (reduceMotion) {
+      gsap.set(chars, { autoAlpha: 1, y: 0, filter: "blur(0px)" });
+      return;
+    }
+
+    const selectedWorksPanel = title.closest(".selected-works-panel");
+    const selectedWorksST = ScrollTrigger.getById("performanteGalleryFlow");
+
+    if (selectedWorksPanel && selectedWorksST?.animation) {
+      gsap.fromTo(
+        chars,
+        { autoAlpha: 0, y: 20, filter: "blur(9px)" },
+        {
+          autoAlpha: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.68,
+          stagger: 0.018,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: selectedWorksPanel,
+            containerAnimation: selectedWorksST.animation,
+            start: "left 97%",
+            once: true
+          }
+        }
+      );
+      return;
+    }
+
+    if (isAtOrAfterBranding(title)) {
+      /* Wraps & Branding gets a little extra lead; titles below it start
+         roughly 12% before reaching the viewport. */
+      const lead = title.closest(".wrap-branding-intro") ? 1.20 : 1.12;
+      queueManualTitleReveal(title, chars, lead);
+      return;
+    }
+
+    /* Earlier-page headings can safely keep normal ScrollTrigger timing. */
+    gsap.fromTo(
+      chars,
+      { autoAlpha: 0, y: 20, filter: "blur(9px)" },
+      {
+        autoAlpha: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 0.68,
+        stagger: 0.018,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: title,
+          start: "top 94%",
+          once: true
+        }
+      }
+    );
+  });
+
+  /* 3) Wraps & Branding cards — use viewport intersection instead of a
+        descendant ScrollTrigger because the parent section's layout position is
+        changing during the marquee transition. Top stays anchored; bottom folds in. */
+  const brandingGrid = document.querySelector(".wrap-branding-grid");
+  const brandingCards = brandingGrid
+    ? gsap.utils.toArray(brandingGrid.querySelectorAll(".wrap-branding-card"))
+    : [];
+
+  if (brandingGrid && brandingCards.length) {
+    gsap.set(brandingGrid, { perspective: 1400 });
+
+    if (reduceMotion) {
+      gsap.set(brandingCards, { autoAlpha: 1, rotateX: 0 });
+    } else {
+      gsap.set(brandingCards, {
+        autoAlpha: 0,
+        rotateX: -72,
+        transformOrigin: "50% 0%",
+        transformPerspective: 1400
+      });
+
+      const revealBrandingCards = () => {
+        gsap.to(brandingCards, {
+          autoAlpha: 1,
+          rotateX: 0,
+          duration: 1.05,
+          stagger: 0.14,
+          ease: "power3.out",
+          overwrite: true,
+          clearProps: "transform-origin"
+        });
+      };
+
+      let brandingCardsRevealed = false;
+      const checkBrandingCards = () => {
+        if (brandingCardsRevealed) return;
+        const rect = brandingGrid.getBoundingClientRect();
+
+        /* Begin about 18% before the grid actually reaches the viewport. */
+        if (rect.top <= window.innerHeight * 1.18 && rect.bottom >= -80) {
+          brandingCardsRevealed = true;
+          gsap.ticker.remove(checkBrandingCards);
+          revealBrandingCards();
+        }
+      };
+
+      gsap.ticker.add(checkBrandingCards);
+      checkBrandingCards();
+    }
+  }
+
+  window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
+});
+
+
+/* ============================================================================
+   BLACK5 — WHY / PROCESS / PROOF / CLOSING CTA MOTION
+   Uses live rendered viewport positions so the existing pinned sections above
+   cannot throw the timing off. Selected Works is intentionally untouched.
+   ============================================================================ */
+(() => {
+  if (typeof gsap === "undefined") return;
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.documentElement.classList.add("pw5-js-ready");
+  if (reduced) return;
+
+  const jobs = [];
+
+  function liveReveal(trigger, targets, fromVars, toVars, lead = 1.08) {
+    if (!trigger || !targets || !targets.length) return;
+    gsap.set(targets, fromVars);
+    jobs.push({ trigger, targets, toVars, lead, done:false });
+  }
+
+  const why = document.querySelector(".pw5-why");
+  const whyItems = gsap.utils.toArray(".pw5-why-item");
+  liveReveal(
+    why,
+    whyItems,
+    { autoAlpha:0, y:56, filter:"blur(8px)" },
+    { autoAlpha:1, y:0, filter:"blur(0px)", duration:.9, stagger:.11, ease:"power3.out" },
+    1.08
+  );
+
+  const process = document.querySelector(".pw5-process-grid");
+  const steps = gsap.utils.toArray(".pw5-process-step");
+  liveReveal(
+    process,
+    steps,
+    { autoAlpha:0, y:42 },
+    { autoAlpha:1, y:0, duration:.72, stagger:.095, ease:"power3.out" },
+    1.10
+  );
+
+  const proof = document.querySelector(".pw5-proof");
+  const proofItems = gsap.utils.toArray(".pw5-proof-item");
+  liveReveal(
+    proof,
+    proofItems,
+    { autoAlpha:0, y:30 },
+    { autoAlpha:1, y:0, duration:.65, stagger:.08, ease:"power3.out" },
+    1.10
+  );
+
+  const cta = document.querySelector(".pw5-closing-cta");
+  const ctaBottom = gsap.utils.toArray(".pw5-closing-cta__bottom");
+  liveReveal(
+    cta,
+    ctaBottom,
+    { autoAlpha:0, y:34 },
+    { autoAlpha:1, y:0, duration:.8, ease:"power3.out" },
+    1.06
+  );
+
+  const ctaImage = document.querySelector(".pw5-closing-cta__media img");
+  if (cta && ctaImage && typeof ScrollTrigger !== "undefined") {
+    gsap.fromTo(ctaImage,
+      { yPercent:-3, scale:1.06 },
+      {
+        yPercent:3,
+        scale:1.02,
+        ease:"none",
+        scrollTrigger:{
+          trigger:cta,
+          start:"top bottom",
+          end:"bottom top",
+          scrub:.8,
+          invalidateOnRefresh:true
+        }
+      }
+    );
+  }
+
+  function tick() {
+    if (!jobs.length) {
+      gsap.ticker.remove(tick);
+      return;
+    }
+
+    for (let i = jobs.length - 1; i >= 0; i--) {
+      const job = jobs[i];
+      const rect = job.trigger.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * job.lead && rect.bottom >= -100) {
+        gsap.to(job.targets, { ...job.toVars, overwrite:true });
+        jobs.splice(i, 1);
+      }
+    }
+  }
+
+  gsap.ticker.add(tick);
+  tick();
+})();
+/* ============================================================================
+   END BLACK5 MOTION
    ============================================================================ */

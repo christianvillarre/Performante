@@ -1711,230 +1711,148 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+/* ==========================================================
+   Gallery filmstrip — click to open lightbox
+   (drag/swipe for the filmstrip itself lives in animations.js,
+   inside its existing step-based carousel — see the "Before/after
+   filmstrip carousel" block there. It exposes
+   window.__filmstripDragMoved so this click handler can tell a
+   drag-release apart from a genuine click.)
+   ========================================================== */
+(() => {
+  const lightbox = document.getElementById("pwLightbox");
+  const lightboxImg = document.getElementById("pwLightboxImg");
+  const frame = document.querySelector(".pw-lightbox__frame");
+  const closeBtn = document.getElementById("pwLightboxClose");
 
-
-
-/* ============================================================================
-   NEW — PW INFINITE GALLERY (added by Claude)
-   Full-width, arrow-controlled, infinite-loop-in-both-directions image
-   gallery. Markup lives in index.html (section#pwInfiniteGallery), CSS
-   lives at the end of styles.css under the matching banner.
-
-   How the loop works: the original slide set is cloned once before and
-   once after itself, so the track is [clones][originals][clones]. The
-   track starts positioned at the first "originals" slide. Clicking an
-   arrow animates one slide at a time; once the animation lands on a
-   cloned slide, we jump (no transition) back to the matching real slide
-   so the loop never shows a blank frame or a hard "reset" in either
-   direction.
-   ============================================================================ */
-document.addEventListener("DOMContentLoaded", () => {
-  const viewport = document.getElementById("pwInfiniteGalleryViewport");
-  const track = document.getElementById("pwInfiniteGalleryTrack");
-  if (!viewport || !track) return;
-
-  const section = document.getElementById("pwInfiniteGallery");
-  const prevBtn = section ? section.querySelector(".pw-infinite-gallery__arrow--prev") : null;
-  const nextBtn = section ? section.querySelector(".pw-infinite-gallery__arrow--next") : null;
-
-  const originals = Array.from(track.children);
-  const slideCount = originals.length;
-  if (!slideCount) return;
-
-  originals.forEach((slide, i) => slide.setAttribute("data-slide-index", String(i)));
-
-  // Build [clones-before][originals][clones-after]
-  const cloneSet = () => originals.map((slide) => {
-    const clone = slide.cloneNode(true);
-    clone.setAttribute("aria-hidden", "true");
-    const img = clone.querySelector("img");
-    if (img) img.removeAttribute("alt");
-    return clone;
+  // Only the real photos, not the aria-hidden loop duplicates, and de-duped
+  // by src so dragging cycles through each photo once.
+  const seen = new Set();
+  const slides = [];
+  document.querySelectorAll(".wrap-filmstrip__item img").forEach((img) => {
+    if (img.closest('[aria-hidden="true"]')) return;
+    if (seen.has(img.src)) return;
+    seen.add(img.src);
+    slides.push({ src: img.src, alt: img.alt });
   });
 
-  const beforeClones = cloneSet();
-  const afterClones = cloneSet();
+  if (!lightbox || !lightboxImg || !frame || !closeBtn || !slides.length) return;
 
-  track.innerHTML = "";
-  [...beforeClones, ...originals, ...afterClones].forEach((el) => track.appendChild(el));
-
-  const allSlides = Array.from(track.children);
-  let index = slideCount; // start at the first "real" slide
-  let slideWidth = 0;
-  let isAnimating = false;
-
-  function measure() {
-    const first = allSlides[0];
-    const style = window.getComputedStyle(first);
-    const marginLeft = parseFloat(style.marginLeft) || 0;
-    const marginRight = parseFloat(style.marginRight) || 0;
-    slideWidth = first.getBoundingClientRect().width + marginLeft + marginRight;
+  // Guarantee the lightbox is a direct child of <body>, not nested inside
+  // any section — a transformed/will-change ancestor anywhere in the tree
+  // would otherwise turn `position: fixed` into something scoped to that
+  // ancestor instead of the viewport.
+  if (lightbox.parentElement !== document.body) {
+    document.body.appendChild(lightbox);
   }
 
-  function setPosition(withTransition) {
-    track.style.transition = withTransition ? "transform .55s cubic-bezier(.65,0,.35,1)" : "none";
-    track.style.transform = `translateX(${-index * slideWidth}px)`;
-  }
+  let currentIndex = 0;
 
-  function goTo(step) {
-    if (isAnimating || !slideWidth) return;
-    isAnimating = true;
-    index += step;
-    setPosition(true);
-  }
+  const showSlide = (index) => {
+    currentIndex = (index + slides.length) % slides.length;
+    const slide = slides[currentIndex];
+    lightboxImg.src = slide.src;
+    lightboxImg.alt = slide.alt || "";
+  };
 
-  track.addEventListener("transitionend", () => {
-    isAnimating = false;
+  const openLightbox = (src) => {
+    const startIndex = slides.findIndex((s) => s.src === src);
+    showSlide(startIndex === -1 ? 0 : startIndex);
+    lightbox.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+  };
 
-    // Landed in the trailing clone zone -> snap back into the real set
-    if (index >= slideCount * 2) {
-      index -= slideCount;
-      setPosition(false);
-    }
+  const closeLightbox = () => {
+    lightbox.classList.remove("is-open");
+    document.body.style.overflow = "";
+  };
 
-    // Landed in the leading clone zone -> snap forward into the real set
-    if (index < slideCount) {
-      index += slideCount;
-      setPosition(false);
-    }
+  document.querySelectorAll(".wrap-filmstrip__item img").forEach((img) => {
+    img.addEventListener("click", () => {
+      if (window.__filmstripDragMoved) return;
+      openLightbox(img.src);
+    });
   });
 
-  if (nextBtn) nextBtn.addEventListener("click", () => goTo(1));
-  if (prevBtn) prevBtn.addEventListener("click", () => goTo(-1));
+  closeBtn.addEventListener("click", closeLightbox);
 
-  // Basic drag / swipe support
-  let dragStartX = 0;
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (!lightbox.classList.contains("is-open")) return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowRight") showSlide(currentIndex + 1);
+    if (e.key === "ArrowLeft") showSlide(currentIndex - 1);
+  });
+
+  /* ---- Drag / swipe to move between photos ---- */
+  const DRAG_THRESHOLD = 70;
+  let pointerId = null;
+  let startX = 0;
+  let dragX = 0;
   let dragging = false;
-  let dragMoved = false;
 
-  function onDragStart(clientX) {
-    if (isAnimating) return;
+  frame.addEventListener("pointerdown", (e) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    pointerId = e.pointerId;
+    startX = e.clientX;
+    dragX = 0;
     dragging = true;
-    dragMoved = false;
-    dragStartX = clientX;
-  }
+    frame.classList.add("is-dragging");
+    frame.setPointerCapture(pointerId);
+  });
 
-  function onDragEnd(clientX) {
-    if (!dragging) return;
+  frame.addEventListener("pointermove", (e) => {
+    if (!dragging || e.pointerId !== pointerId) return;
+    dragX = e.clientX - startX;
+    frame.style.transform = `translateX(${dragX}px)`;
+  });
+
+  const endDrag = (e) => {
+    if (!dragging || (e.pointerId !== undefined && e.pointerId !== pointerId)) return;
     dragging = false;
-    const delta = clientX - dragStartX;
-    if (Math.abs(delta) > 40) {
-      dragMoved = true;
-      goTo(delta < 0 ? 1 : -1);
+    frame.classList.remove("is-dragging");
+    frame.style.transform = "";
+
+    if (dragX <= -DRAG_THRESHOLD) {
+      showSlide(currentIndex + 1);
+    } else if (dragX >= DRAG_THRESHOLD) {
+      showSlide(currentIndex - 1);
     }
-  }
 
-  viewport.addEventListener("pointerdown", (e) => onDragStart(e.clientX));
-  viewport.addEventListener("pointerup", (e) => onDragEnd(e.clientX));
-  viewport.addEventListener("pointerleave", () => { dragging = false; });
+    pointerId = null;
+    dragX = 0;
+  };
 
-  function init() {
-    measure();
-    setPosition(false);
-  }
+  frame.addEventListener("pointerup", endDrag);
+  frame.addEventListener("pointercancel", endDrag);
+  frame.addEventListener("dragstart", (e) => e.preventDefault());
+})();
 
-  init();
+/* Wraps & Branding cards — slide down + fade in, one by one, scrubbed to scroll */
+(() => {
+  if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+  gsap.registerPlugin(ScrollTrigger);
 
-  // If a slide's image is missing/broken, swap in a visible labeled
-  // placeholder instead of leaving a blank/invisible box.
-  allSlides.forEach((slide) => {
-    const img = slide.querySelector("img");
-    if (!img) return;
+  const grid = document.querySelector(".wrap-branding-grid");
+  const cards = gsap.utils.toArray(".wrap-branding-card");
+  if (!grid || !cards.length) return;
 
-    const showFallback = () => {
-      if (slide.querySelector(".pw-infinite-gallery__slide-fallback")) return;
-      const label = img.getAttribute("alt") || "Image coming soon";
-      img.style.display = "none";
-      const fallback = document.createElement("div");
-      fallback.className = "pw-infinite-gallery__slide-fallback";
-      fallback.textContent = label;
-      slide.appendChild(fallback);
-    };
+  gsap.set(cards, { opacity: 0, y: -60 });
 
-    if (img.complete && img.naturalWidth === 0) {
-      showFallback();
-    } else {
-      img.addEventListener("error", showFallback, { once: true });
+  gsap.timeline({
+    scrollTrigger: {
+      trigger: grid,
+      start: "top 90%",
+      end: "top 25%",
+      scrub: 0.6
     }
+  }).to(cards, {
+    opacity: 1,
+    y: 0,
+    ease: "power1.out",
+    stagger: 0.4
   });
-
-  // --- Lightbox ---------------------------------------------------------
-  // Reuses the site's existing (previously unwired) .pw-lightbox markup
-  // and styles. Clicking any slide (including clones) opens the matching
-  // original image; prev/next loop through the original slide set.
-  const lightbox = document.getElementById("pwGalleryLightbox");
-  if (lightbox) {
-    const lightboxImg = document.getElementById("pwGalleryLightboxImg");
-    const lightboxClose = document.getElementById("pwGalleryLightboxClose");
-    const lightboxPrev = document.getElementById("pwGalleryLightboxPrev");
-    const lightboxNext = document.getElementById("pwGalleryLightboxNext");
-    let lightboxIndex = 0;
-
-    function renderLightbox() {
-      const source = originals[lightboxIndex];
-      const sourceImg = source.querySelector("img");
-      if (!sourceImg) return;
-      lightboxImg.src = sourceImg.getAttribute("src");
-      lightboxImg.alt = sourceImg.getAttribute("alt") || "";
-    }
-
-    function openLightbox(i) {
-      lightboxIndex = ((i % slideCount) + slideCount) % slideCount;
-      renderLightbox();
-      lightbox.classList.add("is-open");
-      lightbox.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeLightbox() {
-      lightbox.classList.remove("is-open");
-      lightbox.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
-    }
-
-    function stepLightbox(step) {
-      lightboxIndex = ((lightboxIndex + step) % slideCount + slideCount) % slideCount;
-      renderLightbox();
-    }
-
-    allSlides.forEach((slide) => {
-      const openThis = () => {
-        if (dragMoved) { dragMoved = false; return; }
-        const i = parseInt(slide.getAttribute("data-slide-index"), 10);
-        if (!Number.isNaN(i)) openLightbox(i);
-      };
-      slide.addEventListener("click", openThis);
-      slide.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          openThis();
-        }
-      });
-    });
-
-    if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
-    if (lightboxPrev) lightboxPrev.addEventListener("click", () => stepLightbox(-1));
-    if (lightboxNext) lightboxNext.addEventListener("click", () => stepLightbox(1));
-
-    // Click on the dark backdrop (not the image/frame/buttons) closes it
-    lightbox.addEventListener("click", (e) => {
-      if (e.target === lightbox) closeLightbox();
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (!lightbox.classList.contains("is-open")) return;
-      if (e.key === "Escape") closeLightbox();
-      if (e.key === "ArrowLeft") stepLightbox(-1);
-      if (e.key === "ArrowRight") stepLightbox(1);
-    });
-  }
-
-  let resizeTimer;
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(init, 150);
-  });
-});
-/* ============================================================================
-   END — PW INFINITE GALLERY
-   ============================================================================ */
+})();

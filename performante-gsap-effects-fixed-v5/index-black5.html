@@ -19,7 +19,7 @@
 
 
 
-<link rel="stylesheet" href="/css/index-black6.css" />
+<link rel="stylesheet" href="css/index-black5.css" />
 <link rel="stylesheet" href="css/navbar.css" />
 
 <script type="importmap">
@@ -36,22 +36,9 @@
 <script src="https://unpkg.com/lenis@1.3.18/dist/lenis.min.js"></script>
 
 
-
-<style id="pw5-critical-sections">
-/* BLACK5 visibility safeguard — ensures added homepage sections can never be clipped/hidden by legacy animation states */
-.pw5-why,.pw5-process,.pw5-proof,.pw5-closing-cta{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:80!important;transform:none!important;}
-.pw5-why{background:#0a0a0a!important;color:#f2f2f2!important;min-height:720px!important;padding:120px 0!important;}
-.pw5-process{background:#0a0a0a!important;color:#f2f2f2!important;min-height:900px!important;padding:140px 0!important;}
-.pw5-proof{background:#0a0a0a!important;color:#f2f2f2!important;min-height:190px!important;}
-.pw5-closing-cta{min-height:760px!important;}
-.pw5-shell{width:min(calc(100% - 80px),1600px)!important;margin:0 auto!important;}
-.pw5-section-head,.pw5-process-head,.pw5-why-grid,.pw5-process-grid,.pw5-proof-grid,.pw5-closing-cta__inner{visibility:visible!important;opacity:1!important;}
-.pw5-why-item,.pw5-process-step,.pw5-proof-item,.pw5-closing-cta__bottom{visibility:visible!important;opacity:1!important;}
-</style>
-
 </head>
 
-<body data-black5-build="visible-sections-fixed">
+<body>
 
 <header class="pw-nav" id="pwNav">
   <a class="pw-nav__logo" href="/" aria-label="Performante Wraps home">
@@ -501,56 +488,64 @@
 </section>
 
 <!-- ============================================================================
-     BLACK5 — PROCESS / PROOF
+     BLACK5 — WHY PERFORMANTE / PROCESS / PROOF
      ============================================================================ -->
-<section class="pw5-process" id="process" aria-labelledby="pw5ProcessTitle">
+<section class="pw5-why" id="why-performante" aria-labelledby="pw5WhyTitle">
   <div class="pw5-shell">
-    <div class="pw5-process-head">
-      <!--<p class="pw5-kicker">The Process</p>-->
-      <h2 id="pw5ProcessTitle">The Process</h2>
-      <p class="pw5-process-intro">A focused process keeps every decision connected from concept through final installation.</p>
+    <div class="pw5-section-head">
+      <p class="pw5-kicker">Why Performante</p>
+      <h2 id="pw5WhyTitle">Built around the details most people never notice.</h2>
     </div>
 
-    <div class="pw5-process-timeline" aria-label="Performante project process">
-      <div class="pw5-process-line" aria-hidden="true">
-        <span class="pw5-process-line__fill"></span>
-      </div>
-
-      <article class="pw5-process-milestone pw5-process-milestone--right" data-process-step="1">
-        <span class="pw5-process-point" aria-hidden="true"><i>01</i></span>
-        <div class="pw5-process-copy">
-          <h3>Discover</h3>
-          <p>We define the vehicle, space, brand, finish and practical requirements before design begins.</p>
-        </div>
+    <div class="pw5-why-grid">
+      <article class="pw5-why-item">
+        <span class="pw5-index">01</span>
+        <h3>Design Led</h3>
+        <p>Every project starts with the visual system — proportion, placement, finish and how the complete surface reads in motion.</p>
       </article>
-
-      <article class="pw5-process-milestone pw5-process-milestone--left" data-process-step="2">
-        <span class="pw5-process-point" aria-hidden="true"><i>02</i></span>
-        <div class="pw5-process-copy">
-          <h3>Design</h3>
-          <p>Concepts are developed around the actual surface so graphics, color and material feel intentional from every angle.</p>
-        </div>
+      <article class="pw5-why-item">
+        <span class="pw5-index">02</span>
+        <h3>Material Driven</h3>
+        <p>Film, laminate, protection and finish are selected around the application, not forced into a one-size-fits-all package.</p>
       </article>
-
-      <article class="pw5-process-milestone pw5-process-milestone--right" data-process-step="3">
-        <span class="pw5-process-point" aria-hidden="true"><i>03</i></span>
-        <div class="pw5-process-copy">
-          <h3>Produce</h3>
-          <p>Artwork, color, print and materials are prepared with installation tolerances and final finish already in mind.</p>
-        </div>
-      </article>
-
-      <article class="pw5-process-milestone pw5-process-milestone--left" data-process-step="4">
-        <span class="pw5-process-point" aria-hidden="true"><i>04</i></span>
-        <div class="pw5-process-copy">
-          <h3>Install</h3>
-          <p>The final application is handled with the same attention to alignment, edges, transitions and presentation.</p>
-        </div>
+      <article class="pw5-why-item">
+        <span class="pw5-index">03</span>
+        <h3>Installed with Intent</h3>
+        <p>Edges, transitions, panel alignment and final presentation are treated as part of the design — not just the last step.</p>
       </article>
     </div>
   </div>
 </section>
-<!--
+
+<section class="pw5-process" id="process" aria-labelledby="pw5ProcessTitle">
+  <div class="pw5-shell">
+    <div class="pw5-process-head">
+      <p class="pw5-kicker">The Process</p>
+      <h2 id="pw5ProcessTitle">From first idea to finished surface.</h2>
+      <p class="pw5-process-intro">A clear path from concept through installation keeps the work focused, consistent and built for the real world.</p>
+    </div>
+
+    <div class="pw5-process-grid">
+      <article class="pw5-process-step">
+        <div class="pw5-process-step__top"><span>01</span><span>Discover</span></div>
+        <p>We define the vehicle, space, brand, finish and practical requirements before design begins.</p>
+      </article>
+      <article class="pw5-process-step">
+        <div class="pw5-process-step__top"><span>02</span><span>Design</span></div>
+        <p>Concepts are developed around the actual surface so graphics, color and material feel intentional from every angle.</p>
+      </article>
+      <article class="pw5-process-step">
+        <div class="pw5-process-step__top"><span>03</span><span>Produce</span></div>
+        <p>Artwork, color, print and materials are prepared with installation tolerances and final finish already in mind.</p>
+      </article>
+      <article class="pw5-process-step">
+        <div class="pw5-process-step__top"><span>04</span><span>Install</span></div>
+        <p>The final application is handled with the same attention to alignment, edges, transitions and presentation.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
 <section class="pw5-proof" aria-label="Performante capabilities">
   <div class="pw5-proof-grid">
     <div class="pw5-proof-item"><strong>8+</strong><span>Years Shaping the Industry</span></div>
@@ -558,9 +553,9 @@
     <div class="pw5-proof-item"><strong>Auto + Commercial</strong><span>One Visual Standard</span></div>
     <div class="pw5-proof-item"><strong>Design + Install</strong><span>One Complete Process</span></div>
   </div>
-</section>-->
+</section>
 <!-- ============================================================================
-     END BLACK5 — PROCESS / PROOF
+     END BLACK5 — WHY PERFORMANTE / PROCESS / PROOF
      ============================================================================ -->
 
 <section class="wrap-light-section wrap-brand-logos">
@@ -875,9 +870,9 @@
 <section class="pw-infinite-gallery" id="pwInfiniteGallery" aria-label="Featured work gallery">
   <div class="pw-infinite-gallery__head">
     <div class="pw-infinite-gallery__heading">
-      <!--<p class="pw-infinite-gallery__kicker">Gallery</p>-->
+      <p class="pw-infinite-gallery__kicker">Gallery</p>
       <h2 class="pw-infinite-gallery__title">Our Work in Motion</h2>
-      <!--<p class="pw-infinite-gallery__desc">A rolling look at recent wraps, tint, PPF, and branding installs — browse with the arrows.</p>-->
+      <p class="pw-infinite-gallery__desc">A rolling look at recent wraps, tint, PPF, and branding installs — browse with the arrows.</p>
     </div>
     <div class="pw-infinite-gallery__arrows">
       <button class="pw-infinite-gallery__arrow pw-infinite-gallery__arrow--prev" type="button" aria-label="Previous image">
@@ -907,10 +902,24 @@
      ============================================================================ -->
 <section class="pw5-closing-cta" aria-labelledby="pw5ClosingTitle">
   <div class="pw5-closing-cta__media" aria-hidden="true">
-    <img src="/images/stock15.jpeg" alt="" loading="lazy">
+    <img src="/images/IMG_8910.jpg" alt="" loading="lazy">
   </div>
   <div class="pw5-closing-cta__veil" aria-hidden="true"></div>
-  <a class="pw5-closing-cta__wordmark" href="/contact.html" style="--pw5-wordmark-img:url('/images/stock15.jpeg')"><span id="pw5ClosingTitle">PERFORMANTE</span></a>
+  <div class="pw5-closing-cta__inner">
+    <p class="pw5-kicker">Start a Project</p>
+    <h2 id="pw5ClosingTitle">Have something worth transforming?</h2>
+    <div class="pw5-closing-cta__bottom">
+      <p>Vehicle, fleet, storefront or space — bring us the surface. We’ll build the visual system around it.</p>
+      <a class="pw5-closing-cta__button pw-btn" href="/contact.html">
+        <span class="pw-btn__label">Let’s Build It</span>
+        <span class="pw-btn__arrow" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+    </div>
+  </div>
 </section>
 <!-- ============================================================================
      END BLACK5 — CLOSING PROJECT CTA
@@ -945,7 +954,7 @@
 
 <script src="js/navbar-black.js" defer></script>
 <script type="module" src="js/animations.js"></script>
-<script src="/js/gsap-black6.js" defer></script>
+<script src="js/gsap-black5.js" defer></script>
 
 </body>
 </html>

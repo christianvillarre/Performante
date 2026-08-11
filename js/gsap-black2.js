@@ -1567,6 +1567,34 @@ window.addEventListener("load", () => {
     duration: 0.75
   });
 
+  /* Selected Works image lift: every project image after the first rises
+     slightly as its horizontal panel enters the viewport. */
+  const selectedProjectMedia = gsap.utils.toArray(
+    stage.querySelectorAll(".selected-works-panel--project .selected-project-card__media img")
+  );
+
+  selectedProjectMedia.slice(1).forEach((img) => {
+    const panel = img.closest(".selected-works-panel");
+    if (!panel) return;
+
+    gsap.fromTo(
+      img,
+      { y: 52 },
+      {
+        y: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: panel,
+          containerAnimation: selectedWorksTimeline,
+          start: "left 92%",
+          end: "left 58%",
+          scrub: true,
+          invalidateOnRefresh: true
+        }
+      }
+    );
+  });
+
   window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
 
   /* --------------------------------------------------------
@@ -1938,3 +1966,185 @@ document.addEventListener("DOMContentLoaded", () => {
 /* ============================================================================
    END — PW INFINITE GALLERY
    ============================================================================ */
+
+
+/* ============================================================================
+   GLOBAL TYPOGRAPHY + CARD REVEALS
+   - headings: letter-by-letter blur / fade / rise
+   - about statement: scroll-driven white text fill
+   - Wraps & Branding cards: top-hinged fold-in, staggered
+   ============================================================================ */
+document.addEventListener("DOMContentLoaded", () => {
+  if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function splitHeadingIntoChars(el, charClass, spaceClass) {
+    if (!el || el.dataset.pwSplit === "true") return [];
+
+    const originalLabel = el.textContent.replace(/\s+/g, " ").trim();
+    const chars = [];
+
+    function processNode(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const frag = document.createDocumentFragment();
+        [...node.nodeValue].forEach((char) => {
+          if (/\s/.test(char)) {
+            const space = document.createElement("span");
+            space.className = spaceClass;
+            space.textContent = char;
+            frag.appendChild(space);
+            return;
+          }
+
+          const span = document.createElement("span");
+          span.className = charClass;
+          span.textContent = char;
+          span.setAttribute("aria-hidden", "true");
+          chars.push(span);
+          frag.appendChild(span);
+        });
+        node.replaceWith(frag);
+        return;
+      }
+
+      if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== "BR") {
+        [...node.childNodes].forEach(processNode);
+      }
+    }
+
+    [...el.childNodes].forEach(processNode);
+    if (originalLabel) el.setAttribute("aria-label", originalLabel);
+    el.dataset.pwSplit = "true";
+    return chars;
+  }
+
+  /* 1) Special about statement — letters start muted and fill to white
+        progressively as the user scrolls across the section. */
+  const aboutTitle = document.querySelector(".wrap-about-panel__content h2");
+  if (aboutTitle) {
+    const fillChars = splitHeadingIntoChars(aboutTitle, "pw-fill-char", "pw-fill-space");
+
+    if (fillChars.length) {
+      gsap.set(fillChars, { color: "rgba(255,255,255,0.18)" });
+
+      if (!reduceMotion) {
+        gsap.to(fillChars, {
+          color: "#ffffff",
+          stagger: 0.035,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".wrap-about-panel",
+            start: "top 72%",
+            end: "bottom 34%",
+            scrub: 0.6,
+            invalidateOnRefresh: true
+          }
+        });
+      } else {
+        gsap.set(fillChars, { color: "#ffffff" });
+      }
+    }
+  }
+
+  /* 2) General title reveal — all remaining h1/h2/h3 titles blur upward
+        one letter at a time. Card titles are excluded because their entire
+        card has its own fold reveal. */
+  const titleSelector = [
+    "h1",
+    "h2",
+    "h3"
+  ].join(",");
+
+  gsap.utils.toArray(titleSelector).forEach((title) => {
+    if (title === aboutTitle) return;
+    if (title.closest(".wrap-branding-card")) return;
+    if (title.closest(".pw-menu")) return;
+
+    const chars = splitHeadingIntoChars(title, "pw-title-char", "pw-title-space");
+    if (!chars.length) return;
+
+    if (reduceMotion) {
+      gsap.set(chars, { autoAlpha: 1, y: 0, filter: "blur(0px)" });
+      return;
+    }
+
+    gsap.fromTo(
+      chars,
+      {
+        autoAlpha: 0,
+        y: 22,
+        filter: "blur(10px)"
+      },
+      {
+        autoAlpha: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 0.72,
+        stagger: 0.022,
+        ease: "power3.out",
+        scrollTrigger: (() => {
+          const selectedWorksPanel = title.closest(".selected-works-panel");
+          const selectedWorksST = ScrollTrigger.getById("performanteGalleryFlow");
+
+          if (selectedWorksPanel && selectedWorksST?.animation) {
+            return {
+              trigger: selectedWorksPanel,
+              containerAnimation: selectedWorksST.animation,
+              start: "left 88%",
+              once: true
+            };
+          }
+
+          return {
+            trigger: title,
+            start: "top 88%",
+            once: true
+          };
+        })()
+      }
+    );
+  });
+
+  /* 3) Wraps & Branding cards — the top edge stays anchored while the
+        bottom unfolds forward from behind, one card after another. */
+  const brandingGrid = document.querySelector(".wrap-branding-grid");
+  const brandingCards = brandingGrid
+    ? gsap.utils.toArray(brandingGrid.querySelectorAll(".wrap-branding-card"))
+    : [];
+
+  if (brandingGrid && brandingCards.length) {
+    gsap.set(brandingGrid, { perspective: 1400 });
+
+    if (reduceMotion) {
+      gsap.set(brandingCards, { autoAlpha: 1, rotateX: 0 });
+    } else {
+      gsap.fromTo(
+        brandingCards,
+        {
+          autoAlpha: 0,
+          rotateX: -72,
+          transformOrigin: "50% 0%",
+          transformPerspective: 1400
+        },
+        {
+          autoAlpha: 1,
+          rotateX: 0,
+          duration: 1.15,
+          stagger: 0.16,
+          ease: "power3.out",
+          clearProps: "transform-origin",
+          scrollTrigger: {
+            trigger: brandingGrid,
+            start: "top 82%",
+            once: true
+          }
+        }
+      );
+    }
+  }
+
+  window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
+});

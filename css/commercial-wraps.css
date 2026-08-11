@@ -1,0 +1,828 @@
+/* ============================================================================
+   COMMERCIAL WRAPS — PAGE-SPECIFIC STYLESHEET
+   Deliberately a different layout language from vehicle-wraps.html (split
+   hero + collage instead of full-bleed photo, horizontal scroll-snap fleet
+   showcase instead of a stacked grid, count-up stat bento, draggable
+   before/after slider, rotating testimonial spotlight instead of a marquee).
+   Loaded only on commercial-wraps.html, after the shared css/styles.css +
+   css/navbar.css (tokens, fonts, nav/menu, .pw-btn, .wrap-marquee reused as-is).
+   ============================================================================ */
+
+.cw-page{ background:#0a0a0a; }
+
+/* The shared styles.css force-hides any direct <section> child of #site that
+   isn't .intro-wrap / .wrap-light-section / .wrap-media-gallery /
+   .pw-infinite-gallery. None of this page's sections carry those classes, so
+   each one gets its own id here — two ID selectors outweighs that rule's
+   four-class selector regardless of load order, so this always wins. */
+#site > #cwHeroSection{ display:flex !important; }
+#site > #cwStatsSection,
+#site > #cwIndustriesSection,
+#site > #cwFleetSection,
+#site > #cwCompareSection,
+#site > #cwProgramSection,
+#site > #cwEstimatorSection,
+#site > #cwSpotlightSection,
+#site > #cwCtaSection{ display:block !important; }
+
+.cw-section{
+  position:relative;
+  padding:clamp(90px,10vw,150px) 0;
+  background:#0a0a0a;
+  color:#fff;
+  overflow:hidden;
+}
+
+.cw-section__inner{
+  width:min(1500px, calc(100% - 48px));
+  margin:0 auto;
+}
+
+.cw-kicker{
+  margin:0 0 20px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--pw-red,#f00303);
+}
+
+.cw-section h2{
+  margin:0;
+  max-width:20ch;
+  font-size:clamp(2.4rem,5.6vw,5.6rem);
+  line-height:.92;
+  letter-spacing:-.055em;
+  font-weight:500;
+  color:#fff;
+}
+
+.cw-lead{
+  max-width:56ch;
+  margin:22px 0 0;
+  font-size:clamp(1rem,1.5vw,1.3rem);
+  line-height:1.55;
+  color:rgba(255,255,255,.62);
+}
+
+.cw-reveal{
+  opacity:0;
+  transform:translateY(26px);
+  transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);
+}
+.cw-reveal.is-inview{ opacity:1; transform:translateY(0); }
+
+
+/* ----------------------------------------------------------------------------
+   HERO — split layout: copy left, diagonal clipped image collage right,
+   with a subtle cursor-driven parallax on the collage panels.
+   ---------------------------------------------------------------------------- */
+.cw-hero{
+  position:relative;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  background:#050505;
+  overflow:hidden;
+}
+
+.cw-hero__row{
+  flex:1 1 auto;
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  align-items:stretch;
+}
+
+.cw-hero__copy{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:clamp(120px,16vh,180px) clamp(28px,4vw,72px) clamp(60px,8vh,100px);
+  position:relative;
+  z-index:5;
+}
+
+.cw-hero__eyebrow{
+  margin:0 0 18px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--pw-red,#f00303);
+}
+
+.cw-hero__copy h1{
+  margin:0 0 28px;
+  font-size:clamp(2.4rem,4.6vw,4.6rem);
+  line-height:.98;
+  letter-spacing:-.04em;
+  font-weight:500;
+  max-width:12ch;
+}
+
+.cw-hero__copy .cw-lead{
+  max-width:42ch;
+  margin-bottom:36px;
+}
+
+.cw-hero__stat{
+  display:flex;
+  align-items:baseline;
+  gap:14px;
+  margin-top:48px;
+  padding-top:24px;
+  border-top:1px solid rgba(255,255,255,.14);
+  width:fit-content;
+}
+
+.cw-hero__stat-num{
+  font-family:'Orbitron', sans-serif;
+  font-size:clamp(2.2rem,3.6vw,3.4rem);
+  font-weight:700;
+  color:#fff;
+  line-height:1;
+}
+
+.cw-hero__stat-label{
+  max-width:16ch;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+  line-height:1.4;
+}
+
+.cw-hero__badges{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px 22px;
+  list-style:none;
+  margin:40px 0 0;
+  padding-top:22px;
+  border-top:1px solid rgba(255,255,255,.14);
+}
+
+.cw-hero__badges li{
+  position:relative;
+  padding-left:18px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.6);
+}
+
+.cw-hero__badges li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:50%;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--pw-red,#f00303);
+  transform:translateY(-50%);
+}
+
+.cw-hero__collage{
+  position:relative;
+  overflow:hidden;
+}
+
+.cw-hero__collage-img{
+  position:absolute;
+  overflow:hidden;
+  will-change:transform;
+}
+
+.cw-hero__collage-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.cw-hero__collage-img--a{
+  inset:0;
+  clip-path:polygon(14% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.cw-hero__collage::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(100deg, rgba(5,5,5,.85) 0%, rgba(5,5,5,.25) 20%, rgba(5,5,5,0) 40%), linear-gradient(to top, rgba(5,5,5,.65) 0%, rgba(5,5,5,0) 30%);
+  z-index:3;
+  pointer-events:none;
+}
+
+.cw-hero__floatcard{
+  position:absolute;
+  z-index:4;
+  left:clamp(24px,4vw,56px);
+  bottom:clamp(28px,4vw,56px);
+  max-width:280px;
+  padding:22px 24px;
+  border-radius:14px;
+  background:rgba(10,10,10,.55);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.14);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.cw-hero__floatcard-num{
+  font-family:'Orbitron', sans-serif;
+  font-size:clamp(1.8rem,2.6vw,2.4rem);
+  font-weight:700;
+  color:#fff;
+  line-height:1;
+}
+
+.cw-hero__floatcard-label{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.6);
+  line-height:1.4;
+}
+
+@media(max-width:900px){
+  .cw-hero__row{ grid-template-columns:1fr; }
+  .cw-hero__collage{ min-height:44vh; }
+  .cw-hero__copy{ padding:110px 22px 40px; }
+  .cw-hero__copy h1{ max-width:11ch; font-size:clamp(2.2rem,9vw,3.2rem); }
+  .cw-hero__floatcard{ left:20px; bottom:20px; max-width:220px; padding:18px 20px; }
+}
+
+
+/* ----------------------------------------------------------------------------
+   MARQUEE BAND (reuses .wrap-marquee as-is)
+   ---------------------------------------------------------------------------- */
+.cw-marquee-band{
+  background:#050505;
+  border-top:1px solid rgba(255,255,255,.12);
+  border-bottom:1px solid rgba(255,255,255,.12);
+}
+
+
+/* ----------------------------------------------------------------------------
+   STATS — bento grid with count-up numbers
+   ---------------------------------------------------------------------------- */
+.cw-bento{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  grid-template-rows:auto auto;
+  gap:clamp(10px,1.2vw,18px);
+  margin-top:clamp(48px,6vw,72px);
+}
+
+.cw-bento__stat{
+  grid-column:span 1;
+  padding:clamp(26px,2.4vw,36px);
+  border-radius:16px;
+  background:#121212;
+  border:1px solid rgba(255,255,255,.08);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  min-height:200px;
+}
+
+.cw-bento__num{
+  font-family:'Orbitron', sans-serif;
+  font-size:clamp(2.4rem,3.4vw,3.6rem);
+  font-weight:700;
+  color:#fff;
+  line-height:1;
+}
+
+.cw-bento__label{
+  margin-top:12px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+}
+
+.cw-bento__media{
+  grid-column:span 2;
+  grid-row:span 1;
+  border-radius:16px;
+  overflow:hidden;
+  min-height:200px;
+  position:relative;
+}
+
+.cw-bento__media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  position:absolute;
+  inset:0;
+}
+
+@media(max-width:900px){
+  .cw-bento{ grid-template-columns:repeat(2, 1fr); }
+  .cw-bento__media{ grid-column:span 2; }
+}
+
+
+/* ----------------------------------------------------------------------------
+   FLEET SHOWCASE — horizontal scroll-snap with a scroll-progress bar
+   ---------------------------------------------------------------------------- */
+.cw-fleet{
+  padding-left:0;
+  padding-right:0;
+}
+
+.cw-fleet__head{
+  width:min(1500px, calc(100% - 48px));
+  margin:0 auto clamp(36px,4.5vw,56px);
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:24px;
+  flex-wrap:wrap;
+}
+
+.cw-fleet__track{
+  display:flex;
+  gap:clamp(14px,1.6vw,22px);
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  padding:0 clamp(24px,4vw,64px) 8px;
+  scrollbar-width:none;
+}
+
+.cw-fleet__track::-webkit-scrollbar{ display:none; }
+
+.cw-fleet__card{
+  position:relative;
+  flex:0 0 clamp(280px,34vw,460px);
+  height:clamp(360px,52vw,560px);
+  border-radius:18px;
+  overflow:hidden;
+  scroll-snap-align:start;
+}
+
+.cw-fleet__card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  position:absolute;
+  inset:0;
+}
+
+.cw-fleet__card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.82) 0%, rgba(0,0,0,.15) 45%, rgba(0,0,0,0) 65%);
+}
+
+.cw-fleet__card-copy{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  z-index:2;
+  padding:clamp(20px,2.4vw,30px);
+}
+
+.cw-fleet__card-copy h3{
+  margin:0 0 8px;
+  font-size:clamp(1.3rem,1.8vw,1.7rem);
+  font-weight:500;
+  color:#fff;
+}
+
+.cw-fleet__card-copy p{
+  margin:0;
+  font-size:13.5px;
+  line-height:1.5;
+  color:rgba(255,255,255,.72);
+  max-width:32ch;
+}
+
+.cw-fleet__progress{
+  width:min(1500px, calc(100% - 48px));
+  margin:24px auto 0;
+  height:2px;
+  background:rgba(255,255,255,.12);
+  border-radius:2px;
+  overflow:hidden;
+}
+
+.cw-fleet__progress-bar{
+  height:100%;
+  width:0%;
+  background:var(--pw-red,#f00303);
+  border-radius:2px;
+}
+
+
+/* ----------------------------------------------------------------------------
+   BEFORE / AFTER — draggable comparison slider
+   ---------------------------------------------------------------------------- */
+.cw-compare{
+  position:relative;
+  width:100%;
+  max-width:1100px;
+  margin:clamp(40px,5vw,64px) auto 0;
+  aspect-ratio:16/9;
+  border-radius:18px;
+  overflow:hidden;
+  cursor:ew-resize;
+  touch-action:pan-y;
+  user-select:none;
+}
+
+.cw-compare__img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+
+.cw-compare__img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  -webkit-user-drag:none;
+}
+
+.cw-compare__img--after{
+  clip-path:inset(0 0 0 50%);
+}
+
+.cw-compare__label{
+  position:absolute;
+  bottom:18px;
+  padding:8px 14px;
+  border-radius:100px;
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(4px);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:#fff;
+  z-index:3;
+}
+
+.cw-compare__label--before{ left:18px; }
+.cw-compare__label--after{ right:18px; }
+
+.cw-compare__handle{
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:50%;
+  width:2px;
+  background:#fff;
+  z-index:4;
+  transform:translateX(-1px);
+}
+
+.cw-compare__handle::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  background:#fff;
+  transform:translate(-50%,-50%);
+}
+
+.cw-compare__handle::before{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:14px;
+  height:14px;
+  transform:translate(-50%,-50%);
+  z-index:1;
+  background-image:
+    linear-gradient(45deg, transparent 45%, #111 45%, #111 55%, transparent 55%),
+    linear-gradient(-45deg, transparent 45%, #111 45%, #111 55%, transparent 55%);
+}
+
+
+/* ----------------------------------------------------------------------------
+   FLEET PROGRAM — 3-card horizontal strip
+   ---------------------------------------------------------------------------- */
+.cw-program{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:clamp(14px,1.6vw,22px);
+  margin-top:clamp(48px,6vw,72px);
+}
+
+.cw-program__card{
+  padding:clamp(28px,2.6vw,38px);
+  border-radius:16px;
+  background:#121212;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.cw-program__num{
+  display:block;
+  font-family:'Orbitron', sans-serif;
+  font-size:13px;
+  letter-spacing:.1em;
+  color:var(--pw-red,#f00303);
+  margin-bottom:18px;
+}
+
+.cw-program__card h3{
+  margin:0 0 10px;
+  font-size:clamp(1.2rem,1.6vw,1.5rem);
+  font-weight:500;
+  color:#fff;
+}
+
+.cw-program__card p{
+  margin:0;
+  font-size:14px;
+  line-height:1.6;
+  color:rgba(255,255,255,.6);
+}
+
+@media(max-width:900px){
+  .cw-program{ grid-template-columns:1fr; }
+}
+
+
+/* ----------------------------------------------------------------------------
+   TESTIMONIAL SPOTLIGHT — single rotating quote, not a card marquee
+   ---------------------------------------------------------------------------- */
+.cw-spotlight{
+  text-align:center;
+}
+
+.cw-spotlight__inner{
+  width:min(820px, calc(100% - 40px));
+  margin:0 auto;
+}
+
+.cw-spotlight__quote{
+  position:relative;
+  min-height:clamp(150px,16vw,200px);
+}
+
+.cw-spotlight__item{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transform:translateY(12px);
+  transition:opacity .5s ease, transform .5s ease;
+  pointer-events:none;
+}
+
+.cw-spotlight__item.is-active{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+  position:relative;
+}
+
+.cw-spotlight__text{
+  margin:0;
+  font-size:clamp(1.3rem,2.4vw,2rem);
+  line-height:1.4;
+  font-weight:400;
+  letter-spacing:-.01em;
+  color:#fff;
+}
+
+.cw-spotlight__meta{
+  margin-top:24px;
+  font-size:13px;
+  color:rgba(255,255,255,.55);
+}
+
+.cw-spotlight__meta strong{
+  color:#fff;
+  font-weight:600;
+}
+
+.cw-spotlight__dots{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:36px;
+}
+
+.cw-spotlight__dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:rgba(255,255,255,.25);
+  border:none;
+  cursor:pointer;
+  padding:0;
+  transition:background .25s ease, transform .25s ease;
+}
+
+.cw-spotlight__dot.is-active{
+  background:var(--pw-red,#f00303);
+  transform:scale(1.25);
+}
+
+
+/* ----------------------------------------------------------------------------
+   INDUSTRIES — icon bento grid
+   ---------------------------------------------------------------------------- */
+.cw-industries{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:clamp(10px,1.2vw,18px);
+  margin-top:clamp(48px,6vw,72px);
+}
+
+.cw-industries__card{
+  padding:clamp(26px,2.4vw,34px);
+  border-radius:16px;
+  background:#121212;
+  border:1px solid rgba(255,255,255,.08);
+  transition:border-color .25s ease, background .25s ease;
+}
+
+.cw-industries__card:hover{
+  border-color:rgba(255,255,255,.2);
+  background:#161616;
+}
+
+.cw-industries__icon{
+  display:inline-flex;
+  width:40px;
+  height:40px;
+  color:var(--pw-red,#f00303);
+  margin-bottom:20px;
+}
+
+.cw-industries__icon svg{ width:100%; height:100%; }
+
+.cw-industries__card h3{
+  margin:0 0 10px;
+  font-size:clamp(1.1rem,1.4vw,1.3rem);
+  font-weight:500;
+  color:#fff;
+}
+
+.cw-industries__card p{
+  margin:0;
+  font-size:13.5px;
+  line-height:1.6;
+  color:rgba(255,255,255,.55);
+}
+
+@media(max-width:900px){
+  .cw-industries{ grid-template-columns:1fr 1fr; }
+}
+@media(max-width:600px){
+  .cw-industries{ grid-template-columns:1fr; }
+}
+
+
+/* ----------------------------------------------------------------------------
+   FLEET QUOTE ESTIMATOR
+   ---------------------------------------------------------------------------- */
+.cw-estimator{
+  max-width:720px;
+  margin:clamp(44px,5vw,64px) auto 0;
+  padding:clamp(30px,3.4vw,44px);
+  border-radius:20px;
+  background:#121212;
+  border:1px solid rgba(255,255,255,.1);
+}
+
+.cw-estimator__control-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  margin-bottom:16px;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+}
+
+.cw-estimator__count{
+  color:#fff;
+  font-size:15px;
+}
+
+.cw-estimator__count span{
+  font-family:'Orbitron', sans-serif;
+}
+
+.cw-estimator__slider{
+  -webkit-appearance:none;
+  appearance:none;
+  width:100%;
+  height:4px;
+  border-radius:4px;
+  background:rgba(255,255,255,.15);
+  outline:none;
+  cursor:pointer;
+}
+
+.cw-estimator__slider::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  appearance:none;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:var(--pw-red,#f00303);
+  border:3px solid #fff;
+  cursor:pointer;
+}
+
+.cw-estimator__slider::-moz-range-thumb{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:var(--pw-red,#f00303);
+  border:3px solid #fff;
+  cursor:pointer;
+}
+
+.cw-estimator__scale{
+  display:flex;
+  justify-content:space-between;
+  margin-top:8px;
+  font-size:11px;
+  color:rgba(255,255,255,.4);
+}
+
+.cw-estimator__results{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:32px;
+  padding-top:28px;
+  border-top:1px solid rgba(255,255,255,.1);
+}
+
+.cw-estimator__result{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.cw-estimator__result-label{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+}
+
+.cw-estimator__result-value{
+  font-family:'Orbitron', sans-serif;
+  font-size:clamp(1.2rem,1.8vw,1.6rem);
+  font-weight:700;
+  color:#fff;
+}
+
+@media(max-width:600px){
+  .cw-estimator__results{ grid-template-columns:1fr; }
+}
+
+
+/* ----------------------------------------------------------------------------
+   CLOSING CTA
+   ---------------------------------------------------------------------------- */
+.cw-cta{
+  text-align:center;
+  background:#050505;
+}
+
+.cw-cta__inner{
+  width:min(760px, calc(100% - 40px));
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.cw-cta h2{ max-width:none; }
+
+.cw-cta .cw-lead{
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+}
+
+.cw-cta .pw-btn{ margin-top:30px; }
