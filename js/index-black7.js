@@ -1957,17 +1957,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-    
-  // ResizeObserver instead of a plain window "resize" listener — this
-  // also catches CSS-only size changes (editing the clamp() width/height,
-  // devtools live-edits, etc.), which never fire a window resize event
-  // but still leave the cached slideWidth stale and cause a visual jump.
   let resizeTimer;
-  const ro = new ResizeObserver(() => {
+  window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(init, 150);
   });
-  ro.observe(allSlides[0]);
 });
 /* ============================================================================
    END — PW INFINITE GALLERY

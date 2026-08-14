@@ -1,0 +1,251 @@
+/* ==========================================================================
+   Performante Wraps — SERVICES page (page-specific)
+   Reuses sitewide tokens/classes from index-black7.css wherever possible:
+     - .pw-btn                      (pill button + fill, from gsap.js)
+     - .wrap-light-section(--services), .wrap-services*  (dormant module
+       already defined in index-black7.css — this page is what wires it up)
+     - .wrap-branding-intro__subtitle  (red uppercase kicker text)
+   Only the hero, process steps and ticker below are new to this page.
+   ========================================================================== */
+
+/* ---------- reveal-on-scroll utility (driven by services.js) ---------- */
+.svc-reveal{
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1);
+}
+.svc-reveal.is-in{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+.svc-hero{
+  position:relative;
+  min-height:78dvh;
+  display:flex;
+  align-items:flex-end;
+  overflow:hidden;
+  background:#0a0a0a;
+  isolation:isolate;
+}
+
+.svc-hero__media{
+  position:absolute;
+  inset:0;
+  z-index:0;
+}
+
+.svc-hero__media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  filter:saturate(1.02) brightness(.72);
+}
+
+.svc-hero__veil{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:
+    linear-gradient(to top, rgba(6,6,6,.96) 0%, rgba(6,6,6,.55) 42%, rgba(6,6,6,.25) 100%),
+    linear-gradient(to right, rgba(6,6,6,.4) 0%, rgba(6,6,6,0) 40%);
+}
+
+.svc-hero__inner{
+  position:relative;
+  z-index:2;
+  width:min(1500px, calc(100% - 48px));
+  margin:0 auto;
+  padding:clamp(48px,8vw,110px) 0 clamp(56px,7vw,84px);
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:clamp(22px,2.6vw,32px);
+}
+
+.svc-hero__eyebrow{
+  margin:0;
+  color:#ff5a5a;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+
+.svc-hero__title{
+  margin:0;
+  max-width:16ch;
+  color:#f2f2f2;
+  font-size:clamp(2.6rem,6vw,5.6rem);
+  line-height:.94;
+  letter-spacing:-.055em;
+  font-weight:500;
+}
+
+.svc-hero__desc{
+  margin:0;
+  max-width:56ch;
+  color:rgba(255,255,255,.78);
+  font-size:clamp(15px,1.3vw,20px);
+  line-height:1.4;
+  letter-spacing:-.02em;
+}
+
+.svc-hero__cta{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-top:6px;
+  padding:14px 22px;
+  font-size:14px;
+  letter-spacing:-.01em;
+}
+
+@media(max-width:760px){
+  .svc-hero{ min-height:64dvh; align-items:flex-end; }
+  .svc-hero__title{ max-width:13ch; }
+}
+
+/* ==========================================================================
+   SERVICES GRID INTRO KICKER (sits above the dormant .wrap-services block)
+   ========================================================================== */
+.svc-services-kicker{
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  text-align:center;
+  padding:clamp(60px,7vw,100px) 20px 0;
+  background:var(--off-white);
+}
+
+.svc-services-kicker p{
+  margin:0 auto;
+  max-width:640px;
+  color:rgba(255,255,255,.68);
+  font-size:clamp(14px,1.1vw,17px);
+  line-height:1.4;
+  letter-spacing:-.02em;
+}
+
+/* ==========================================================================
+   PROCESS
+   ========================================================================== */
+.svc-process{
+  position:relative;
+  background:#0a0a0a;
+  padding:clamp(80px,9vw,140px) 0;
+}
+
+.svc-process__shell{
+  width:min(calc(100% - 48px),1280px);
+  margin:0 auto;
+}
+
+.svc-process__head{
+  max-width:640px;
+  margin:0 0 clamp(44px,5vw,72px);
+}
+
+.svc-process__head h2{
+  margin:0;
+  color:#f2f2f2;
+  font-size:clamp(2.1rem,3.4vw,3.8rem);
+  line-height:.95;
+  letter-spacing:-.05em;
+  font-weight:500;
+}
+
+.svc-process__head p{
+  margin:18px 0 0;
+  color:rgba(255,255,255,.65);
+  font-size:clamp(14px,1.1vw,17px);
+  line-height:1.4;
+}
+
+.svc-process__grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:clamp(18px,2vw,28px);
+}
+
+.svc-process__step{
+  padding:clamp(24px,2.2vw,32px) clamp(20px,1.8vw,26px) clamp(28px,2.6vw,34px);
+  border-top:1px solid rgba(255,255,255,.16);
+}
+
+.svc-process__num{
+  display:block;
+  font-family:'Orbitron', sans-serif;
+  color:var(--pw-red,#f00303);
+  font-size:13px;
+  letter-spacing:.08em;
+  margin-bottom:clamp(18px,2vw,28px);
+}
+
+.svc-process__step h3{
+  margin:0 0 10px;
+  color:#f2f2f2;
+  font-size:clamp(1.1rem,1.3vw,1.35rem);
+  font-weight:600;
+  letter-spacing:-.02em;
+}
+
+.svc-process__step p{
+  margin:0;
+  color:rgba(255,255,255,.62);
+  font-size:14px;
+  line-height:1.45;
+}
+
+@media(max-width:900px){
+  .svc-process__grid{ grid-template-columns:repeat(2,1fr); }
+}
+@media(max-width:560px){
+  .svc-process__grid{ grid-template-columns:1fr; }
+}
+
+/* ==========================================================================
+   TICKER — pure-CSS infinite marquee (no ScrollTrigger dependency)
+   ========================================================================== */
+.svc-ticker{
+  overflow:hidden;
+  background:#0a0a0a;
+  border-top:1px solid rgba(255,255,255,.12);
+  border-bottom:1px solid rgba(255,255,255,.12);
+  padding:clamp(18px,2vw,26px) 0;
+}
+
+.svc-ticker__track{
+  display:flex;
+  width:max-content;
+  animation:svcTickerScroll 26s linear infinite;
+}
+
+.svc-ticker__track span{
+  display:inline-flex;
+  align-items:center;
+  color:#f2f2f2;
+  font-size:clamp(1.1rem,2.2vw,1.8rem);
+  letter-spacing:-.03em;
+  font-weight:500;
+  white-space:nowrap;
+  padding:0 clamp(16px,2vw,28px);
+}
+
+.svc-ticker__track i{
+  color:var(--pw-red,#f00303);
+  font-style:normal;
+}
+
+@keyframes svcTickerScroll{
+  from{ transform:translateX(0); }
+  to{ transform:translateX(-50%); }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .svc-ticker__track{ animation:none; }
+  .svc-reveal{ opacity:1; transform:none; transition:none; }
+}

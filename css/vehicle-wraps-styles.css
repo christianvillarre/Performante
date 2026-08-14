@@ -2836,7 +2836,7 @@ html{
 .wrap-blinds span:nth-child(8){ top:calc(87.5% - 2px); }
 
 
-#site > section:not(.intro-wrap):not(.wrap-light-section):not(.wrap-media-gallery):not(.pw-infinite-gallery):not(.pw5-why):not(.pw5-process):not(.pw5-proof):not(.pw5-closing-cta):not(.pw6-final-cta),
+#site > section:not(.intro-wrap):not(.wrap-light-section):not(.wrap-media-gallery):not(.pw-infinite-gallery):not(.pw5-why):not(.pw5-process):not(.pw5-proof):not(.pw5-closing-cta):not(.pw6-final-cta):not(.vw-hero),
 #site > .contact-section,
 #site > footer{ display:none !important; }
 
@@ -5798,3 +5798,467 @@ html{
   }
 }
 
+
+
+/* ============================================================================
+   VEHICLE WRAPS PAGE — NEW SECTIONS
+   ============================================================================ */
+
+/* --- Hero: top 20vh copy band, remaining 80vh full-bleed looping video --- */
+.vw-hero{
+  position:relative;
+  height:100vh;
+  max-height:100vh;
+  overflow:hidden;
+  background:var(--off-white);
+  color:var(--ink);
+  display:flex;
+  flex-direction:column;
+}
+
+.vw-hero__top{
+  flex:0 0 auto;
+  box-sizing:border-box;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px 48px;
+  padding:calc(104px + 3vh) clamp(24px,4vw,64px) clamp(48px,6vh,80px);
+}
+
+.vw-hero__top-copy{
+  flex:1 1 340px;
+  min-width:0;
+}
+
+.vw-hero__eyebrow{
+  margin:0 0 14px;
+  color:rgba(255,255,255,.58);
+  font-size:13px;
+  font-weight:400;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+
+.vw-hero__title{
+  margin:0;
+  color:#fff;
+  font-size:clamp(1.5rem,2.6vw,2.5rem);
+  line-height:1.08;
+  letter-spacing:-.03em;
+  font-weight:500;
+  max-width:20ch;
+}
+
+.vw-hero__top-side{
+  flex:1 1 340px;
+  min-width:0;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:36px;
+}
+
+.vw-hero__desc{
+  margin:0;
+  max-width:38ch;
+  color:#c9c9c9;
+  font-size:clamp(13px,.95vw,15px);
+  line-height:1.55;
+}
+
+.vw-hero__cta{
+  flex:0 0 auto;
+  min-height:48px;
+  width:fit-content;
+  display:inline-flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:36px;
+  padding:0 18px;
+  text-decoration:none;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.vw-hero__video{
+  position:relative;
+  flex:1 1 auto;
+  min-height:0;
+  overflow:hidden;
+  background:#161616;
+}
+
+.vw-hero__video video{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+@media(max-width:900px){
+  .vw-hero__top{
+    flex:0 0 auto;
+    flex-direction:column;
+    align-items:flex-start;
+    padding:calc(96px + 28px) 20px 40px;
+  }
+  .vw-hero__top-side{
+    justify-content:flex-start;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:16px;
+  }
+  .vw-hero__title{ font-size:clamp(1.7rem,7vw,2.2rem); max-width:16ch; }
+}
+
+
+/* --- Shared wider description line for section intros with longer copy
+       (the original .wrap-branding-intro__desc is tuned for a short ~24ch
+       tagline, which wraps badly on longer sentences) --- */
+.vw-section-desc{
+  max-width:56ch;
+  letter-spacing:normal;
+}
+
+
+/* --- Services grid: 4 vehicle wrap service cards, one row, tall portrait
+       cards (matches the original Wraps & Branding card proportions) ---
+       Section stays centered, using a wider container than the site's
+       default 1500px cap so the cards read larger, but short of full
+       edge-to-edge. --- */
+.vw-services-section .wrap-light-section__inner{
+  width:min(1700px, calc(100% - 48px));
+  max-width:none;
+}
+
+.vw-services-intro{
+  margin-top:clamp(90px,10vw,150px);
+}
+
+.vw-services-kicker{
+  color:rgba(255,255,255,.55);
+}
+
+.vw-services-intro h2{
+  font-size:clamp(2.1rem,3vw,3.8rem);
+}
+
+.vw-services-intro .vw-section-desc{
+  margin-top:clamp(22px,2.4vw,32px);
+  font-size:clamp(16px,1.25vw,21px);
+}
+
+.vw-services-grid{
+  width:100%;
+  margin:clamp(70px,8vw,110px) auto 0;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:clamp(16px,1.6vw,26px);
+  text-align:left;
+}
+
+.vw-services-grid .wrap-branding-card{
+  aspect-ratio:3.3/4.6;
+}
+
+.vw-services-grid .wrap-branding-card:nth-child(1) .wrap-branding-card__title-row,
+.vw-services-grid .wrap-branding-card:nth-child(2) .wrap-branding-card__title-row,
+.vw-services-grid .wrap-branding-card:nth-child(3) .wrap-branding-card__title-row,
+.vw-services-grid .wrap-branding-card:nth-child(4) .wrap-branding-card__title-row{
+  justify-content:flex-start;
+}
+
+.vw-services-grid .wrap-branding-card:nth-child(1) .wrap-branding-card__title,
+.vw-services-grid .wrap-branding-card:nth-child(2) .wrap-branding-card__title,
+.vw-services-grid .wrap-branding-card:nth-child(3) .wrap-branding-card__title,
+.vw-services-grid .wrap-branding-card:nth-child(4) .wrap-branding-card__title{
+  text-align:left;
+  font-size:clamp(1.15rem,1.5vw,1.6rem);
+}
+
+.vw-services-grid .wrap-branding-card__desc{
+  font-size:clamp(0.85rem,0.95vw,1.05rem);
+}
+
+@media(max-width:1100px){
+  .vw-services-grid{ grid-template-columns:repeat(2,1fr); }
+  .vw-services-grid .wrap-branding-card{ aspect-ratio:3.3/4.2; }
+}
+
+@media(max-width:760px){
+  .vw-services-grid{ grid-template-columns:1fr; max-width:520px; }
+  .vw-services-grid .wrap-branding-card{ aspect-ratio:4/3.4; }
+}
+
+/* --- Benefits: full-width section, title/text on the left, stats +
+       icon cards on the right --- */
+.vw-benefits-section .wrap-light-section__inner{
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  padding:clamp(90px,10vw,150px) clamp(24px,4vw,64px) clamp(110px,12vw,190px);
+}
+
+.vw-benefits-row{
+  display:grid;
+  grid-template-columns:minmax(240px,.72fr) minmax(0,1.28fr);
+  gap:clamp(48px,6vw,110px);
+  align-items:start;
+}
+
+.vw-benefits-row__left{
+  position:sticky;
+  top:130px;
+}
+
+.vw-benefits-row__left h2{
+  margin:0;
+  color:#f2f2f2;
+  font-size:clamp(2.2rem,3vw,3.4rem);
+  line-height:1.04;
+  letter-spacing:-.03em;
+  font-weight:500;
+  max-width:11ch;
+}
+
+.vw-benefits-row__left p{
+  margin:24px 0 0;
+  max-width:34ch;
+  color:#c9c9c9;
+  font-size:clamp(14px,1vw,16px);
+  line-height:1.6;
+}
+
+.vw-benefits-row__right{
+  min-width:0;
+}
+
+@media(max-width:1000px){
+  .vw-benefits-row{
+    grid-template-columns:1fr;
+    gap:44px;
+  }
+  .vw-benefits-row__left{
+    position:static;
+  }
+}
+
+.vw-benefits-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:clamp(16px,2vw,32px);
+  margin:0;
+}
+
+.vw-benefits-stat{
+  padding:clamp(26px,2.8vw,40px) clamp(4px,1vw,10px) 0;
+  border-top:1px solid rgba(255,255,255,.18);
+  text-align:left;
+}
+
+.vw-benefits-stat__value{
+  display:block;
+  font-size:clamp(2.4rem,4.2vw,4.2rem);
+  font-weight:500;
+  letter-spacing:-.04em;
+  color:#fff;
+  line-height:1;
+  margin-bottom:14px;
+}
+
+.vw-benefits-stat__label{
+  display:block;
+  max-width:22ch;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+}
+
+@media(max-width:640px){
+  .vw-benefits-stats{ grid-template-columns:1fr; }
+}
+
+.vw-benefits-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:clamp(18px,2vw,28px);
+  margin:clamp(48px,5vw,72px) 0 0;
+}
+
+@media(max-width:640px){
+  .vw-benefits-grid{ grid-template-columns:1fr; }
+}
+
+.vw-benefit-card{
+  position:relative;
+  overflow:hidden;
+  min-height:264px;
+  padding:clamp(32px,2.8vw,46px) clamp(26px,2.4vw,36px);
+  border-radius:16px;
+  background:linear-gradient(165deg,#181818 0%,#111111 100%);
+  border:1px solid rgba(255,255,255,.08);
+  text-align:left;
+  transition:transform .4s cubic-bezier(.22,1,.36,1), border-color .4s ease, box-shadow .4s ease;
+}
+
+.vw-benefit-card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:2px;
+  background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.8) 50%, rgba(255,255,255,0) 100%);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+
+.vw-benefit-card:hover{
+  transform:translateY(-8px);
+  border-color:rgba(255,255,255,.24);
+  box-shadow:0 24px 48px rgba(0,0,0,.35);
+}
+
+.vw-benefit-card:hover::before{
+  transform:scaleX(1);
+}
+
+.vw-benefit-card__num{
+  position:absolute;
+  top:clamp(18px,1.8vw,28px);
+  right:clamp(20px,2vw,30px);
+  font-size:clamp(2.6rem,3.6vw,4rem);
+  font-weight:600;
+  letter-spacing:-.03em;
+  color:rgba(255,255,255,.05);
+  line-height:1;
+  pointer-events:none;
+  transition:color .4s ease;
+}
+
+.vw-benefit-card:hover .vw-benefit-card__num{
+  color:rgba(255,255,255,.1);
+}
+
+.vw-benefit-card__icon{
+  position:relative;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:56px;
+  height:56px;
+  margin-bottom:28px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.18);
+  color:#f2f2f2;
+  transition:background .35s ease, color .35s ease, border-color .35s ease, transform .35s ease;
+}
+
+.vw-benefit-card__icon svg{
+  width:23px;
+  height:23px;
+}
+
+.vw-benefit-card:hover .vw-benefit-card__icon{
+  background:#fff;
+  color:#0c0c0c;
+  border-color:#fff;
+  transform:scale(1.06);
+}
+
+.vw-benefit-card h3{
+  position:relative;
+  z-index:1;
+  margin:0 0 14px;
+  font-size:clamp(1.2rem,1.5vw,1.5rem);
+  font-weight:600;
+  letter-spacing:-.02em;
+  color:#f2f2f2;
+}
+
+.vw-benefit-card p{
+  position:relative;
+  z-index:1;
+  margin:0;
+  max-width:34ch;
+  color:rgba(255,255,255,.65);
+  font-size:14px;
+  line-height:1.65;
+}
+
+/* --- FAQ accordion --- */
+.vw-faq-list{
+  width:min(900px,100%);
+  margin:clamp(44px,5vw,72px) auto 0;
+  border-top:1px solid rgba(255,255,255,.14);
+}
+
+.vw-faq-item{
+  border-bottom:1px solid rgba(255,255,255,.14);
+}
+
+.vw-faq-question{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  padding:26px 4px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  color:#f2f2f2;
+  font-size:clamp(1rem,1.4vw,1.3rem);
+  font-weight:500;
+  letter-spacing:-.02em;
+  text-align:left;
+  font-family:inherit;
+}
+
+.vw-faq-icon{
+  flex:0 0 auto;
+  width:30px;
+  height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.4);
+  color:#f2f2f2;
+  font-size:18px;
+  font-weight:300;
+  line-height:1;
+  transition:transform .3s ease, background .3s ease, color .3s ease;
+}
+
+.vw-faq-item.is-open .vw-faq-icon{
+  transform:rotate(45deg);
+  background:#fff;
+  color:#0c0c0c;
+}
+
+.vw-faq-answer{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .35s ease;
+}
+
+.vw-faq-answer p{
+  margin:0 0 26px;
+  color:#c9c9c9;
+  font-size:15px;
+  line-height:1.65;
+  text-align:left;
+}
+
+@media(max-width:760px){
+  .vw-faq-list{ width:100%; }
+}
