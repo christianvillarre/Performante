@@ -16,16 +16,42 @@
 
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
 
-<link rel="stylesheet" href="/css/vehicle-wraps-styles.css" />
+<link rel="stylesheet" href="/css/vehicle-wraps-styles-5.css" />
 <link rel="stylesheet" href="css/navbar.css" />
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.3.18/dist/lenis.min.js"></script>
 
+<script>
+(function(){
+  if (typeof Lenis === 'undefined') return;
+
+  var lenis = new Lenis({
+    autoRaf: false
+  });
+
+  // Keep GSAP ScrollTrigger (used by the sticky service cards) in sync
+  // with Lenis's smoothed scroll position instead of running two
+  // separate scroll loops.
+  if (window.gsap && window.ScrollTrigger) {
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(function(time){
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+  } else {
+    requestAnimationFrame(function raf(time){
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    });
+  }
+})();
+</script>
+
 </head>
 
-<body data-black7-build="mini-cta-footer-added">
+<body data-black7-build="mini-cta-footer-added-benefits-faq-v1-swap-lenis-layout">
 
 <header class="pw-nav" id="pwNav">
   <a class="pw-nav__logo" href="/" aria-label="Performante Wraps home">
@@ -52,7 +78,7 @@
   </div>
 
   <nav class="pw-menu__links" aria-label="Primary navigation">
-    <a href="/vehicle-wraps.html" aria-current="page">Vehicle Wraps</a>
+    <a href="/vehicle-wraps-2.html" aria-current="page">Vehicle Wraps</a>
     <a href="/wraps/commercial-fleet.html">Commercial Wraps</a>
     <a href="/paint-protection-film.html">Paint Protection</a>
     <a href="/window-tint.html">Window Tint</a>
@@ -86,17 +112,18 @@
 
 <!-- ============================================================================
      VEHICLE WRAPS — HERO
-     Top 20vh: eyebrow / title / description / CTA in a compact band.
-     Remaining 80vh: full-bleed looping video.
+     Full-viewport split hero. Left half: eyebrow / title / description / CTA,
+     left-aligned, vertically centered. Right half: image carousel that sits
+     below the nav (doesn't run under it), with a caption line and dots
+     beneath it to switch images. A single vertical line splits the two
+     halves down the middle.
      ============================================================================ -->
 <section class="vw-hero" id="home">
-  <div class="vw-hero__top">
-    <div class="vw-hero__top-copy">
+
+  <div class="vw-hero__col vw-hero__col--copy">
+    <div class="vw-hero__copy">
       <p class="vw-hero__eyebrow">Vehicle Wraps</p>
       <h1 class="vw-hero__title">Wrapped With Precision. Built To Turn Heads.</h1>
-    </div>
-
-    <div class="vw-hero__top-side">
       <p class="vw-hero__desc">
         From full color changes to custom-designed graphics, every wrap is
         designed, printed and installed in-house — finished to a showroom
@@ -114,103 +141,209 @@
     </div>
   </div>
 
-  <div class="vw-hero__video">
-    <video autoplay muted loop playsinline poster="/images/IMG_1800.jpg">
-      <source src="/videos/vehicle-wrap-hero.mp4" type="video/mp4">
-    </video>
+  <div class="vw-hero__divider" aria-hidden="true"></div>
+
+  <div class="vw-hero__col vw-hero__col--media">
+    <div class="vw-hero__media" id="vwHeroMedia">
+      <img class="vw-hero__slide is-active" data-slide="0" src="/images/IMG_1800.jpg" alt="Full color change vehicle wrap">
+      <img class="vw-hero__slide" data-slide="1" src="/images/IMG_7650.jpg" alt="Paint protection film install">
+      <img class="vw-hero__slide" data-slide="2" src="/images/Untitled-5.jpg" alt="Custom vehicle stripe accents">
+    </div>
+
+    <p class="vw-hero__media-caption">
+      <span class="vw-hero__media-text is-active" data-slide="0">Full color change — gloss, matte, satin or chrome.</span>
+      <span class="vw-hero__media-text" data-slide="1">Paint protection film, designed and installed in-house.</span>
+      <span class="vw-hero__media-text" data-slide="2">Custom stripes &amp; accents, built around your vehicle.</span>
+    </p>
+
+    <div class="vw-hero__dots" id="vwHeroDots" role="tablist" aria-label="Switch hero image">
+      <button class="vw-hero__dot is-active" type="button" data-slide="0" role="tab" aria-selected="true" aria-label="Show color change image"></button>
+      <button class="vw-hero__dot" type="button" data-slide="1" role="tab" aria-selected="false" aria-label="Show paint protection film image"></button>
+      <button class="vw-hero__dot" type="button" data-slide="2" role="tab" aria-selected="false" aria-label="Show stripes and accents image"></button>
+    </div>
   </div>
+
 </section>
 
 <!-- ============================================================================
-     VEHICLE WRAPS — SERVICES GRID (4 cards)
-     Built off the existing .wrap-branding-card component.
+     VEHICLE WRAPS — SERVICES (stacking cards)
+     Adapted from a reference stacking-card component: an intro card,
+     then each service as a card with a main image, title + feature
+     links, and a description + CTA + secondary image. On desktop each
+     card pins in place as the next one scrolls up over it.
      ============================================================================ -->
-<section class="wrap-light-section wrap-light-section--intro vw-services-section">
-  <div class="wrap-light-section__inner">
-    <div class="wrap-branding-intro vw-services-intro">
-      <!--<p class="wrap-light-section__kicker vw-services-kicker">What We Offer</p>-->
-      <h2>Vehicle Wrap Services</h2>
-      <p class="wrap-branding-intro__desc vw-section-desc">
-        Four ways to transform your vehicle, each finished to showroom standard.
-      </p>
-    </div>
+<section class="wrap-light-section vws-section">
+  <div class="vws-shell">
+    <div class="vws-stage">
 
-    <div class="vw-services-grid">
-      <a class="wrap-branding-card" href="#">
-        <div class="wrap-branding-card__media">
-          <img src="/images/IMG_1800.jpg" alt="Color change vehicle wrap">
-        </div>
-        <div class="wrap-branding-card__overlay">
-          <div class="wrap-branding-card__title-row">
-            <h3 class="wrap-branding-card__title">Color Change</h3>
+      <article class="vws-card">
+        <div class="vws-card-inner vws-card-inner-intro">
+          <div class="vws-intro-content">
+            <p class="vws-intro-kicker">What We Offer</p>
+            <h2 class="vws-intro-title">Vehicle Wrap Services</h2>
+            <p class="vws-intro-text">
+              Four ways to transform your vehicle, from a full color change to a
+              fully custom design — every wrap is designed, printed and installed
+              in-house, then finished to a showroom standard.
+            </p>
           </div>
-          <div class="wrap-branding-card__bottom-row">
-            <p class="wrap-branding-card__desc">Full-body color change wraps in gloss, matte, satin or chrome — transform the look without touching the factory paint.</p>
-            <span class="wrap-branding-card__arrow" aria-hidden="true">
-              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </div>
-        </div>
-      </a>
 
-      <a class="wrap-branding-card" href="#">
-        <div class="wrap-branding-card__media">
-          <img src="/images/IMG_7650.jpg" alt="Paint protection film install">
+          <ul class="vws-intro-list">
+            <li><a href="#"><span class="vws-intro-list__num">01</span><span class="vws-intro-list__title">Color Change</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+            <li><a href="/paint-protection-film.html"><span class="vws-intro-list__num">02</span><span class="vws-intro-list__title">Paint Protection Film</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+            <li><a href="#"><span class="vws-intro-list__num">03</span><span class="vws-intro-list__title">Stripes &amp; Accents</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+            <li><a href="#"><span class="vws-intro-list__num">04</span><span class="vws-intro-list__title">Custom Designs</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+          </ul>
         </div>
-        <div class="wrap-branding-card__overlay">
-          <div class="wrap-branding-card__title-row">
-            <h3 class="wrap-branding-card__title">Paint Protection Film</h3>
-          </div>
-          <div class="wrap-branding-card__bottom-row">
-            <p class="wrap-branding-card__desc">Self-healing film that shields your paint from rock chips, road debris and everyday wear.</p>
-            <span class="wrap-branding-card__arrow" aria-hidden="true">
-              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </div>
-        </div>
-      </a>
+      </article>
 
-      <a class="wrap-branding-card" href="#">
-        <div class="wrap-branding-card__media">
-          <img src="/images/Untitled-5.jpg" alt="Custom vehicle stripe accents">
-        </div>
-        <div class="wrap-branding-card__overlay">
-          <div class="wrap-branding-card__title-row">
-            <h3 class="wrap-branding-card__title">Stripes & Accents</h3>
+      <article class="vws-card">
+        <div class="vws-card-inner">
+          <div class="vws-card-image main">
+            <img src="/images/IMG_1800.jpg" alt="Full color change vehicle wrap">
           </div>
-          <div class="wrap-branding-card__bottom-row">
-            <p class="wrap-branding-card__desc">Racing stripes, accent panels and trim details that add character without wrapping the whole vehicle.</p>
-            <span class="wrap-branding-card__arrow" aria-hidden="true">
-              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </div>
-        </div>
-      </a>
 
-      <a class="wrap-branding-card" href="#">
-        <div class="wrap-branding-card__media">
-          <img src="/images/Untitled-2-2.jpg" alt="Custom designed vehicle wrap">
-        </div>
-        <div class="wrap-branding-card__overlay">
-          <div class="wrap-branding-card__title-row">
-            <h3 class="wrap-branding-card__title">Custom Designs</h3>
+          <div class="vws-title-wrap">
+            <div class="vws-title-group">
+              <h3 class="vws-title">Color Change</h3>
+              <p class="vws-text">
+                Change the entire look of your vehicle without repainting it. A
+                full color change wrap gives you a fresh, custom finish while
+                helping protect the original paint underneath.
+              </p>
+              <a href="#" class="vws-cta">
+                Learn more
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
+              </a>
+            </div>
           </div>
-          <div class="wrap-branding-card__bottom-row">
-            <p class="wrap-branding-card__desc">Fully custom, hand-designed wraps built from your brand or vision — printed and installed as a one-of-one finish.</p>
-            <span class="wrap-branding-card__arrow" aria-hidden="true">
-              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
+
+          <div class="vws-content">
+            <div class="vws-links-wrap">
+              <ul class="vws-links">
+                <li><a href="#"><span>Gloss, Satin &amp; Matte Finishes</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Full &amp; Partial Color Changes</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Custom Accent Packages</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Paint-Safe Vehicle Transformation</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+              </ul>
+            </div>
+            <div class="vws-card-image small">
+              <img src="/images/IMG_7650.jpg" alt="Color change wrap detail">
+            </div>
           </div>
         </div>
-      </a>
+      </article>
+
+      <article class="vws-card">
+        <div class="vws-card-inner">
+          <div class="vws-card-image main">
+            <img src="/images/IMG_7650.jpg" alt="Paint protection film install">
+          </div>
+
+          <div class="vws-title-wrap">
+            <div class="vws-title-group">
+              <h3 class="vws-title">Paint Protection Film</h3>
+              <p class="vws-text">
+                Protect your vehicle's paint from chips, scratches, road debris
+                and everyday wear with a self-healing film that preserves the
+                finish while keeping your vehicle looking clean.
+              </p>
+              <a href="/paint-protection-film.html" class="vws-cta">
+                Learn more
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="vws-content">
+            <div class="vws-links-wrap">
+              <ul class="vws-links">
+                <li><a href="/paint-protection-film.html"><span>Full Front PPF</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="/paint-protection-film.html"><span>Track Package Protection</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="/paint-protection-film.html"><span>High-Impact Area Coverage</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="/paint-protection-film.html"><span>Clear Paint Protection</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+              </ul>
+            </div>
+            <div class="vws-card-image small">
+              <img src="/images/IMG_1800.jpg" alt="Paint protection film detail">
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="vws-card">
+        <div class="vws-card-inner">
+          <div class="vws-card-image main">
+            <img src="/images/Untitled-5.jpg" alt="Custom vehicle stripe accents">
+          </div>
+
+          <div class="vws-title-wrap">
+            <div class="vws-title-group">
+              <h3 class="vws-title">Stripes &amp; Accents</h3>
+              <p class="vws-text">
+                Racing stripes, accent panels and trim details that add character
+                without wrapping the whole vehicle — a quicker way to make a
+                statement.
+              </p>
+              <a href="#" class="vws-cta">
+                Learn more
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="vws-content">
+            <div class="vws-links-wrap">
+              <ul class="vws-links">
+                <li><a href="#"><span>Racing Stripes</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Accent Panels &amp; Trim</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Two-Tone Designs</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Custom Striping Packages</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+              </ul>
+            </div>
+            <div class="vws-card-image small">
+              <img src="/images/Untitled-2-2.jpg" alt="Stripe and accent detail">
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="vws-card">
+        <div class="vws-card-inner">
+          <div class="vws-card-image main">
+            <img src="/images/Untitled-2-2.jpg" alt="Custom designed vehicle wrap">
+          </div>
+
+          <div class="vws-title-wrap">
+            <div class="vws-title-group">
+              <h3 class="vws-title">Custom Designs</h3>
+              <p class="vws-text">
+                Fully custom, hand-designed wraps built from your brand or
+                vision — printed and installed as a one-of-one finish.
+              </p>
+              <a href="#" class="vws-cta">
+                Learn more
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="vws-content">
+            <div class="vws-links-wrap">
+              <ul class="vws-links">
+                <li><a href="#"><span>Fully Custom Artwork</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Brand &amp; Logo Integration</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>One-Of-One Finishes</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Design Consultation</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+              </ul>
+            </div>
+            <div class="vws-card-image small">
+              <img src="/images/IMG_1800.jpg" alt="Custom design detail">
+            </div>
+          </div>
+        </div>
+      </article>
+
     </div>
   </div>
 </section>
@@ -490,6 +623,7 @@
 
 <script src="js/navbar-black.js" defer></script>
 <script src="/js/gsap.js" defer></script>
+<script src="/js/vehicle-wraps-2.js" defer></script>
 
 <!-- FAQ accordion — self-contained, no dependency on gsap.js -->
 <script>

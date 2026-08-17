@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vehicle Wraps | Performante Wraps</title>
+  <meta name="description" content="Color change wraps, paint protection film, stripes &amp; accents and fully custom vehicle wrap designs — installed in Houston to a showroom standard." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&family=Zalando+Sans+SemiExpanded:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
+
+<link rel="stylesheet" href="/css/vehicle-wraps-styles-2.css" />
+<link rel="stylesheet" href="/css/vehicle-wraps-makeover.css" />
+<link rel="stylesheet" href="css/navbar.css" />
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.3.18/dist/lenis.min.js"></script>
+
+</head>
+
+<body data-black7-build="mini-cta-footer-added-makeover-v1">
+
+<header class="pw-nav" id="pwNav">
+  <a class="pw-nav__logo" href="/" aria-label="Performante Wraps home">
+    <img src="/images/logo.png" alt="Performante Wraps">
+  </a>
+
+  <div class="pw-nav__actions">
+    <a class="pw-nav__chat" href="/contact.html"><span class="pw-nav__chat-label">Let’s Talk</span></a>
+    <button class="pw-nav__toggle" id="pwMenuToggle" type="button" aria-label="Open menu" aria-expanded="false">
+      <span class="pw-nav__toggle-label">Menu</span>
+      <span class="pw-nav__toggle-icon" aria-hidden="true">
+        <span class="pw-nav__toggle-line pw-nav__toggle-line--one"></span>
+        <span class="pw-nav__toggle-line pw-nav__toggle-line--two"></span>
+      </span>
+    </button>
+  </div>
+</header>
+
+<div class="pw-menu-backdrop" id="pwMenuBackdrop" aria-hidden="true"></div>
+<aside class="pw-menu" id="pwMenu" aria-hidden="true">
+  <div class="pw-menu__top">
+    <span class="pw-menu__label"></span>
+    <button class="pw-menu__close" id="pwMenuClose" type="button" aria-label="Close menu"></button>
+  </div>
+
+  <nav class="pw-menu__links" aria-label="Primary navigation">
+    <a href="/vehicle-wraps-2.html" aria-current="page">Vehicle Wraps</a>
+    <a href="/wraps/commercial-fleet.html">Commercial Wraps</a>
+    <a href="/paint-protection-film.html">Paint Protection</a>
+    <a href="/window-tint.html">Window Tint</a>
+    <a href="/gallery.html">Gallery</a>
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+  </nav>
+
+  <div class="pw-menu__footer">
+    <div class="pw-menu__footer-block">
+      <p class="pw-menu__footer-label">Business Inquiry</p>
+      <a href="mailto:enrico@performantewraps.com"><span class="pw-menu__footer-tag">E:</span> enrico@performantewraps.com</a>
+      <a href="tel:8328014675"><span class="pw-menu__footer-tag">P:</span> (832) 801-4675</a>
+    </div>
+
+    <div class="pw-menu__socials">
+      <p class="pw-menu__footer-label">Social</p>
+      <div class="pw-menu__socials-grid">
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Tiktok</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</aside>
+
+
+ <div id="scroll-container">
+  <main id="site">
+
+<!-- ============================================================================
+     VEHICLE WRAPS — HERO
+     Full-viewport split hero. Left half: eyebrow / title / description / CTA,
+     left-aligned, vertically centered. Right half: image carousel that sits
+     below the nav (doesn't run under it), with a caption line and dots
+     beneath it to switch images. A single vertical line splits the two
+     halves down the middle.
+     ============================================================================ -->
+<section class="vw-hero" id="home">
+
+  <div class="vw-hero__col vw-hero__col--copy">
+    <div class="vw-hero__copy">
+      <p class="vw-hero__eyebrow">Vehicle Wraps</p>
+      <h1 class="vw-hero__title">Wrapped With Precision. Built To Turn Heads.</h1>
+      <p class="vw-hero__desc">
+        From full color changes to custom-designed graphics, every wrap is
+        designed, printed and installed in-house — finished to a showroom
+        standard that holds up mile after mile.
+      </p>
+
+      <a class="vw-hero__cta pw-btn" href="/contact.html">
+        <span class="pw-btn__label">Start a Project</span>
+        <span class="pw-btn__arrow" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <div class="vw-hero__divider" aria-hidden="true"></div>
+
+  <div class="vw-hero__col vw-hero__col--media">
+    <div class="vw-hero__media" id="vwHeroMedia">
+      <img class="vw-hero__slide is-active" data-slide="0" src="/images/IMG_1800.jpg" alt="Full color change vehicle wrap">
+      <img class="vw-hero__slide" data-slide="1" src="/images/IMG_7650.jpg" alt="Paint protection film install">
+      <img class="vw-hero__slide" data-slide="2" src="/images/Untitled-5.jpg" alt="Custom vehicle stripe accents">
+    </div>
+
+    <p class="vw-hero__media-caption">
+      <span class="vw-hero__media-text is-active" data-slide="0">Full color change — gloss, matte, satin or chrome.</span>
+      <span class="vw-hero__media-text" data-slide="1">Paint protection film, designed and installed in-house.</span>
+      <span class="vw-hero__media-text" data-slide="2">Custom stripes &amp; accents, built around your vehicle.</span>
+    </p>
+
+    <div class="vw-hero__dots" id="vwHeroDots" role="tablist" aria-label="Switch hero image">
+      <button class="vw-hero__dot is-active" type="button" data-slide="0" role="tab" aria-selected="true" aria-label="Show color change image"></button>
+      <button class="vw-hero__dot" type="button" data-slide="1" role="tab" aria-selected="false" aria-label="Show paint protection film image"></button>
+      <button class="vw-hero__dot" type="button" data-slide="2" role="tab" aria-selected="false" aria-label="Show stripes and accents image"></button>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================================================================
+     VEHICLE WRAPS — SERVICES (stacking cards)
+     Adapted from a reference stacking-card component: an intro card,
+     then each service as a card with a main image, title + feature
+     links, and a description + CTA + secondary image. On desktop each
+     card pins in place as the next one scrolls up over it.
+     ============================================================================ -->
+<section class="wrap-light-section vws-section">
+  <div class="vws-shell">
+    <div class="vws-stage">
+
+      <article class="vws-card">
+        <div class="vws-card-inner vws-card-inner-intro">
+          <div class="vws-intro-content">
+            <p class="vws-intro-kicker">What We Offer</p>
+            <h2 class="vws-intro-title">Vehicle Wrap Services</h2>
+            <p class="vws-intro-text">
+              Four ways to transform your vehicle, from a full color change to a
+              fully custom design — every wrap is designed, printed and installed
+              in-house, then finished to a showroom standard.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <article class="vws-card">
+        <div class="vws-card-inner">
+          <div class="vws-card-image main">
+            <img src="/images/IMG_1800.jpg" alt="Full color change vehicle wrap">
+          </div>
+
+          <div class="vws-title-wrap">
+            <div class="vws-title-group">
+              <h3 class="vws-title">Color Change</h3>
+              <ul class="vws-links">
+                <li><a href="#"><span>Gloss, Satin &amp; Matte Finishes</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Full &amp; Partial Color Changes</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Custom Accent Packages</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Paint-Safe Vehicle Transformation</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="vws-content">
+            <div class="vws-text-wrap">
+              <p class="vws-text">
+                Change the entire look of your vehicle without repainting it. A
+                full color change wrap gives you a fresh, custom finish while
+                helping protect the original paint underneath.
+              </p>
+              <a href="#" class="vws-cta">
+                Learn more
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
+              </a>
+            </div>
+            <div class="vws-card-image small">
+              <img src="/images/IMG_7650.jpg" alt="Color change wrap detail">
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="vws-card">
+        <div class="vws-card-inner">
+          <div class="vws-card-image main">
+            <img src="/images/IMG_7650.jpg" alt="Paint protection film install">
+          </div>
+
+          <div class="vws-title-wrap">
+            <div class="vws-title-group">
+              <h3 class="vws-title">Paint Protection Film</h3>
+              <ul class="vws-links">
+                <li><a href="/paint-protection-film.html"><span>Full Front PPF</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="/paint-protection-film.html"><span>Track Package Protection</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="/paint-protection-film.html"><span>High-Impact Area Coverage</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="/paint-protection-film.html"><span>Clear Paint Protection</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="vws-content">
+            <div class="vws-text-wrap">
+              <p class="vws-text">
+                Protect your vehicle's paint from chips, scratches, road debris
+                and everyday wear with a self-healing film that preserves the
+                finish while keeping your vehicle looking clean.
+              </p>
+              <a href="/paint-protection-film.html" class="vws-cta">
+                Learn more
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
+              </a>
+            </div>
+            <div class="vws-card-image small">
+              <img src="/images/IMG_1800.jpg" alt="Paint protection film detail">
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="vws-card">
+        <div class="vws-card-inner">
+          <div class="vws-card-image main">
+            <img src="/images/Untitled-5.jpg" alt="Custom vehicle stripe accents">
+          </div>
+
+          <div class="vws-title-wrap">
+            <div class="vws-title-group">
+              <h3 class="vws-title">Stripes &amp; Accents</h3>
+              <ul class="vws-links">
+                <li><a href="#"><span>Racing Stripes</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Accent Panels &amp; Trim</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Two-Tone Designs</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Custom Striping Packages</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="vws-content">
+            <div class="vws-text-wrap">
+              <p class="vws-text">
+                Racing stripes, accent panels and trim details that add character
+                without wrapping the whole vehicle — a quicker way to make a
+                statement.
+              </p>
+              <a href="#" class="vws-cta">
+                Learn more
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
+              </a>
+            </div>
+            <div class="vws-card-image small">
+              <img src="/images/Untitled-2-2.jpg" alt="Stripe and accent detail">
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="vws-card">
+        <div class="vws-card-inner">
+          <div class="vws-card-image main">
+            <img src="/images/Untitled-2-2.jpg" alt="Custom designed vehicle wrap">
+          </div>
+
+          <div class="vws-title-wrap">
+            <div class="vws-title-group">
+              <h3 class="vws-title">Custom Designs</h3>
+              <ul class="vws-links">
+                <li><a href="#"><span>Fully Custom Artwork</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Brand &amp; Logo Integration</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>One-Of-One Finishes</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li><a href="#"><span>Design Consultation</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="vws-content">
+            <div class="vws-text-wrap">
+              <p class="vws-text">
+                Fully custom, hand-designed wraps built from your brand or
+                vision — printed and installed as a one-of-one finish.
+              </p>
+              <a href="#" class="vws-cta">
+                Learn more
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
+              </a>
+            </div>
+            <div class="vws-card-image small">
+              <img src="/images/IMG_1800.jpg" alt="Custom design detail">
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     VEHICLE WRAPS — BENEFITS
+     Full-width banner (title + description), then all benefits as
+     equal boxes, four per row.
+     ============================================================================ -->
+<section class="wrap-light-section vw-benefits-section">
+
+  <div class="vw-section-banner">
+    <p class="vw-section-banner__kicker">Why Wrap</p>
+    <h2 class="vw-section-banner__title">The Benefits of Vehicle Wrapping</h2>
+    <p class="vw-section-banner__desc">
+      A wrap protects the paint underneath, opens up colors and finishes a repaint
+      can't match, and can be removed down the line without touching the factory
+      finish — here's why more owners are choosing a wrap over a repaint.
+    </p>
+  </div>
+
+  <div class="vw-benefits-stats">
+    <div class="vw-benefits-stat">
+      <span class="vw-benefits-stat__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3L20 7.5L12 12L4 7.5L12 3Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 12L12 16.5L20 12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 16.5L12 21L20 16.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <div class="vw-benefits-stat__body">
+        <span class="vw-benefits-stat__value">In-House, Start To Finish</span>
+        <span class="vw-benefits-stat__label">Every wrap is designed, printed and installed under one roof, so quality stays consistent throughout.</span>
+      </div>
+    </div>
+    <div class="vw-benefits-stat">
+      <span class="vw-benefits-stat__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3L13.6 9.4L20 12L13.6 14.6L12 21L10.4 14.6L4 12L10.4 9.4L12 3Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <div class="vw-benefits-stat__body">
+        <span class="vw-benefits-stat__value">Showroom-Standard Finish</span>
+        <span class="vw-benefits-stat__label">Every install is finished to a showroom standard that holds up to daily driving, mile after mile.</span>
+      </div>
+    </div>
+    <div class="vw-benefits-stat">
+      <span class="vw-benefits-stat__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3L20 6.5V11.5C20 16.2 16.9 20.4 12 21.5C7.1 20.4 4 16.2 4 11.5V6.5L12 3Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <div class="vw-benefits-stat__body">
+        <span class="vw-benefits-stat__value">100% Paint Protected</span>
+        <span class="vw-benefits-stat__label">Your factory paint stays shielded underneath the wrap for as long as it's on the vehicle.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="vw-benefits-grid">
+    <div class="vw-benefit-card">
+      <span class="vw-benefit-card__num" aria-hidden="true">01</span>
+      <span class="vw-benefit-card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3L20 6.5V11.5C20 16.2 16.9 20.4 12 21.5C7.1 20.4 4 16.2 4 11.5V6.5L12 3Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <h3>Paint Protection</h3>
+      <p>A wrap acts as a barrier between your factory paint and everyday wear, helping protect the finish underneath.</p>
+    </div>
+
+    <div class="vw-benefit-card">
+      <span class="vw-benefit-card__num" aria-hidden="true">02</span>
+      <span class="vw-benefit-card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 10V14H7L13 18V6L7 10H3Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16.5 9C17.4 9.9 18 11.1 18 12.5C18 13.9 17.4 15.1 16.5 16" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <h3>Cost-Effective Marketing</h3>
+      <p>For commercial vehicles, a wrap turns every mile driven into brand exposure — far cheaper than traditional advertising over time.</p>
+    </div>
+
+    <div class="vw-benefit-card">
+      <span class="vw-benefit-card__num" aria-hidden="true">03</span>
+      <span class="vw-benefit-card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 21C16 21 20 18.5 20 12C20 6 16 4 12 4C8 4 4 6 4 11C4 13 5.5 14 7 14H8.5C9.3 14 10 14.7 10 15.5C10 16 9.7 16.4 9.5 16.8C9.3 17.2 9 17.6 9 18.2C9 19.7 10.3 21 12 21Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="8" cy="10" r="1" fill="currentColor"/>
+          <circle cx="12" cy="8" r="1" fill="currentColor"/>
+          <circle cx="16" cy="10" r="1" fill="currentColor"/>
+        </svg>
+      </span>
+      <h3>Total Design Freedom</h3>
+      <p>Colors, finishes and custom graphics that paint alone can't achieve, from matte black to full custom artwork.</p>
+    </div>
+
+    <div class="vw-benefit-card">
+      <span class="vw-benefit-card__num" aria-hidden="true">04</span>
+      <span class="vw-benefit-card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 12C4 7.6 7.6 4 12 4C15.2 4 18 5.9 19.3 8.7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20 4V9H15" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20 12C20 16.4 16.4 20 12 20C8.8 20 6 18.1 4.7 15.3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 20V15H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <h3>Fully Removable</h3>
+      <p>Wraps can be removed without damaging the original paint, so you can change the look or return to factory finish anytime.</p>
+    </div>
+
+    <div class="vw-benefit-card">
+      <span class="vw-benefit-card__num" aria-hidden="true">05</span>
+      <span class="vw-benefit-card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M12 7.5V12L15 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <h3>Faster Turnaround</h3>
+      <p>Most wraps are completed in days, not weeks — with far less downtime than a full custom paint job.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     VEHICLE WRAPS — FAQ
+     ============================================================================ -->
+<section class="wrap-light-section wrap-light-section--intro vw-faq-section">
+  <div class="wrap-light-section__inner">
+    <div class="wrap-branding-intro">
+      <h2>Frequently Asked Questions</h2>
+      <p class="wrap-branding-intro__desc vw-section-desc">
+        Answers to the questions we hear most about vehicle wraps.
+      </p>
+    </div>
+
+    <div class="vw-faq-list" id="vwFaqList">
+      <div class="vw-faq-item">
+        <button class="vw-faq-question" type="button" aria-expanded="false">
+          <span>How long does a vehicle wrap last?</span>
+          <span class="vw-faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="vw-faq-answer">
+          <p>With proper care, a quality vinyl wrap typically lasts 5–7 years, depending on the film used, your climate and how the vehicle is maintained.</p>
+        </div>
+      </div>
+
+      <div class="vw-faq-item">
+        <button class="vw-faq-question" type="button" aria-expanded="false">
+          <span>Will a wrap damage my paint?</span>
+          <span class="vw-faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="vw-faq-answer">
+          <p>No. A professionally installed wrap protects your factory paint and can be removed cleanly without damage when it's installed and removed correctly.</p>
+        </div>
+      </div>
+
+      <div class="vw-faq-item">
+        <button class="vw-faq-question" type="button" aria-expanded="false">
+          <span>How long does installation take?</span>
+          <span class="vw-faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="vw-faq-answer">
+          <p>Most full vehicle wraps take 3–5 days from design approval to final install, depending on the vehicle and complexity of the design.</p>
+        </div>
+      </div>
+
+      <div class="vw-faq-item">
+        <button class="vw-faq-question" type="button" aria-expanded="false">
+          <span>Can I wrap just part of my vehicle?</span>
+          <span class="vw-faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="vw-faq-answer">
+          <p>Yes. Stripes, accents and partial wraps are a great option if you want a custom look without the cost of a full wrap.</p>
+        </div>
+      </div>
+
+      <div class="vw-faq-item">
+        <button class="vw-faq-question" type="button" aria-expanded="false">
+          <span>How do I care for a wrapped vehicle?</span>
+          <span class="vw-faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="vw-faq-answer">
+          <p>Hand wash with a mild soap, avoid automatic brush car washes, and keep the vehicle out of direct sun when possible to extend the life of the film.</p>
+        </div>
+      </div>
+
+      <div class="vw-faq-item">
+        <button class="vw-faq-question" type="button" aria-expanded="false">
+          <span>Do you offer custom designs?</span>
+          <span class="vw-faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="vw-faq-answer">
+          <p>Yes — every custom wrap starts with a design consultation, so the final graphics are built specifically around your vehicle and brand.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     CLOSING CTA + FOOTER (reused from index.html)
+     ============================================================================ -->
+<section class="pw6-final-cta" aria-labelledby="pw6FinalCtaTitle">
+  <div class="pw6-final-cta__inner">
+
+    <div class="pw6-final-cta__top">
+      <div class="pw6-final-cta__heading">
+        <p class="pw6-final-cta__eyebrow">Let’s Transform Your Brand.</p>
+        <h2 id="pw6FinalCtaTitle">Start Your Project</h2>
+      </div>
+      <a class="pw6-final-cta__button pw-btn" href="/contact.html">
+        <span class="pw-btn__label">Contact Performante</span>
+        <span class="pw-btn__arrow" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+    </div>
+
+    <div class="pw6-final-cta__bottom">
+
+      <div class="pw6-final-cta__brand">
+        <img
+          class="pw6-final-cta__logo"
+          src="/images/logo-icon.png"
+          alt="Performante Wraps logo"
+        >
+
+        <div class="pw6-final-cta__bio">
+          <h3 class="pw6-final-cta__bio-name">Enrico Molina</h3>
+          <p class="pw6-final-cta__bio-title">Founder &amp; Creative Director</p>
+          <p class="pw6-final-cta__bio-desc">
+            Building bold visual identities through automotive,
+            architectural and commercial branding.
+          </p>
+        </div>
+
+        <p class="pw6-final-cta__copyright">
+          © <span id="pwFooterYear">2026</span> Performante Wraps. All rights reserved.
+        </p>
+      </div>
+
+      <div class="pw6-final-cta__info">
+
+        <div class="pw6-final-cta__info-col">
+          <p class="pw6-final-cta__info-label">Business Inquiry</p>
+
+          <a href="mailto:enrico@performantewraps.com">
+            <span class="pw6-final-cta__prefix">E.</span>
+            enrico@performantewraps.com
+          </a>
+
+          <a href="tel:8328014675">
+            <span class="pw6-final-cta__prefix">P.</span>
+            (832) 801-4675
+          </a>
+        </div>
+
+        <div class="pw6-final-cta__info-col">
+          <p class="pw6-final-cta__info-label">Social</p>
+
+          <div class="pw6-final-cta__social-grid">
+            <a href="#">Instagram</a>
+            <a href="#">Facebook</a>
+            <a href="#">Tiktok</a>
+            <a href="#">LinkedIn</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+<script>document.getElementById('pwFooterYear').textContent = new Date().getFullYear();</script>
+
+<!-- ============================================================================
+     CLOSING PROJECT CTA — full-bleed image + wordmark (reused from index.html,
+     the final section on the page beneath the footer)
+     ============================================================================ -->
+<section class="pw5-closing-cta" aria-labelledby="pw5ClosingTitle">
+  <div class="pw5-closing-cta__media" aria-hidden="true">
+    <img src="/images/stock15.jpeg" alt="" loading="lazy">
+  </div>
+  <div class="pw5-closing-cta__veil" aria-hidden="true"></div>
+  <a class="pw5-closing-cta__wordmark" href="/contact.html" style="--pw5-wordmark-img:url('/images/stock15.jpeg')"><span id="pw5ClosingTitle">PERFORMANTE</span></a>
+</section>
+
+</main>
+
+</div><!-- /#scroll-container -->
+
+<script src="js/navbar-black.js" defer></script>
+<script src="/js/gsap.js" defer></script>
+<script src="/js/vehicle-wraps-2.js" defer></script>
+
+<!-- FAQ accordion — self-contained, no dependency on gsap.js -->
+<script>
+(function(){
+  var list = document.getElementById('vwFaqList');
+  if(!list) return;
+
+  list.addEventListener('click', function(e){
+    var btn = e.target.closest('.vw-faq-question');
+    if(!btn) return;
+
+    var item = btn.closest('.vw-faq-item');
+    var answer = item.querySelector('.vw-faq-answer');
+    var isOpen = item.classList.contains('is-open');
+
+    // Close any other open item (accordion-style, one open at a time)
+    list.querySelectorAll('.vw-faq-item.is-open').forEach(function(openItem){
+      if(openItem !== item){
+        openItem.classList.remove('is-open');
+        openItem.querySelector('.vw-faq-question').setAttribute('aria-expanded','false');
+        openItem.querySelector('.vw-faq-answer').style.maxHeight = null;
+      }
+    });
+
+    if(isOpen){
+      item.classList.remove('is-open');
+      btn.setAttribute('aria-expanded','false');
+      answer.style.maxHeight = null;
+    } else {
+      item.classList.add('is-open');
+      btn.setAttribute('aria-expanded','true');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

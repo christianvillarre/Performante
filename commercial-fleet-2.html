@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Commercial Fleet Wraps Houston | Performante Wraps (v2)</title>
+  <meta name="description" content="Full and partial commercial fleet wraps, graphics and maintenance programs — designed, printed and installed in Houston. Bulk pricing for 3+ vehicles." />
+  <link rel="canonical" href="https://performantewraps.com/wraps/commercial-fleet.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Commercial Fleet Wraps Houston | Performante Wraps" />
+  <meta property="og:description" content="Full and partial commercial fleet wraps, graphics and maintenance programs — designed, printed and installed in Houston." />
+  <meta property="og:image" content="/images/fleet-hero.jpg" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&family=Zalando+Sans+SemiExpanded:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
+
+<!-- Shared sitewide styles: variables, nav, pw-btn, wrap-light-section, wrap-branding-card, FAQ accordion, footer CTAs -->
+<link rel="stylesheet" href="/css/vehicle-wraps-styles.css" />
+<link rel="stylesheet" href="css/navbar.css" />
+<!-- Page-specific styles for this build only -->
+<link rel="stylesheet" href="/css/commercial-fleet-2-styles.css" />
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.3.18/dist/lenis.min.js"></script>
+
+<!-- Structured data: Service + FAQ, for search visibility -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Commercial Fleet Vehicle Wraps",
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "Performante Wraps",
+    "telephone": "+1-832-801-4675",
+    "email": "enrico@performantewraps.com",
+    "areaServed": "Houston, TX"
+  },
+  "areaServed": { "@type": "City", "name": "Houston" },
+  "description": "Full and partial commercial fleet vehicle wraps, fleet graphic design and wrap maintenance programs, designed and installed in-house."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Do you offer pricing for multiple vehicles?","acceptedAnswer":{"@type":"Answer","text":"Yes. Fleets of three or more vehicles are quoted on a per-vehicle rate that drops as the fleet size grows, and every vehicle is scheduled as part of one project instead of separate jobs."}},
+    {"@type":"Question","name":"Can new vehicles be matched to our existing fleet design later?","acceptedAnswer":{"@type":"Answer","text":"Yes. We keep your fleet's design file on record, so a vehicle added six months or six years from now can be wrapped to match the rest of the fleet exactly."}},
+    {"@type":"Question","name":"Do you handle DOT and compliance markings?","acceptedAnswer":{"@type":"Answer","text":"Yes, required markings such as USDOT numbers, weight ratings and hazard placards are built into the design layout so they meet regulations without disrupting the graphic."}},
+    {"@type":"Question","name":"How do you minimize downtime for a large fleet?","acceptedAnswer":{"@type":"Answer","text":"Vehicles are scheduled in staggered install windows, usually a few at a time, so the rest of the fleet stays on the road while each vehicle is wrapped."}},
+    {"@type":"Question","name":"Can you service fleets across multiple locations?","acceptedAnswer":{"@type":"Answer","text":"Yes, we coordinate install schedules across yards and branch locations so every vehicle in the fleet gets the same design and finish."}}
+  ]
+}
+</script>
+
+</head>
+
+<body data-black7-build="commercial-fleet-v2">
+
+<header class="pw-nav" id="pwNav">
+  <a class="pw-nav__logo" href="/" aria-label="Performante Wraps home">
+    <img src="/images/logo.png" alt="Performante Wraps">
+  </a>
+
+  <div class="pw-nav__actions">
+    <a class="pw-nav__chat" href="/contact.html"><span class="pw-nav__chat-label">Let’s Talk</span></a>
+    <button class="pw-nav__toggle" id="pwMenuToggle" type="button" aria-label="Open menu" aria-expanded="false">
+      <span class="pw-nav__toggle-label">Menu</span>
+      <span class="pw-nav__toggle-icon" aria-hidden="true">
+        <span class="pw-nav__toggle-line pw-nav__toggle-line--one"></span>
+        <span class="pw-nav__toggle-line pw-nav__toggle-line--two"></span>
+      </span>
+    </button>
+  </div>
+</header>
+
+<div class="pw-menu-backdrop" id="pwMenuBackdrop" aria-hidden="true"></div>
+<aside class="pw-menu" id="pwMenu" aria-hidden="true">
+  <div class="pw-menu__top">
+    <span class="pw-menu__label"></span>
+    <button class="pw-menu__close" id="pwMenuClose" type="button" aria-label="Close menu"></button>
+  </div>
+
+  <nav class="pw-menu__links" aria-label="Primary navigation">
+    <a href="/vehicle-wraps.html">Vehicle Wraps</a>
+    <a href="/wraps/commercial-fleet.html" aria-current="page">Commercial Wraps</a>
+    <a href="/paint-protection-film.html">Paint Protection</a>
+    <a href="/window-tint.html">Window Tint</a>
+    <a href="/gallery.html">Gallery</a>
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+  </nav>
+
+  <div class="pw-menu__footer">
+    <div class="pw-menu__footer-block">
+      <p class="pw-menu__footer-label">Business Inquiry</p>
+      <a href="mailto:enrico@performantewraps.com"><span class="pw-menu__footer-tag">E:</span> enrico@performantewraps.com</a>
+      <a href="tel:8328014675"><span class="pw-menu__footer-tag">P:</span> (832) 801-4675</a>
+    </div>
+
+    <div class="pw-menu__socials">
+      <p class="pw-menu__footer-label">Social</p>
+      <div class="pw-menu__socials-grid">
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Tiktok</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</aside>
+
+
+ <div id="scroll-container">
+  <main id="site">
+
+<!-- ============================================================================
+     COMMERCIAL FLEET — HERO
+     Same top-band + full-bleed video pattern as vehicle-wraps.html, but with a
+     dashed "lane line" divider at the base that carries into the stats band —
+     the page's recurring transition device.
+     ============================================================================ -->
+<section class="cf-hero" id="home">
+  <div class="cf-hero__top">
+    <div class="cf-hero__top-copy">
+      <p class="cf-hero__eyebrow">Commercial Fleet Wraps</p>
+      <h1 class="cf-hero__title">Your Fleet Is Already On The Road. Make It Work For You.</h1>
+    </div>
+
+    <div class="cf-hero__top-side">
+      <p class="cf-hero__desc">
+        Full and partial wraps for delivery vans, box trucks, trailers and
+        service vehicles — designed once, then matched across every truck
+        you add, from three vehicles to thirty.
+      </p>
+
+      <a class="cf-hero__cta pw-btn" href="/contact.html">
+        <span class="pw-btn__label">Get a Fleet Quote</span>
+        <span class="pw-btn__arrow" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <div class="cf-hero__video">
+    <video autoplay muted loop playsinline poster="/images/fleet-hero.jpg">
+      <source src="/videos/commercial-fleet-hero.mp4" type="video/mp4">
+    </video>
+    <div class="cf-hero__video-veil" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     COMMERCIAL FLEET — TRUST / STATS BAND
+     Fills the space directly under the hero with real numbers instead of
+     empty black — first "contrast" beat: a textured dark panel, not flat.
+     ============================================================================ -->
+<section class="cf-stats" id="stats" aria-label="Fleet wrap track record">
+  <div class="cf-stats__inner">
+    <div class="cf-stat">
+      <span class="cf-stat__value">300<span class="cf-stat__plus">+</span></span>
+      <span class="cf-stat__label">Vehicles Wrapped</span>
+    </div>
+    <div class="cf-stat">
+      <span class="cf-stat__value">40M<span class="cf-stat__plus">+</span></span>
+      <span class="cf-stat__label">Monthly Ad Impressions*</span>
+    </div>
+    <div class="cf-stat">
+      <span class="cf-stat__value">3–5</span>
+      <span class="cf-stat__label">Days Per Vehicle</span>
+    </div>
+    <div class="cf-stat">
+      <span class="cf-stat__value">5–7</span>
+      <span class="cf-stat__label">Year Average Lifespan</span>
+    </div>
+  </div>
+  <p class="cf-stats__footnote">*Based on industry impression studies for wrapped commercial vehicles driven daily in an urban market.</p>
+</section>
+
+<!-- ============================================================================
+     COMMERCIAL FLEET — SERVICES
+     The page's one deliberately light section — the strongest contrast beat
+     on the page, breaking the black/near-black rhythm on purpose.
+     ============================================================================ -->
+<section class="cf-services" id="services">
+  <div class="cf-services__inner">
+    <div class="cf-services__intro">
+      <p class="cf-services__kicker">What We Offer</p>
+      <h2>Commercial Wrap Services</h2>
+      <p class="cf-services__desc">
+        Four ways to put your fleet to work, all designed, printed and
+        installed under one roof.
+      </p>
+    </div>
+
+    <div class="cf-services__grid">
+      <a class="cf-service-card" href="#">
+        <div class="cf-service-card__media">
+          <img src="/images/fleet-full-wrap.jpg" alt="Full commercial fleet vehicle wrap on a box truck">
+        </div>
+        <div class="cf-service-card__body">
+          <span class="cf-service-card__index">01</span>
+          <h3>Full Fleet Wraps</h3>
+          <p>Every panel wrapped edge-to-edge for maximum coverage and a matching look across your entire fleet.</p>
+          <span class="cf-service-card__link">See full wraps <span aria-hidden="true">→</span></span>
+        </div>
+      </a>
+
+      <a class="cf-service-card" href="#">
+        <div class="cf-service-card__media">
+          <img src="/images/fleet-partial-wrap.jpg" alt="Partial door wrap and logo decal on a service van">
+        </div>
+        <div class="cf-service-card__body">
+          <span class="cf-service-card__index">02</span>
+          <h3>Partial &amp; Door Wraps</h3>
+          <p>Logo panels, door decals and cab graphics — full brand presence at a fraction of the cost and downtime.</p>
+          <span class="cf-service-card__link">See partial wraps <span aria-hidden="true">→</span></span>
+        </div>
+      </a>
+
+      <a class="cf-service-card" href="#">
+        <div class="cf-service-card__media">
+          <img src="/images/fleet-graphic-design.jpg" alt="Fleet graphic design layout proof for a delivery van">
+        </div>
+        <div class="cf-service-card__body">
+          <span class="cf-service-card__index">03</span>
+          <h3>Fleet Graphic Design</h3>
+          <p>In-house design turns your brand guide into a wrap-ready layout, then keeps every future vehicle matching it.</p>
+          <span class="cf-service-card__link">See our design process <span aria-hidden="true">→</span></span>
+        </div>
+      </a>
+
+      <a class="cf-service-card" href="#">
+        <div class="cf-service-card__media">
+          <img src="/images/fleet-maintenance.jpg" alt="Technician inspecting a vehicle wrap panel for maintenance">
+        </div>
+        <div class="cf-service-card__body">
+          <span class="cf-service-card__index">04</span>
+          <h3>Maintenance &amp; Re-Wrap</h3>
+          <p>Scheduled inspections and panel touch-ups keep every truck looking new — not just the newest one.</p>
+          <span class="cf-service-card__link">See the maintenance plan <span aria-hidden="true">→</span></span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     COMMERCIAL FLEET — THE BUSINESS CASE (benefits, dark again)
+     ============================================================================ -->
+<section class="cf-case" id="why-wrap">
+  <div class="cf-case__inner">
+    <div class="cf-case__row">
+
+      <div class="cf-case__left">
+        <p class="cf-case__kicker">Why It Pays Off</p>
+        <h2>The Business Case For Wrapping Your Fleet</h2>
+        <p>Every mile your vehicles drive is free advertising — if the vehicle is dressed for it.</p>
+      </div>
+
+      <div class="cf-case__right">
+        <div class="cf-case-grid">
+          <div class="cf-case-card">
+            <span class="cf-case-card__num" aria-hidden="true">01</span>
+            <h3>Lowest Cost-Per-Impression</h3>
+            <p>A wrap generates tens of thousands of daily impressions for a one-time cost, working out to fractions of a cent per view over its lifespan.</p>
+          </div>
+          <div class="cf-case-card">
+            <span class="cf-case-card__num" aria-hidden="true">02</span>
+            <h3>Consistent Brand Presence</h3>
+            <p>Matching graphics across every vehicle reinforce recognition each time a customer sees a truck on site or on the highway.</p>
+          </div>
+          <div class="cf-case-card">
+            <span class="cf-case-card__num" aria-hidden="true">03</span>
+            <h3>Often Tax-Deductible</h3>
+            <p>Vehicle wraps are typically treated as a deductible advertising expense — confirm the specifics with your accountant.</p>
+          </div>
+          <div class="cf-case-card">
+            <span class="cf-case-card__num" aria-hidden="true">04</span>
+            <h3>Built For The Road</h3>
+            <p>Commercial-grade film and laminate handle daily driving, weather and regular washing without fading or lifting.</p>
+          </div>
+          <div class="cf-case-card">
+            <span class="cf-case-card__num" aria-hidden="true">05</span>
+            <h3>Scales With Your Fleet</h3>
+            <p>Add a vehicle next year and we match it to your existing design on file — no redesigning from scratch.</p>
+          </div>
+          <div class="cf-case-card">
+            <span class="cf-case-card__num" aria-hidden="true">06</span>
+            <h3>Zero Paint Risk</h3>
+            <p>A wrap protects the factory finish underneath, so a leased or resale vehicle comes out from under it undamaged.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     COMMERCIAL FLEET — HOW IT WORKS
+     Mile-marker numbering: this content is a real sequence, so numbering it
+     is doing work, not decorating. Connected by the lane-line motif.
+     ============================================================================ -->
+<section class="cf-process" id="process">
+  <div class="cf-process__inner">
+    <div class="cf-process__intro">
+      <p class="cf-process__kicker">How It Works</p>
+      <h2>From Survey To Install, In Five Stops</h2>
+    </div>
+
+    <ol class="cf-process__list">
+      <li class="cf-process-step">
+        <span class="cf-process-step__marker">01</span>
+        <div class="cf-process-step__body">
+          <h3>Consultation &amp; Vehicle Survey</h3>
+          <p>We measure and photograph every vehicle in your fleet, or work from spec sheets for vehicles not yet delivered.</p>
+        </div>
+      </li>
+      <li class="cf-process-step">
+        <span class="cf-process-step__marker">02</span>
+        <div class="cf-process-step__body">
+          <h3>Design Proof</h3>
+          <p>Your brand guide becomes a wrap-ready layout. You review and approve proofs before anything goes to print.</p>
+        </div>
+      </li>
+      <li class="cf-process-step">
+        <span class="cf-process-step__marker">03</span>
+        <div class="cf-process-step__body">
+          <h3>Print &amp; Laminate</h3>
+          <p>Graphics are printed in-house and laminated for UV and abrasion resistance built for daily driving.</p>
+        </div>
+      </li>
+      <li class="cf-process-step">
+        <span class="cf-process-step__marker">04</span>
+        <div class="cf-process-step__body">
+          <h3>Staggered Installation</h3>
+          <p>Vehicles are scheduled a few at a time so the rest of your fleet stays on the road while we work.</p>
+        </div>
+      </li>
+      <li class="cf-process-step">
+        <span class="cf-process-step__marker">05</span>
+        <div class="cf-process-step__body">
+          <h3>Maintenance Plan</h3>
+          <p>An optional recurring check-up catches lifting edges and panel wear before they become a re-wrap.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============================================================================
+     COMMERCIAL FLEET — INDUSTRIES SERVED
+     Fills the page with real, specific, search-friendly content instead of
+     more black space; each row alternates text/media for rhythm.
+     ============================================================================ -->
+<section class="cf-industries" id="industries">
+  <div class="cf-industries__inner">
+    <div class="cf-industries__intro">
+      <p class="cf-industries__kicker">Who We Wrap For</p>
+      <h2>Built Around Your Industry</h2>
+      <p class="cf-industries__desc">Fleet wraps read differently depending on what you're hauling, servicing or delivering. We design around that.</p>
+    </div>
+
+    <div class="cf-industries__grid">
+      <div class="cf-industry-card">
+        <h3>Construction &amp; Contracting</h3>
+        <p>Bold, legible graphics that hold up on job sites — visible from a distance on a crowded lot.</p>
+      </div>
+      <div class="cf-industry-card">
+        <h3>HVAC &amp; Plumbing</h3>
+        <p>Service-van layouts that keep phone numbers and licensing readable at a stoplight.</p>
+      </div>
+      <div class="cf-industry-card">
+        <h3>Food &amp; Beverage Delivery</h3>
+        <p>Appetite-driving color and imagery designed to read clearly at low speed in traffic.</p>
+      </div>
+      <div class="cf-industry-card">
+        <h3>Real Estate &amp; Property Services</h3>
+        <p>Clean, brand-consistent wraps for agents and crews who need to look established from day one.</p>
+      </div>
+      <div class="cf-industry-card">
+        <h3>Medical &amp; Mobile Clinics</h3>
+        <p>Calm, trustworthy graphics with clear signage requirements built into the layout.</p>
+      </div>
+      <div class="cf-industry-card">
+        <h3>Logistics &amp; Courier Services</h3>
+        <p>High-visibility route branding designed to stay legible on trailers and box trucks alike.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     COMMERCIAL FLEET — RECENT FLEET WORK
+     Reuses the wrap-branding-card visual language from vehicle-wraps.html so
+     the two pages still feel like the same site, with fleet-specific work.
+     ============================================================================ -->
+<section class="wrap-light-section wrap-light-section--intro cf-showcase-section" id="work">
+  <div class="wrap-light-section__inner">
+    <div class="wrap-branding-intro cf-showcase-intro">
+      <h2>Recent Fleet Work</h2>
+      <p class="wrap-branding-intro__desc vw-section-desc">
+        A sample of fleets we've designed, printed and installed for around Houston.
+      </p>
+    </div>
+
+    <div class="vw-services-grid cf-showcase-grid">
+      <a class="wrap-branding-card" href="#">
+        <div class="wrap-branding-card__media">
+          <img src="/images/fleet-work-delivery.jpg" alt="Regional delivery fleet vehicle wrap">
+        </div>
+        <div class="wrap-branding-card__overlay">
+          <div class="wrap-branding-card__title-row">
+            <h3 class="wrap-branding-card__title">Regional Delivery Fleet</h3>
+          </div>
+          <div class="wrap-branding-card__bottom-row">
+            <p class="wrap-branding-card__desc">12-van rollout with matching graphics installed across three weeks.</p>
+            <span class="wrap-branding-card__arrow" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <a class="wrap-branding-card" href="#">
+        <div class="wrap-branding-card__media">
+          <img src="/images/fleet-work-hvac.jpg" alt="HVAC service van fleet wrap">
+        </div>
+        <div class="wrap-branding-card__overlay">
+          <div class="wrap-branding-card__title-row">
+            <h3 class="wrap-branding-card__title">HVAC Service Vans</h3>
+          </div>
+          <div class="wrap-branding-card__bottom-row">
+            <p class="wrap-branding-card__desc">Partial wraps designed for legibility at a stoplight.</p>
+            <span class="wrap-branding-card__arrow" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <a class="wrap-branding-card" href="#">
+        <div class="wrap-branding-card__media">
+          <img src="/images/fleet-work-construction.jpg" alt="Construction company fleet wrap">
+        </div>
+        <div class="wrap-branding-card__overlay">
+          <div class="wrap-branding-card__title-row">
+            <h3 class="wrap-branding-card__title">Construction Fleet</h3>
+          </div>
+          <div class="wrap-branding-card__bottom-row">
+            <p class="wrap-branding-card__desc">Full wraps across pickups and a lowboy trailer.</p>
+            <span class="wrap-branding-card__arrow" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <a class="wrap-branding-card" href="#">
+        <div class="wrap-branding-card__media">
+          <img src="/images/fleet-work-mobile-clinic.jpg" alt="Mobile clinic unit vehicle wrap">
+        </div>
+        <div class="wrap-branding-card__overlay">
+          <div class="wrap-branding-card__title-row">
+            <h3 class="wrap-branding-card__title">Mobile Clinic Units</h3>
+          </div>
+          <div class="wrap-branding-card__bottom-row">
+            <p class="wrap-branding-card__desc">Calm color palette with required signage worked into the design.</p>
+            <span class="wrap-branding-card__arrow" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     COMMERCIAL FLEET — TESTIMONIAL SPOTLIGHT (placeholder quote — swap for a
+     real client quote later)
+     ============================================================================ -->
+<section class="cf-testimonial" id="testimonial">
+  <div class="cf-testimonial__inner">
+    <span class="cf-testimonial__mark" aria-hidden="true">“</span>
+    <blockquote class="cf-testimonial__quote">
+      Every truck in our fleet looks like it rolled off the same line. Performante scheduled the install around our routes, so we never lost a day of service.
+    </blockquote>
+    <p class="cf-testimonial__attribution">— Fleet Manager, Regional Delivery Client</p>
+  </div>
+</section>
+
+<!-- ============================================================================
+     COMMERCIAL FLEET — FAQ
+     ============================================================================ -->
+<section class="wrap-light-section wrap-light-section--intro cf-faq-section" id="faq">
+  <div class="wrap-light-section__inner">
+    <div class="wrap-branding-intro">
+      <h2>Frequently Asked Questions</h2>
+      <p class="wrap-branding-intro__desc vw-section-desc">
+        Answers to the questions we hear most from fleet owners and managers.
+      </p>
+    </div>
+
+    <div class="vw-faq-list" id="cfFaqList">
+      <div class="vw-faq-item">
+        <button class="vw-faq-question" type="button" aria-expanded="false">
+          <span>Do you offer pricing for multiple vehicles?</span>
+          <span class="vw-faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="vw-faq-answer">
+          <p>Yes. Fleets of three or more vehicles are quoted on a per-vehicle rate that drops as the fleet grows, and every vehicle is scheduled as one project instead of separate jobs.</p>
+        </div>
+      </div>
+
+      <div class="vw-faq-item">
+        <button class="vw-faq-question" type="button" aria-expanded="false">
+          <span>Can new vehicles be matched to our existing fleet design later?</span>
+          <span class="vw-faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="vw-faq-answer">
+          <p>Yes. We keep your fleet's design file on record, so a vehicle added months or years from now can be wrapped to match the rest of the fleet exactly.</p>
+        </div>
+      </div>
+
+      <div class="vw-faq-item">
+        <button class="vw-faq-question" type="button" aria-expanded="false">
+          <span>Do you handle DOT and compliance markings?</span>
+          <span class="vw-faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="vw-faq-answer">
+          <p>Yes — required markings like USDOT numbers, weight ratings and hazard placards are built into the layout so they meet regulations without disrupting the graphic.</p>
+        </div>
+      </div>
+
+      <div class="vw-faq-item">
+        <button class="vw-faq-question" type="button" aria-expanded="false">
+          <span>How do you minimize downtime for a large fleet?</span>
+          <span class="vw-faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="vw-faq-answer">
+          <p>Vehicles are scheduled in staggered install windows, usually a few at a time, so the rest of your fleet stays on the road while each one is wrapped.</p>
+        </div>
+      </div>
+
+      <div class="vw-faq-item">
+        <button class="vw-faq-question" type="button" aria-expanded="false">
+          <span>Can you service fleets across multiple locations?</span>
+          <span class="vw-faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="vw-faq-answer">
+          <p>Yes — we coordinate install schedules across yards and branch locations so every vehicle gets the same design and finish.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     CLOSING CTA + FOOTER (reused from vehicle-wraps.html / index.html)
+     ============================================================================ -->
+<section class="pw6-final-cta" aria-labelledby="pw6FinalCtaTitle">
+  <div class="pw6-final-cta__inner">
+
+    <div class="pw6-final-cta__top">
+      <div class="pw6-final-cta__heading">
+        <p class="pw6-final-cta__eyebrow">Let’s Get Your Fleet On The Road.</p>
+        <h2 id="pw6FinalCtaTitle">Start Your Fleet Project</h2>
+      </div>
+      <a class="pw6-final-cta__button pw-btn" href="/contact.html">
+        <span class="pw-btn__label">Contact Performante</span>
+        <span class="pw-btn__arrow" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+    </div>
+
+    <div class="pw6-final-cta__bottom">
+
+      <div class="pw6-final-cta__brand">
+        <img
+          class="pw6-final-cta__logo"
+          src="/images/logo-icon.png"
+          alt="Performante Wraps logo"
+        >
+
+        <div class="pw6-final-cta__bio">
+          <h3 class="pw6-final-cta__bio-name">Enrico Molina</h3>
+          <p class="pw6-final-cta__bio-title">Founder &amp; Creative Director</p>
+          <p class="pw6-final-cta__bio-desc">
+            Building bold visual identities through automotive,
+            architectural and commercial branding.
+          </p>
+        </div>
+
+        <p class="pw6-final-cta__copyright">
+          © <span id="pwFooterYear">2026</span> Performante Wraps. All rights reserved.
+        </p>
+      </div>
+
+      <div class="pw6-final-cta__info">
+
+        <div class="pw6-final-cta__info-col">
+          <p class="pw6-final-cta__info-label">Business Inquiry</p>
+
+          <a href="mailto:enrico@performantewraps.com">
+            <span class="pw6-final-cta__prefix">E.</span>
+            enrico@performantewraps.com
+          </a>
+
+          <a href="tel:8328014675">
+            <span class="pw6-final-cta__prefix">P.</span>
+            (832) 801-4675
+          </a>
+        </div>
+
+        <div class="pw6-final-cta__info-col">
+          <p class="pw6-final-cta__info-label">Social</p>
+
+          <div class="pw6-final-cta__social-grid">
+            <a href="#">Instagram</a>
+            <a href="#">Facebook</a>
+            <a href="#">Tiktok</a>
+            <a href="#">LinkedIn</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+<script>document.getElementById('pwFooterYear').textContent = new Date().getFullYear();</script>
+
+<!-- ============================================================================
+     CLOSING PROJECT CTA — full-bleed image + wordmark (reused pattern)
+     ============================================================================ -->
+<section class="pw5-closing-cta" aria-labelledby="pw5ClosingTitle">
+  <div class="pw5-closing-cta__media" aria-hidden="true">
+    <img src="/images/fleet-closing.jpg" alt="" loading="lazy">
+  </div>
+  <div class="pw5-closing-cta__veil" aria-hidden="true"></div>
+  <a class="pw5-closing-cta__wordmark" href="/contact.html" style="--pw5-wordmark-img:url('/images/fleet-closing.jpg')"><span id="pw5ClosingTitle">PERFORMANTE</span></a>
+</section>
+
+</main>
+
+</div><!-- /#scroll-container -->
+
+<script src="js/navbar-black.js" defer></script>
+<script src="/js/gsap.js" defer></script>
+
+<!-- FAQ accordion — self-contained, no dependency on gsap.js -->
+<script>
+(function(){
+  var list = document.getElementById('cfFaqList');
+  if(!list) return;
+
+  list.addEventListener('click', function(e){
+    var btn = e.target.closest('.vw-faq-question');
+    if(!btn) return;
+
+    var item = btn.closest('.vw-faq-item');
+    var answer = item.querySelector('.vw-faq-answer');
+    var isOpen = item.classList.contains('is-open');
+
+    list.querySelectorAll('.vw-faq-item.is-open').forEach(function(openItem){
+      if(openItem !== item){
+        openItem.classList.remove('is-open');
+        openItem.querySelector('.vw-faq-question').setAttribute('aria-expanded','false');
+        openItem.querySelector('.vw-faq-answer').style.maxHeight = null;
+      }
+    });
+
+    if(isOpen){
+      item.classList.remove('is-open');
+      btn.setAttribute('aria-expanded','false');
+      answer.style.maxHeight = null;
+    } else {
+      item.classList.add('is-open');
+      btn.setAttribute('aria-expanded','true');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  });
+})();
+</script>
+
+<!-- Stat count-up on scroll into view -->
+<script>
+(function(){
+  var stats = document.querySelectorAll('.cf-stat__value');
+  if(!stats.length || !('IntersectionObserver' in window)) return;
+
+  function animate(el){
+    var raw = el.getAttribute('data-raw') || el.textContent.replace(/[^\d]/g,'');
+    var target = parseInt(raw, 10);
+    if(!target){ return; }
+    var plus = el.querySelector('.cf-stat__plus');
+    var plusHTML = plus ? plus.outerHTML : '';
+    var start = 0;
+    var duration = 1100;
+    var startTime = null;
+
+    function step(ts){
+      if(!startTime) startTime = ts;
+      var progress = Math.min((ts - startTime) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var val = Math.round(start + (target - start) * eased);
+      el.innerHTML = val + plusHTML;
+      if(progress < 1){ requestAnimationFrame(step); }
+    }
+    requestAnimationFrame(step);
+  }
+
+  var seen = new WeakSet();
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting && !seen.has(entry.target)){
+        seen.add(entry.target);
+        var el = entry.target;
+        var text = el.textContent.trim();
+        if(/^\d+$/.test(text.replace(/[^\d]/g,'')) && !text.includes('–')){
+          el.setAttribute('data-raw', text.replace(/[^\d]/g,''));
+          animate(el);
+        }
+      }
+    });
+  }, { threshold: 0.6 });
+
+  stats.forEach(function(el){ io.observe(el); });
+})();
+</script>
+
+</body>
+</html>

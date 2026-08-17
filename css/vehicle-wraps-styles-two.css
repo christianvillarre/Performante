@@ -5804,7 +5804,8 @@ html{
    VEHICLE WRAPS PAGE — NEW SECTIONS
    ============================================================================ */
 
-/* --- Hero: top 20vh copy band, remaining 80vh full-bleed looping video --- */
+/* --- Hero: full-viewport split. Left half copy, right half image carousel,
+       a single vertical line divides the two halves down the middle. --- */
 .vw-hero{
   position:relative;
   height:100vh;
@@ -5813,23 +5814,33 @@ html{
   background:var(--off-white);
   color:var(--ink);
   display:flex;
-  flex-direction:column;
+  align-items:stretch;
 }
 
-.vw-hero__top{
-  flex:0 0 auto;
-  box-sizing:border-box;
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-  gap:24px 48px;
-  padding:calc(104px + 3vh) clamp(24px,4vw,64px) clamp(48px,6vh,80px);
-}
-
-.vw-hero__top-copy{
-  flex:1 1 340px;
+.vw-hero__col{
+  flex:1 1 50%;
+  width:50%;
   min-width:0;
+  display:flex;
+  flex-direction:column;
+  box-sizing:border-box;
+}
+
+.vw-hero__divider{
+  flex:0 0 1px;
+  width:1px;
+  align-self:stretch;
+  background:rgba(255,255,255,.16);
+}
+
+/* --- left half: copy, left-aligned, vertically centered --- */
+.vw-hero__col--copy{
+  justify-content:center;
+  padding:0 clamp(24px,4.5vw,72px);
+}
+
+.vw-hero__copy{
+  max-width:44ch;
 }
 
 .vw-hero__eyebrow{
@@ -5842,26 +5853,17 @@ html{
 }
 
 .vw-hero__title{
-  margin:0;
+  margin:0 0 20px;
   color:#fff;
-  font-size:clamp(1.5rem,2.6vw,2.5rem);
+  font-size:clamp(1.8rem,3.2vw,3rem);
   line-height:1.08;
   letter-spacing:-.03em;
   font-weight:500;
-  max-width:20ch;
-}
-
-.vw-hero__top-side{
-  flex:1 1 340px;
-  min-width:0;
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:36px;
+  max-width:16ch;
 }
 
 .vw-hero__desc{
-  margin:0;
+  margin:0 0 32px;
   max-width:38ch;
   color:#c9c9c9;
   font-size:clamp(13px,.95vw,15px);
@@ -5885,7 +5887,14 @@ html{
   white-space:nowrap;
 }
 
-.vw-hero__video{
+/* --- right half: image carousel, kept clear of the nav bar, with a
+       caption line and switch-dots beneath it --- */
+.vw-hero__col--media{
+  padding:calc(104px + 4vh) clamp(24px,4vw,64px) clamp(28px,4.5vh,48px);
+  gap:18px;
+}
+
+.vw-hero__media{
   position:relative;
   flex:1 1 auto;
   min-height:0;
@@ -5893,27 +5902,89 @@ html{
   background:#161616;
 }
 
-.vw-hero__video video{
-  display:block;
+.vw-hero__slide{
+  position:absolute;
+  inset:0;
   width:100%;
   height:100%;
   object-fit:cover;
+  opacity:0;
+  transition:opacity .6s ease;
+}
+
+.vw-hero__slide.is-active{
+  opacity:1;
+}
+
+.vw-hero__media-caption{
+  flex:0 0 auto;
+  margin:0;
+  min-height:1.55em;
+  color:#c9c9c9;
+  font-size:clamp(12px,.85vw,14px);
+  line-height:1.55;
+}
+
+.vw-hero__media-text{
+  display:none;
+}
+
+.vw-hero__media-text.is-active{
+  display:block;
+}
+
+.vw-hero__dots{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.vw-hero__dot{
+  width:8px;
+  height:8px;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,.28);
+  cursor:pointer;
+  transition:background .3s ease, transform .3s ease;
+}
+
+.vw-hero__dot:hover{
+  background:rgba(255,255,255,.5);
+}
+
+.vw-hero__dot.is-active{
+  background:#fff;
+  transform:scale(1.15);
 }
 
 @media(max-width:900px){
-  .vw-hero__top{
-    flex:0 0 auto;
+  .vw-hero{
     flex-direction:column;
-    align-items:flex-start;
-    padding:calc(96px + 28px) 20px 40px;
   }
-  .vw-hero__top-side{
+  .vw-hero__col{
+    width:100%;
+    flex:1 1 50%;
+  }
+  .vw-hero__divider{
+    width:auto;
+    height:1px;
+    flex:0 0 1px;
+  }
+  .vw-hero__col--copy{
+    padding:calc(96px + 24px) 20px 32px;
     justify-content:flex-start;
-    flex-direction:column;
-    align-items:flex-start;
-    gap:16px;
   }
-  .vw-hero__title{ font-size:clamp(1.7rem,7vw,2.2rem); max-width:16ch; }
+  .vw-hero__copy{
+    max-width:none;
+  }
+  .vw-hero__title{ font-size:clamp(1.6rem,7vw,2.1rem); max-width:18ch; }
+  .vw-hero__desc{ margin-bottom:24px; }
+  .vw-hero__col--media{
+    padding:24px 20px 28px;
+  }
 }
 
 
@@ -6022,7 +6093,7 @@ html{
   line-height:1.04;
   letter-spacing:-.03em;
   font-weight:500;
-  max-width:14ch;
+  max-width:11ch;
 }
 
 .vw-benefits-row__left p{
@@ -6088,7 +6159,7 @@ html{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:clamp(18px,2vw,28px);
-  /*margin:clamp(48px,5vw,72px) 0 0;*/
+  margin:clamp(48px,5vw,72px) 0 0;
 }
 
 @media(max-width:640px){

@@ -16,7 +16,7 @@
 
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
 
-<link rel="stylesheet" href="/css/vehicle-wraps-styles.css" />
+<link rel="stylesheet" href="/css/vehicle-wraps-styles-two.css" />
 <link rel="stylesheet" href="css/navbar.css" />
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
@@ -86,17 +86,18 @@
 
 <!-- ============================================================================
      VEHICLE WRAPS — HERO
-     Top 20vh: eyebrow / title / description / CTA in a compact band.
-     Remaining 80vh: full-bleed looping video.
+     Full-viewport split hero. Left half: eyebrow / title / description / CTA,
+     left-aligned, vertically centered. Right half: image carousel that sits
+     below the nav (doesn't run under it), with a caption line and dots
+     beneath it to switch images. A single vertical line splits the two
+     halves down the middle.
      ============================================================================ -->
 <section class="vw-hero" id="home">
-  <div class="vw-hero__top">
-    <div class="vw-hero__top-copy">
+
+  <div class="vw-hero__col vw-hero__col--copy">
+    <div class="vw-hero__copy">
       <p class="vw-hero__eyebrow">Vehicle Wraps</p>
       <h1 class="vw-hero__title">Wrapped With Precision. Built To Turn Heads.</h1>
-    </div>
-
-    <div class="vw-hero__top-side">
       <p class="vw-hero__desc">
         From full color changes to custom-designed graphics, every wrap is
         designed, printed and installed in-house — finished to a showroom
@@ -114,11 +115,28 @@
     </div>
   </div>
 
-  <div class="vw-hero__video">
-    <video autoplay muted loop playsinline poster="/images/IMG_1800.jpg">
-      <source src="/videos/vehicle-wrap-hero.mp4" type="video/mp4">
-    </video>
+  <div class="vw-hero__divider" aria-hidden="true"></div>
+
+  <div class="vw-hero__col vw-hero__col--media">
+    <div class="vw-hero__media" id="vwHeroMedia">
+      <img class="vw-hero__slide is-active" data-slide="0" src="/images/IMG_1800.jpg" alt="Full color change vehicle wrap">
+      <img class="vw-hero__slide" data-slide="1" src="/images/IMG_7650.jpg" alt="Paint protection film install">
+      <img class="vw-hero__slide" data-slide="2" src="/images/Untitled-5.jpg" alt="Custom vehicle stripe accents">
+    </div>
+
+    <p class="vw-hero__media-caption">
+      <span class="vw-hero__media-text is-active" data-slide="0">Full color change — gloss, matte, satin or chrome.</span>
+      <span class="vw-hero__media-text" data-slide="1">Paint protection film, designed and installed in-house.</span>
+      <span class="vw-hero__media-text" data-slide="2">Custom stripes &amp; accents, built around your vehicle.</span>
+    </p>
+
+    <div class="vw-hero__dots" id="vwHeroDots" role="tablist" aria-label="Switch hero image">
+      <button class="vw-hero__dot is-active" type="button" data-slide="0" role="tab" aria-selected="true" aria-label="Show color change image"></button>
+      <button class="vw-hero__dot" type="button" data-slide="1" role="tab" aria-selected="false" aria-label="Show paint protection film image"></button>
+      <button class="vw-hero__dot" type="button" data-slide="2" role="tab" aria-selected="false" aria-label="Show stripes and accents image"></button>
+    </div>
   </div>
+
 </section>
 
 <!-- ============================================================================
@@ -128,7 +146,7 @@
 <section class="wrap-light-section wrap-light-section--intro vw-services-section">
   <div class="wrap-light-section__inner">
     <div class="wrap-branding-intro vw-services-intro">
-      <!--<p class="wrap-light-section__kicker vw-services-kicker">What We Offer</p>-->
+      <p class="wrap-light-section__kicker vw-services-kicker">What We Offer</p>
       <h2>Vehicle Wrap Services</h2>
       <p class="wrap-branding-intro__desc vw-section-desc">
         Four ways to transform your vehicle, each finished to showroom standard.
@@ -224,14 +242,14 @@
     <div class="vw-benefits-row">
 
       <div class="vw-benefits-row__left">
-        <!--<p class="wrap-light-section__kicker">Why Wrap</p>-->
+        <p class="wrap-light-section__kicker">Why Wrap</p>
         <h2>The Benefits of Vehicle Wrapping</h2>
         <p>Why more owners are choosing a wrap over a repaint.</p>
       </div>
 
       <div class="vw-benefits-row__right">
 
-        <!--<div class="vw-benefits-stats">
+        <div class="vw-benefits-stats">
           <div class="vw-benefits-stat">
             <span class="vw-benefits-stat__value">5–7</span>
             <span class="vw-benefits-stat__label">Years Typical Lifespan</span>
@@ -244,7 +262,7 @@
             <span class="vw-benefits-stat__value">100%</span>
             <span class="vw-benefits-stat__label">Paint Protected Underneath</span>
           </div>
-        </div>-->
+        </div>
 
         <div class="vw-benefits-grid">
           <div class="vw-benefit-card">
@@ -489,6 +507,7 @@
 </div><!-- /#scroll-container -->
 
 <script src="js/navbar-black.js" defer></script>
+<script src="/js/vehicle-wraps-two.js" defer></script>
 <script src="/js/gsap.js" defer></script>
 
 <!-- FAQ accordion — self-contained, no dependency on gsap.js -->

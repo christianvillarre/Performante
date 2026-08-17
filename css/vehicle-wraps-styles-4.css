@@ -5804,7 +5804,8 @@ html{
    VEHICLE WRAPS PAGE — NEW SECTIONS
    ============================================================================ */
 
-/* --- Hero: top 20vh copy band, remaining 80vh full-bleed looping video --- */
+/* --- Hero: full-viewport split. Left half copy, right half image carousel,
+       a single vertical line divides the two halves down the middle. --- */
 .vw-hero{
   position:relative;
   height:100vh;
@@ -5813,23 +5814,34 @@ html{
   background:var(--off-white);
   color:var(--ink);
   display:flex;
-  flex-direction:column;
+  align-items:stretch;
 }
 
-.vw-hero__top{
-  flex:0 0 auto;
-  box-sizing:border-box;
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-  gap:24px 48px;
-  padding:calc(104px + 3vh) clamp(24px,4vw,64px) clamp(48px,6vh,80px);
-}
-
-.vw-hero__top-copy{
-  flex:1 1 340px;
+.vw-hero__col{
+  flex:1 1 50%;
+  width:50%;
   min-width:0;
+  display:flex;
+  flex-direction:column;
+  box-sizing:border-box;
+  border-bottom:1px solid rgba(255,255,255,.16);
+}
+
+.vw-hero__divider{
+  flex:0 0 1px;
+  width:1px;
+  align-self:stretch;
+  background:rgba(255,255,255,.16);
+}
+
+/* --- left half: copy, left-aligned, vertically centered --- */
+.vw-hero__col--copy{
+  justify-content:center;
+  padding:0 clamp(24px,4.5vw,72px);
+}
+
+.vw-hero__copy{
+  max-width:54ch;
 }
 
 .vw-hero__eyebrow{
@@ -5842,26 +5854,17 @@ html{
 }
 
 .vw-hero__title{
-  margin:0;
+  margin:0 0 20px;
   color:#fff;
-  font-size:clamp(1.5rem,2.6vw,2.5rem);
+  font-size:clamp(1.8rem,3.2vw,3rem);
   line-height:1.08;
   letter-spacing:-.03em;
   font-weight:500;
-  max-width:20ch;
-}
-
-.vw-hero__top-side{
-  flex:1 1 340px;
-  min-width:0;
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:36px;
+  max-width:26ch;
 }
 
 .vw-hero__desc{
-  margin:0;
+  margin:0 0 32px;
   max-width:38ch;
   color:#c9c9c9;
   font-size:clamp(13px,.95vw,15px);
@@ -5885,7 +5888,14 @@ html{
   white-space:nowrap;
 }
 
-.vw-hero__video{
+/* --- right half: image carousel, kept clear of the nav bar, with a
+       caption line and switch-dots beneath it --- */
+.vw-hero__col--media{
+  padding:calc(104px + 4vh) clamp(24px,4vw,64px) clamp(28px,4.5vh,48px);
+  gap:18px;
+}
+
+.vw-hero__media{
   position:relative;
   flex:1 1 auto;
   min-height:0;
@@ -5893,27 +5903,89 @@ html{
   background:#161616;
 }
 
-.vw-hero__video video{
-  display:block;
+.vw-hero__slide{
+  position:absolute;
+  inset:0;
   width:100%;
   height:100%;
   object-fit:cover;
+  opacity:0;
+  transition:opacity .6s ease;
+}
+
+.vw-hero__slide.is-active{
+  opacity:1;
+}
+
+.vw-hero__media-caption{
+  flex:0 0 auto;
+  margin:0;
+  min-height:1.55em;
+  color:#c9c9c9;
+  font-size:clamp(12px,.85vw,14px);
+  line-height:1.55;
+}
+
+.vw-hero__media-text{
+  display:none;
+}
+
+.vw-hero__media-text.is-active{
+  display:block;
+}
+
+.vw-hero__dots{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.vw-hero__dot{
+  width:8px;
+  height:8px;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,.28);
+  cursor:pointer;
+  transition:background .3s ease, transform .3s ease;
+}
+
+.vw-hero__dot:hover{
+  background:rgba(255,255,255,.5);
+}
+
+.vw-hero__dot.is-active{
+  background:#fff;
+  transform:scale(1.15);
 }
 
 @media(max-width:900px){
-  .vw-hero__top{
-    flex:0 0 auto;
+  .vw-hero{
     flex-direction:column;
-    align-items:flex-start;
-    padding:calc(96px + 28px) 20px 40px;
   }
-  .vw-hero__top-side{
+  .vw-hero__col{
+    width:100%;
+    flex:1 1 50%;
+  }
+  .vw-hero__divider{
+    width:auto;
+    height:1px;
+    flex:0 0 1px;
+  }
+  .vw-hero__col--copy{
+    padding:calc(96px + 24px) 20px 32px;
     justify-content:flex-start;
-    flex-direction:column;
-    align-items:flex-start;
-    gap:16px;
   }
-  .vw-hero__title{ font-size:clamp(1.7rem,7vw,2.2rem); max-width:16ch; }
+  .vw-hero__copy{
+    max-width:none;
+  }
+  .vw-hero__title{ font-size:clamp(1.6rem,7vw,2.1rem); max-width:18ch; }
+  .vw-hero__desc{ margin-bottom:24px; }
+  .vw-hero__col--media{
+    padding:24px 20px 28px;
+  }
 }
 
 
@@ -5925,75 +5997,6 @@ html{
   letter-spacing:normal;
 }
 
-
-/* --- Services grid: 4 vehicle wrap service cards, one row, tall portrait
-       cards (matches the original Wraps & Branding card proportions) ---
-       Section stays centered, using a wider container than the site's
-       default 1500px cap so the cards read larger, but short of full
-       edge-to-edge. --- */
-.vw-services-section .wrap-light-section__inner{
-  width:min(1700px, calc(100% - 48px));
-  max-width:none;
-}
-
-.vw-services-intro{
-  margin-top:clamp(90px,10vw,150px);
-}
-
-.vw-services-kicker{
-  color:rgba(255,255,255,.55);
-}
-
-.vw-services-intro h2{
-  font-size:clamp(2.1rem,3vw,3.8rem);
-}
-
-.vw-services-intro .vw-section-desc{
-  margin-top:clamp(22px,2.4vw,32px);
-  font-size:clamp(16px,1.25vw,21px);
-}
-
-.vw-services-grid{
-  width:100%;
-  margin:clamp(70px,8vw,110px) auto 0;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:clamp(16px,1.6vw,26px);
-  text-align:left;
-}
-
-.vw-services-grid .wrap-branding-card{
-  aspect-ratio:3.3/4.6;
-}
-
-.vw-services-grid .wrap-branding-card:nth-child(1) .wrap-branding-card__title-row,
-.vw-services-grid .wrap-branding-card:nth-child(2) .wrap-branding-card__title-row,
-.vw-services-grid .wrap-branding-card:nth-child(3) .wrap-branding-card__title-row,
-.vw-services-grid .wrap-branding-card:nth-child(4) .wrap-branding-card__title-row{
-  justify-content:flex-start;
-}
-
-.vw-services-grid .wrap-branding-card:nth-child(1) .wrap-branding-card__title,
-.vw-services-grid .wrap-branding-card:nth-child(2) .wrap-branding-card__title,
-.vw-services-grid .wrap-branding-card:nth-child(3) .wrap-branding-card__title,
-.vw-services-grid .wrap-branding-card:nth-child(4) .wrap-branding-card__title{
-  text-align:left;
-  font-size:clamp(1.15rem,1.5vw,1.6rem);
-}
-
-.vw-services-grid .wrap-branding-card__desc{
-  font-size:clamp(0.85rem,0.95vw,1.05rem);
-}
-
-@media(max-width:1100px){
-  .vw-services-grid{ grid-template-columns:repeat(2,1fr); }
-  .vw-services-grid .wrap-branding-card{ aspect-ratio:3.3/4.2; }
-}
-
-@media(max-width:760px){
-  .vw-services-grid{ grid-template-columns:1fr; max-width:520px; }
-  .vw-services-grid .wrap-branding-card{ aspect-ratio:4/3.4; }
-}
 
 /* --- Benefits: full-width section, title/text on the left, stats +
        icon cards on the right --- */
@@ -6262,3 +6265,245 @@ html{
 @media(max-width:760px){
   .vw-faq-list{ width:100%; }
 }
+
+/* ============================================================================
+   VEHICLE WRAP SERVICES — stacking cards
+   An intro card followed by one card per service. On desktop each card
+   pins in place (position:sticky within a taller runway) so the next
+   card scrolls up and visually stacks over it; on smaller screens the
+   cards simply flow as normal stacked blocks.
+   ============================================================================ */
+.vws-section{
+  background:var(--off-white);
+  padding:0;
+}
+
+.vws-shell{
+  width:100%;
+  margin:0 auto;
+}
+
+.vws-stage{
+  position:relative;
+}
+
+.vws-card{
+  position:sticky;
+  top:0;
+  height:30rem;
+}
+
+.vws-card-inner{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr .85fr 1.25fr;
+  align-items:stretch;
+  overflow:hidden;
+  background:#000;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 18px 50px rgba(0,0,0,.35);
+}
+
+.vws-card-inner-intro{
+  display:block;
+  background:
+    linear-gradient(180deg, rgba(6,6,6,.85), rgba(0,0,0,.92)),
+    var(--off-white);
+  border-color:rgba(255,255,255,.09);
+}
+
+.vws-intro-content{
+  width:100%;
+  max-width:1200px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:4rem clamp(24px,4.5vw,72px);
+}
+
+.vws-intro-kicker{
+  margin:0 0 14px;
+  color:rgba(255,255,255,.58);
+  font-size:13px;
+  font-weight:400;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+
+.vws-intro-content .vws-intro-title{
+  margin:0;
+  font-size:clamp(2.4rem,3vw,5.6rem);
+  line-height:.95; 
+  letter-spacing:-.04em;
+  font-weight:500;
+  color:#fff;
+  max-width:20ch;
+  font-family: 'Zalando Sans', sans-serif;
+}
+
+.vws-intro-text{
+  margin:30px 0 32px;
+  max-width:38ch;
+  color:#c9c9c9;
+  font-size:clamp(13px,.95vw,15px);
+  line-height:1.55;
+}
+
+.vws-card-image{
+  position:relative;
+  overflow:hidden;
+  height:100%;
+  background:#161616;
+}
+
+.vws-card-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.vws-title-wrap{
+  display:flex;
+  align-items:flex-start;
+  padding-left:clamp(24px,3vw,48px);
+}
+
+.vws-title-group{
+  width:100%;
+  padding:2.4rem 0;
+}
+
+.vws-title{
+  margin:0;
+  font-size:clamp(1.3rem,1.8vw,1.8rem);
+  line-height:1.05;
+  letter-spacing:-.02em;
+  font-weight:400;
+  color:#fff;
+  max-width:15ch;
+}
+
+.vws-links{
+  margin:1.7rem 0 0;
+  padding:0;
+  list-style:none;
+  display:grid;
+  gap:.5rem;
+}
+
+.vws-links a{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 12px;
+  align-items:start;
+  column-gap:.5rem;
+  color:rgba(255,255,255,.72);
+  text-decoration:none;
+  transition:color .25s ease;
+}
+
+.vws-links a span{
+  display:block;
+  font-size:.85rem;
+  line-height:1.45;
+}
+
+.vws-links svg{
+  width:11px;
+  height:11px;
+  stroke:rgba(255,255,255,.55);
+  stroke-width:1.6;
+  fill:none;
+  margin-top:.28rem;
+  justify-self:end;
+  transition:transform .25s ease, stroke .25s ease;
+}
+
+.vws-links a:hover{ color:#fff; }
+.vws-links a:hover svg{ transform:translate(2px,-2px); stroke:#fff; }
+
+.vws-content{
+  display:grid;
+  grid-template-columns:1fr 9rem;
+  gap:1.4rem;
+  align-items:flex-start;
+  padding:2.4rem clamp(24px,3vw,48px);
+}
+
+.vws-text-wrap{
+  display:grid;
+  align-content:center;
+  justify-items:start;
+  min-width:0;
+}
+
+.vws-text{
+  margin:0 0 1rem;
+  font-size:.92rem;
+  line-height:1.6;
+  color:rgba(255,255,255,.72);
+  max-width:38ch;
+}
+
+.vws-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:.35rem;
+  background:#fff;
+  padding:.55rem 1.2rem;
+  border-radius:6px;
+  font-size:.8rem;
+  font-weight:600;
+  color:#141414;
+  text-decoration:none;
+  white-space:nowrap;
+  width:fit-content;
+  transition:opacity .25s ease, transform .25s ease;
+}
+
+.vws-cta svg{
+  width:12px;
+  height:12px;
+  stroke:#141414;
+  stroke-width:1.6;
+  fill:none;
+  transition:transform .25s ease;
+}
+
+.vws-cta:hover{ opacity:.85; transform:translateY(-1px); }
+
+.vws-card-image.small{
+  height:100%;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+/* z-index ladder: later cards stack over earlier ones as they pin */
+.vws-card:nth-of-type(1){ z-index:1; }
+.vws-card:nth-of-type(2){ z-index:2; }
+.vws-card:nth-of-type(3){ z-index:3; }
+.vws-card:nth-of-type(4){ z-index:4; }
+.vws-card:nth-of-type(5){ z-index:5; }
+
+@media(max-width:1100px){
+  .vws-card{
+    position:relative;
+    top:auto;
+    height:auto;
+  }
+  .vws-card-inner{
+    height:auto;
+    grid-template-columns:1fr;
+  }
+  .vws-card-inner-intro{ display:block; }
+  .vws-intro-content{ padding:3rem 20px 2rem; }
+  .vws-intro-content .vws-intro-title{ font-size:clamp(2.1rem,9vw,3.4rem); }
+  .vws-card-image.main{ height:240px; }
+  .vws-title-wrap{ padding:0 20px; border-top:1px solid rgba(255,255,255,.06); }
+  .vws-title-group{ padding:1.4rem 0 .6rem; }
+  .vws-title{ max-width:none; }
+  .vws-content{ grid-template-columns:1fr; padding:0 20px 1.6rem; gap:1rem; }
+  .vws-card-image.small{ display:none; }
+}
+

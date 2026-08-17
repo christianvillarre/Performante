@@ -1,0 +1,264 @@
+/* ==========================================================================
+   Performante Wraps — Vehicle Wraps "Makeover" pass.
+
+   This file layers on top of vehicle-wraps-styles-2.css and does not
+   replace or restructure anything there. Nothing in vehicle-wraps-2.html
+   changes structurally — every rule below targets classes that already
+   exist in the markup (.vw-hero, .vws-*, .vw-benefits-*, .vw-faq-*).
+
+   Concept: the signature motif is the "seam" — the line where two panels
+   of vinyl wrap meet — rendered as a fine chrome-gradient hairline, used
+   at section boundaries, card corners and the hero divider instead of a
+   flat rule. It's paired with a brushed-metal treatment on icons/badges,
+   grounded in the actual material this business installs (chrome, satin
+   and iridescent film finishes), rather than a generic accent color.
+   ========================================================================== */
+
+:root{
+  --vw-chrome: linear-gradient(115deg, #f4f6f7 0%, #aab3ba 22%, #5b646b 42%, #eef1f2 58%, #838d94 74%, #f4f6f7 100%);
+  --vw-panel: #16171a;
+  --vw-panel-2: #1c1e22;
+  --vw-hairline: rgba(255,255,255,.12);
+  --vw-red-deep: #c40202;
+}
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+
+/* Fine grain over the hero for material depth instead of flat black. */
+.vw-hero{
+  position:relative;
+}
+
+.vw-hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  opacity:.05;
+  background-image:
+    radial-gradient(circle at 1px 1px, #fff 1px, transparent 1px);
+  background-size:3px 3px;
+  mix-blend-mode:overlay;
+}
+
+.vw-hero__eyebrow{
+  background:var(--vw-chrome);
+  background-size:220% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:rgba(255,255,255,.58); /* fallback if background-clip unsupported */
+  font-weight:600;
+  animation:vw-chrome-drift 7s ease-in-out infinite;
+}
+
+@keyframes vw-chrome-drift{
+  0%,100%{ background-position:0% 50%; }
+  50%{ background-position:100% 50%; }
+}
+
+.vw-hero__title{
+  font-family:'Zalando Sans SemiExpanded', 'Zalando Sans', sans-serif;
+  letter-spacing:-.035em;
+  font-weight:560;
+}
+
+/* The divider between copy and media becomes the "seam" — a thin chrome
+   line with a soft glow, rather than a plain hairline. */
+.vw-hero__divider{
+  position:relative;
+  background:var(--vw-hairline);
+  overflow:visible;
+}
+
+.vw-hero__divider::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  width:1px;
+  background:var(--vw-chrome);
+  background-size:100% 300%;
+  animation:vw-chrome-drift-v 9s ease-in-out infinite;
+  box-shadow:0 0 18px rgba(230,230,235,.25);
+}
+
+@keyframes vw-chrome-drift-v{
+  0%,100%{ background-position:50% 0%; }
+  50%{ background-position:50% 100%; }
+}
+
+/* CTA gets a chrome sweep on hover instead of a flat color swap. */
+.vw-hero__cta.pw-btn{
+  position:relative;
+}
+
+.vw-hero__cta.pw-btn::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background:var(--vw-chrome);
+  background-size:220% 100%;
+  background-position:0% 50%;
+  opacity:0;
+  transition:opacity .3s ease, background-position .6s ease;
+  pointer-events:none;
+}
+
+.vw-hero__cta.pw-btn:hover::after{
+  opacity:.16;
+  background-position:100% 50%;
+}
+
+.vw-hero__dot.is-active{
+  background:var(--vw-red-deep);
+  box-shadow:0 0 0 3px rgba(196,2,2,.18);
+}
+
+@media(max-width:900px){
+  .vw-hero__divider::before{ display:none; }
+}
+
+/* ==========================================================================
+   SERVICES — stacking cards
+   ========================================================================== */
+
+.vws-intro-content .vws-intro-title,
+.vws-title{
+  font-family:'Zalando Sans SemiExpanded', 'Zalando Sans', sans-serif;
+  letter-spacing:-.03em;
+}
+
+.vws-intro-kicker{
+  position:relative;
+  padding-bottom:16px;
+}
+
+.vws-intro-kicker::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:64px;
+  height:2px;
+  background:var(--vw-chrome);
+  background-size:220% 100%;
+}
+
+/* Card frame: hairline border with a seam highlight that brightens on
+   hover, and a small chrome corner tick standing in for a panel seam. */
+.vws-card-inner{
+  border-color:var(--vw-hairline);
+  transition:border-color .4s ease, box-shadow .4s ease;
+}
+
+.vws-card-inner:hover{
+  border-color:rgba(255,255,255,.22);
+  box-shadow:0 24px 60px rgba(0,0,0,.45);
+}
+
+.vws-card-inner::after{
+  content:"";
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:22px;
+  height:22px;
+  border-top:1px solid rgba(230,230,235,.55);
+  border-right:1px solid rgba(230,230,235,.55);
+  opacity:.6;
+  pointer-events:none;
+}
+
+.vws-card-inner-intro{
+  background:
+    radial-gradient(720px 360px at 15% 0%, rgba(230,230,235,.05), transparent 60%),
+    linear-gradient(180deg, rgba(6,6,6,.85), rgba(0,0,0,.92)),
+    var(--off-white);
+}
+
+.vws-links a:hover{ color:var(--vw-red-deep); }
+.vws-links a:hover svg{ stroke:var(--vw-red-deep); }
+
+.vws-cta{
+  box-shadow:0 8px 20px rgba(0,0,0,.18);
+  transition:opacity .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+
+.vws-cta:hover{
+  box-shadow:0 12px 28px rgba(0,0,0,.24);
+}
+
+/* ==========================================================================
+   BENEFITS — off-white section: badge-style icons, refined cards
+   ========================================================================== */
+
+.vw-benefits-stat__icon{
+  background:
+    radial-gradient(120% 120% at 30% 20%, #ffffff 0%, #e6e2d6 55%, #d3cebd 100%);
+  border-color:rgba(20,20,20,.14);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.9),
+    inset 0 -2px 3px rgba(20,20,20,.08),
+    0 1px 2px rgba(20,20,20,.08);
+}
+
+.vw-benefit-card{
+  border-color:rgba(20,20,20,.10);
+}
+
+.vw-benefit-card::before{
+  background:linear-gradient(90deg, rgba(196,2,2,0) 0%, rgba(196,2,2,.55) 50%, rgba(196,2,2,0) 100%);
+}
+
+.vw-benefit-card:hover{
+  box-shadow:0 26px 54px rgba(20,20,20,.16);
+}
+
+.vw-benefits-section .vw-section-banner__title,
+.vw-benefits-row__left h2,
+.vw-benefits-section .wrap-light-section h2{
+  font-family:'Zalando Sans SemiExpanded', 'Zalando Sans', sans-serif;
+  letter-spacing:-.035em;
+}
+
+/* ==========================================================================
+   FAQ
+   ========================================================================== */
+
+.vw-faq-question{
+  font-family:'Zalando Sans SemiExpanded', 'Zalando Sans', sans-serif;
+}
+
+.vw-faq-icon{
+  background:
+    radial-gradient(120% 120% at 30% 20%, #ffffff 0%, #efece3 60%, #ddd7c6 100%);
+  border-color:rgba(20,20,20,.16);
+}
+
+.vw-faq-item.is-open .vw-faq-icon{
+  background:var(--vw-red-deep);
+  border-color:var(--vw-red-deep);
+  color:#fff;
+}
+
+.vw-faq-item{
+  transition:border-color .3s ease;
+}
+
+.vw-faq-item:hover{
+  border-color:rgba(20,20,20,.28);
+}
+
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce){
+  .vw-hero__eyebrow,
+  .vw-hero__divider::before{
+    animation:none;
+  }
+}
