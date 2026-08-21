@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>About | Performante Wraps</title>
+  <meta name="description" content="Performante Wraps is a Houston vehicle wrap, PPF and window tint shop — every project designed, printed and installed in-house." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&family=Zalando+Sans+SemiExpanded:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
+
+<!-- Shared tokens/nav/buttons/footer CTA only -->
+<link rel="stylesheet" href="/css/vehicle-wraps-styles-8.css" />
+<link rel="stylesheet" href="css/navbar.css" />
+<!-- Page-specific: everything on this page besides nav + footer CTA -->
+<link rel="stylesheet" href="/css/about-styles.css" />
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.3.18/dist/lenis.min.js"></script>
+
+<script>
+(function(){
+  if (typeof Lenis === 'undefined') return;
+
+  var lenis = new Lenis({
+    autoRaf: false
+  });
+
+  if (window.gsap && window.ScrollTrigger) {
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(function(time){
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+  } else {
+    requestAnimationFrame(function raf(time){
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    });
+  }
+})();
+</script>
+
+</head>
+
+<body data-black7-build="about-v1">
+
+<header class="pw-nav" id="pwNav">
+  <a class="pw-nav__logo" href="/" aria-label="Performante Wraps home">
+    <img src="/images/logo.png" alt="Performante Wraps">
+  </a>
+
+  <div class="pw-nav__actions">
+    <a class="pw-nav__chat" href="/contact.html"><span class="pw-nav__chat-label">Let’s Talk</span></a>
+    <button class="pw-nav__toggle" id="pwMenuToggle" type="button" aria-label="Open menu" aria-expanded="false">
+      <span class="pw-nav__toggle-label">Menu</span>
+      <span class="pw-nav__toggle-icon" aria-hidden="true">
+        <span class="pw-nav__toggle-line pw-nav__toggle-line--one"></span>
+        <span class="pw-nav__toggle-line pw-nav__toggle-line--two"></span>
+      </span>
+    </button>
+  </div>
+</header>
+
+<div class="pw-menu-backdrop" id="pwMenuBackdrop" aria-hidden="true"></div>
+<aside class="pw-menu" id="pwMenu" aria-hidden="true">
+  <div class="pw-menu__top">
+    <span class="pw-menu__label"></span>
+    <button class="pw-menu__close" id="pwMenuClose" type="button" aria-label="Close menu"></button>
+  </div>
+
+  <nav class="pw-menu__links" aria-label="Primary navigation">
+    <a href="/vehicle-wraps-2.html">Vehicle Wraps</a>
+    <a href="/wraps/commercial-fleet.html">Commercial Wraps</a>
+    <a href="/wraps/architectural.html">Architectural Wraps</a>
+    <a href="/paint-protection-film.html">Paint Protection</a>
+    <a href="/window-tint.html">Window Tint</a>
+    <a href="/gallery.html">Gallery</a>
+    <a href="/about.html" aria-current="page">About</a>
+    <a href="/contact.html">Contact</a>
+  </nav>
+
+  <div class="pw-menu__footer">
+    <div class="pw-menu__footer-block">
+      <p class="pw-menu__footer-label">Business Inquiry</p>
+      <a href="mailto:enrico@performantewraps.com"><span class="pw-menu__footer-tag">E:</span> enrico@performantewraps.com</a>
+      <a href="tel:8328014675"><span class="pw-menu__footer-tag">P:</span> (832) 801-4675</a>
+    </div>
+
+    <div class="pw-menu__socials">
+      <p class="pw-menu__footer-label">Social</p>
+      <div class="pw-menu__socials-grid">
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Tiktok</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</aside>
+
+
+ <div id="scroll-container">
+  <main id="site">
+
+<!-- ============================================================================
+     ABOUT — HERO
+     "Index about" pattern: eyebrow on the left beside the title + a short
+     intro line, then a second row below with an image and a longer desc.
+     ============================================================================ -->
+<section class="ab-hero" id="hero">
+  <div class="ab-hero__grid">
+    <div class="ab-hero__main">
+      <div class="ab-hero__top">
+        <div class="ab-hero__intro">
+          <h1 class="ab-hero__title"><span class="ab-hero__span">About Performante</span>: Automotive craftsmanship and commercial branding, engineered to a higher standard.</h1>
+          <!--<p class="ab-hero__intro-text">
+            Automotive craftsmanship and commercial branding, engineered to a higher standard.
+          </p>-->
+        </div>
+      </div>
+
+      <div class="ab-hero__bottom">
+        <div class="ab-hero__media">
+          <img src="/images/graphics_1.jpg" alt="Performante Wraps shop, vehicle mid-wrap">
+        </div>
+        <p class="ab-hero__desc">
+          Performante is an automotive branding and performance company built around precision, craftsmanship, and a refusal to settle for ordinary.<br><br>
+          From luxury vehicles to commercial fleets, storefronts to complete branded environments, we approach every project with the same objective: create work that represents our clients at the highest level.<br><br>
+          We aren't interested in being another wrap shop. We're building Performante to become one of the most respected names in automotive branding in North America.
+        </p>
+      </div>
+    </div>
+
+    <div class="ab-hero__side">
+      <img src="/images/ppf.jpg" alt="Performante Wraps close-up detail">
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     ABOUT — STORY 1
+     Text-forward band: eyebrow to the side, a styled headline statement
+     spanning across the section, a smaller image alongside to complement
+     it — not the image-led card layout used before.
+     ============================================================================ -->
+<section class="ab-story" id="story-1">
+  <div class="ab-story__row">
+    <p class="ab-story__eyebrow">Where It Started</p>
+    <h2 class="ab-story__headline">
+      A company built around one standard —
+      <span>precision, craftsmanship and performance</span>, without compromise.
+    </h2>
+    <div class="ab-story__media">
+      <img src="/images/ppf2.jpg" alt="Enrico Molina working on a vehicle wrap">
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     ABOUT — STORY 2
+     Same text-forward pattern, image swapped to the middle for rhythm.
+     ============================================================================ -->
+<section class="ab-story ab-story--media-mid" id="story-2">
+  <div class="ab-story__row">
+    <p class="ab-story__eyebrow">How We Work</p>
+    <div class="ab-story__media">
+      <img src="/images/ppf3.jpg" alt="Inside the Performante Wraps shop">
+    </div>
+    <h2 class="ab-story__headline">
+      Every project receives the same <span>attention to detail </span>— from luxury vehicles to complete branded environments.
+    </h2>
+  </div>
+</section>
+
+<!-- ============================================================================
+     ABOUT — VALUES (scroll-locked)
+     Pins in place while a line draws across the section; three values
+     reveal one at a time as the line reaches them.
+     ============================================================================ -->
+<section class="ab-values" id="values">
+  <div class="ab-values__stage">
+    <p class="ab-values__kicker">What We Stand For</p>
+    <h2 class="ab-values__title">Three Standards Behind Everything We Do</h2>
+
+    <div class="ab-values__line-track" aria-hidden="true">
+      <div class="ab-values__line" id="abValuesLine"></div>
+      <div class="ab-values__dots">
+        <span class="ab-values__dot" data-dot="1"></span>
+        <span class="ab-values__dot" data-dot="2"></span>
+        <span class="ab-values__dot" data-dot="3"></span>
+      </div>
+    </div>
+
+    <div class="ab-values__points">
+      <div class="ab-values__point" data-point="1">
+        <span class="ab-values__point-num">01</span>
+        <h3>Precision</h3>
+        <p>Every detail is intentional — from the first concept and material selection to execution and final presentation.</p>
+      </div>
+      <div class="ab-values__point" data-point="2">
+        <span class="ab-values__point-num">02</span>
+        <h3>Craftsmanship</h3>
+        <p>Great work is built, not rushed. We combine skilled hands, proven processes, and premium materials to deliver work worthy of the Performante name.</p>
+      </div>
+      <div class="ab-values__point" data-point="3">
+        <span class="ab-values__point-num">03</span>
+        <h3>Consistency</h3>
+        <p>One vehicle or an entire fleet. Automotive or commercial. Every project is held to the same uncompromising standard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     ABOUT — PROCESS (scroll-locked)
+     Pins in place while three images rise up from below the viewport,
+     one at a time, showing design / print / install.
+     ============================================================================ -->
+<section class="ab-rise" id="process">
+  <div class="ab-rise__stage">
+    <p class="ab-rise__kicker">How It Comes Together</p>
+    <h2 class="ab-rise__title">Design. Print. Install.</h2>
+
+    <div class="ab-rise__cards">
+      <div class="ab-rise__card" data-step="1">
+        <div class="ab-rise__media">
+          <img src="/images/IMG_1794.jpg" alt="Design proof for a vehicle wrap">
+        </div>
+        <p class="ab-rise__label"><span>01</span>Design</p>
+      </div>
+      <div class="ab-rise__card" data-step="2">
+        <div class="ab-rise__media">
+          <img src="/images/graphics_2.jpg" alt="Printing wrap film in-house">
+        </div>
+        <p class="ab-rise__label"><span>02</span>Print</p>
+      </div>
+      <div class="ab-rise__card" data-step="3">
+        <div class="ab-rise__media">
+          <img src="/images/C0017.00_01_07_00.Still004.jpg" alt="Installing a wrap on a vehicle">
+        </div>
+        <p class="ab-rise__label"><span>03</span>Install</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     ABOUT — WORK STRIP
+     Image-forward, minimal text — a quick run of recent work between the
+     locked sections and the closing CTA.
+     ============================================================================ -->
+<section class="ab-gallery" id="gallery">
+  <div class="ab-gallery__intro">
+    <p class="ab-gallery__kicker">Recent Work</p>
+    <h2>A Few Projects We're Proud Of</h2>
+  </div>
+  <div class="ab-gallery__grid">
+    <div class="ab-gallery__item"><img src="/images/IMG_0905.jpg" alt="Full color change vehicle wrap"></div>
+    <div class="ab-gallery__item"><img src="/images/ppf2.jpg" alt="Fleet vehicle wrap"></div>
+    <div class="ab-gallery__item"><img src="/images/DSC07534.jpeg" alt="Paint protection film install"></div>
+    <div class="ab-gallery__item"><img src="/images/customdesigns.jpg" alt="Interior office branding"></div>
+    <div class="ab-gallery__item"><img src="/images/Untitled-5.jpg" alt="Custom stripe and accent detail"></div>
+    <div class="ab-gallery__item"><img src="/images/stock15.jpeg" alt="Building exterior wrap"></div>
+  </div>
+</section>
+
+<!-- ============================================================================
+     CLOSING CTA + FOOTER
+     ============================================================================ -->
+<section class="pw6-final-cta" aria-labelledby="pw6FinalCtaTitle">
+  <div class="pw6-final-cta__inner">
+
+    <div class="pw6-final-cta__top">
+      <div class="pw6-final-cta__heading">
+        <p class="pw6-final-cta__eyebrow">Let’s Build Something.</p>
+        <h2 id="pw6FinalCtaTitle">Start Your Project</h2>
+      </div>
+      <a class="pw6-final-cta__button pw-btn" href="/contact.html">
+        <span class="pw-btn__label">Contact Performante</span>
+        <span class="pw-btn__arrow" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+    </div>
+
+    <div class="pw6-final-cta__bottom">
+
+      <div class="pw6-final-cta__brand">
+        <img
+          class="pw6-final-cta__logo"
+          src="/images/logo-icon.png"
+          alt="Performante Wraps logo"
+        >
+
+        <div class="pw6-final-cta__bio">
+          <h3 class="pw6-final-cta__bio-name">Enrico Molina</h3>
+          <p class="pw6-final-cta__bio-title">Founder &amp; Creative Director</p>
+          <p class="pw6-final-cta__bio-desc">
+            Building bold visual identities through automotive,
+            architectural and commercial branding.
+          </p>
+        </div>
+
+        <p class="pw6-final-cta__copyright">
+          © <span id="pwFooterYear">2026</span> Performante Wraps. All rights reserved.
+        </p>
+      </div>
+
+      <div class="pw6-final-cta__info">
+
+        <div class="pw6-final-cta__info-col">
+          <p class="pw6-final-cta__info-label">Business Inquiry</p>
+
+          <a href="mailto:enrico@performantewraps.com">
+            <span class="pw6-final-cta__prefix">E.</span>
+            enrico@performantewraps.com
+          </a>
+
+          <a href="tel:8328014675">
+            <span class="pw6-final-cta__prefix">P.</span>
+            (832) 801-4675
+          </a>
+        </div>
+
+        <div class="pw6-final-cta__info-col">
+          <p class="pw6-final-cta__info-label">Social</p>
+
+          <div class="pw6-final-cta__social-grid">
+            <a href="#">Instagram</a>
+            <a href="#">Facebook</a>
+            <a href="#">Tiktok</a>
+            <a href="#">LinkedIn</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+<script>document.getElementById('pwFooterYear').textContent = new Date().getFullYear();</script>
+
+<!-- ============================================================================
+     CLOSING PROJECT CTA — full-bleed image + wordmark
+     ============================================================================ -->
+<section class="pw5-closing-cta" aria-labelledby="pw5ClosingTitle">
+  <div class="pw5-closing-cta__media" aria-hidden="true">
+    <img src="/images/stock15.jpeg" alt="" loading="lazy">
+  </div>
+  <div class="pw5-closing-cta__veil" aria-hidden="true"></div>
+  <a class="pw5-closing-cta__wordmark" href="/contact.html" style="--pw5-wordmark-img:url('/images/stock15.jpeg')"><span id="pw5ClosingTitle">PERFORMANTE</span></a>
+</section>
+
+</main>
+
+</div><!-- /#scroll-container -->
+
+<script src="js/navbar-black.js" defer></script>
+<script src="/js/about.js" defer></script>
+
+</body>
+</html>

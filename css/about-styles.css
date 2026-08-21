@@ -1,0 +1,490 @@
+/* ==========================================================================
+   Performante Wraps — About page, page-specific styles.
+   Shared tokens (--off-white, --pw-red), nav, .pw-btn, pw6-final-cta and
+   pw5-closing-cta come from the sitewide /css/vehicle-wraps-styles-8.css
+   and are NOT redefined here.
+   ========================================================================== */
+
+/* --- Visibility override: the sitewide stylesheet hides any direct
+       <section> child of #site that doesn't carry one of its known
+       classes. This page introduces new section classes, so each is
+       opted back in by id — same fix used on the other subpages. --- */
+#site > #hero,
+#site > #story-1,
+#site > #story-2,
+#site > #values,
+#site > #process,
+#site > #gallery{
+  display:block !important;
+}
+
+.ab-hero, .ab-story, .ab-values, .ab-rise, .ab-gallery{
+  --ab-ink:#f2f2f2;
+  --ab-muted:rgba(255,255,255,.6);
+  --ab-line:rgba(255,255,255,.14);
+  --ab-accent:#bdbdbd;
+}
+
+/* ==========================================================================
+   HERO — "index about" pattern: eyebrow beside title/intro up top,
+   image + description below.
+   ========================================================================== */
+.ab-hero{
+  background:var(--off-white);
+  padding:clamp(140px,14vw,180px) clamp(20px,2vw,56px) clamp(70px,8vw,110px);
+}
+
+.ab-hero__grid{
+  display:grid;
+  grid-template-columns:1fr minmax(220px,30vw);
+  gap:clamp(24px,3vw,48px);
+  align-items:start;
+}
+
+.ab-hero__side{
+  align-self:stretch;
+  height:100%;
+  min-height:100%;
+  border-radius:4px;
+  overflow:hidden;
+  background:#161616;
+  border:1px solid var(--ab-line);
+}
+
+.ab-hero__side img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.ab-hero__top{
+  padding-bottom:clamp(40px,5vw,64px);
+  border-bottom:1px solid var(--ab-line);
+}
+.ab-hero__eyebrow{
+  margin:6px 0 0;
+  color:rgba(242,242,242,.55);
+  font-size:10px;
+  line-height:1;
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+
+.ab-hero__title{
+  margin:0 0 16px;
+  color:var(--ab-ink);
+  font-family:'Zalando Sans', sans-serif;
+  font-size:clamp(1.9rem,3.2vw,3.4rem);
+  line-height:1.05;
+  letter-spacing:-.03em;
+  font-weight:500;
+  max-width:30ch;
+}
+.ab-hero__title span {
+  color:#bdbdbdc4;
+}
+
+.ab-hero__intro-text{
+  margin:0;
+  max-width:52ch;
+  color:var(--ab-muted);
+  font-size:clamp(14px,1.1vw,17px);
+  line-height:1.55;
+}
+
+.ab-hero__bottom{
+  margin:clamp(40px,5vw,64px) 0 0;
+  display:grid;
+  grid-template-columns:minmax(220px,340px) 1fr;
+  gap:clamp(32px,4vw,64px);
+  align-items:flex-start;
+}
+
+.ab-hero__media{
+  border-radius:4px;
+  overflow:hidden;
+  aspect-ratio:4/5;
+  background:#161616;
+  border:1px solid var(--ab-line);
+}
+
+.ab-hero__media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.ab-hero__desc{
+  margin:0;
+  /*max-width:48ch;*/
+  color:white;
+  font-size:clamp(13px,1.2vw,18px);
+  line-height:1.6;
+  text-indent: 2em; /* adjust to taste — 2em ≈ a tab */
+  padding-right: 4rem;
+}
+
+@media(max-width:900px){
+  .ab-hero__grid{ grid-template-columns:1fr; }
+  .ab-hero__side{ height:clamp(220px,40vw,320px); order:-1; }
+}
+
+@media(max-width:760px){
+  .ab-hero__top{ grid-template-columns:1fr; }
+  .ab-hero__bottom{ grid-template-columns:1fr; }
+  .ab-hero__media{ max-width:280px; }
+}
+
+/* ==========================================================================
+   STORY — text-forward band: eyebrow to the side, a styled headline
+   statement spanning the section, a smaller image alongside to
+   complement it (not lead it).
+   ========================================================================== */
+.ab-story{
+  background:var(--off-white);
+  padding:clamp(70px,8vw,110px) clamp(20px,4vw,56px);
+  border-top:1px solid var(--ab-line);
+}
+
+.ab-story__row{
+  display:grid;
+  grid-template-columns:minmax(110px,160px) 1fr minmax(160px,240px);
+  gap:clamp(24px,3vw,48px);
+  align-items:center;
+}
+
+.ab-story__eyebrow{
+  margin:0;
+  color:rgba(242,242,242,.55);
+  font-size:10px;
+  line-height:1;
+  font-weight:400;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+
+}
+
+.ab-story__headline{
+  margin:0;
+  color:var(--ab-ink);
+  font-family:'Zalando Sans', sans-serif;
+  font-size:clamp(1.8rem,3.1vw,3.1rem);
+  line-height:1.12;
+  letter-spacing:-.025em;
+  font-weight:500;
+  text-indent: 2em; /* adjust to taste, e.g. 24px, 1.5em */
+}
+
+.ab-story__headline span{
+  color:var(--ab-accent);
+}
+
+.ab-story__media{
+  border-radius:4px;
+  overflow:hidden;
+  aspect-ratio:4/5;
+  background:#161616;
+  border:1px solid var(--ab-line);
+}
+
+.ab-story__media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+/* Story 2: image sits between the eyebrow and the headline instead of
+   trailing it, for a little rhythm between the two sections. */
+.ab-story--media-mid .ab-story__row{
+  grid-template-columns:minmax(110px,160px) minmax(160px,240px) 1fr;
+}
+
+@media(max-width:900px){
+  .ab-story__row,
+  .ab-story--media-mid .ab-story__row{
+    grid-template-columns:1fr;
+  }
+  .ab-story__media{
+    max-width:280px;
+    aspect-ratio:4/3;
+  }
+}
+
+/* ==========================================================================
+   VALUES — scroll-locked: a line draws across, three values reveal in turn
+   ========================================================================== */
+.ab-values{
+  position:relative;
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  background:#0c0c0c;
+}
+
+.ab-values__stage{
+  width:100%;
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 clamp(20px,4vw,56px);
+  text-align:center;
+}
+
+.ab-values__kicker{
+  margin:0 0 16px;
+  color:var(--ab-accent);
+  font-size:13px;
+  font-weight:400;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+
+.ab-values__title{
+  margin:0 auto;
+  max-width:22ch;
+  color:var(--ab-ink);
+  font-family:'Zalando Sans', sans-serif;
+  font-size:clamp(1.8rem,3.2vw,2.8rem);
+  line-height:1.08;
+  letter-spacing:-.03em;
+  font-weight:500;
+}
+
+.ab-values__line-track{
+  position:relative;
+  margin:clamp(40px,5vw,64px) auto;
+  height:2px;
+  background:var(--ab-line);
+}
+
+.ab-values__line{
+  position:absolute;
+  inset:0;
+  width:100%;
+  background:var(--ab-accent);
+  transform:scaleX(0);
+  transform-origin:left center;
+}
+
+/* Dots sit on the line track using the SAME 3-col grid + gap as
+   .ab-values__points below, so each dot's left edge lines up exactly
+   with the left edge of its value's text — not evenly spread across
+   the full track (which would push the last dot to the very end). */
+.ab-values__dots{
+  position:absolute;
+  inset:0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:clamp(24px,3vw,40px);
+  align-items:center;
+}
+
+.ab-values__dot{
+  justify-self:start;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#fff;
+  opacity:0;
+  transform:translateY(-3px);
+  transition:opacity .35s ease;
+}
+
+.ab-values__dot.is-active{
+  opacity:1;
+}
+
+.ab-values__points{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:clamp(24px,3vw,40px);
+  text-align:left;
+}
+
+.ab-values__point{
+  opacity:0;
+}
+
+.ab-values__point-num{
+  display:block;
+  margin-bottom:14px;
+  font-family:'Orbitron', sans-serif;
+  font-size:.8rem;
+  font-weight:600;
+  color:var(--ab-accent);
+}
+
+.ab-values__point h3{
+  margin:0 0 10px;
+  color:var(--ab-ink);
+  font-size:1.2rem;
+  font-weight:500;
+  letter-spacing:-.02em;
+}
+
+.ab-values__point p{
+  margin:0;
+  color:var(--ab-muted);
+  font-size:.92rem;
+  line-height:1.6;
+}
+
+@media(max-width:760px){
+  .ab-values__points{ grid-template-columns:1fr; gap:24px; }
+  .ab-values__dots{ grid-template-columns:1fr; gap:24px; }
+}
+
+/* ==========================================================================
+   PROCESS (RISE) — scroll-locked: three images rise up from below,
+   staggered, while the section stays pinned.
+   ========================================================================== */
+.ab-rise{
+  position:relative;
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  background:var(--off-white);
+}
+
+.ab-rise__stage{
+  width:100%;
+  max-width:1300px;
+  margin:0 auto;
+  padding:0 clamp(20px,4vw,56px);
+}
+
+.ab-rise__kicker{
+  margin:0 0 14px;
+  color:var(--ab-accent);
+  font-size:13px;
+  font-weight:400;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  text-align:center;
+}
+
+.ab-rise__title{
+  margin:0 0 clamp(40px,5vw,64px);
+  color:var(--ab-ink);
+  font-family:'Zalando Sans', sans-serif;
+  font-size:clamp(1.8rem,3.2vw,2.8rem);
+  line-height:1.08;
+  letter-spacing:-.03em;
+  font-weight:500;
+  text-align:center;
+}
+
+.ab-rise__cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:clamp(16px,2vw,28px);
+}
+
+.ab-rise__card{
+  opacity:0;
+  will-change:transform, opacity;
+}
+
+.ab-rise__media{
+  aspect-ratio:3/4;
+  border-radius:14px;
+  overflow:hidden;
+  background:#161616;
+}
+
+.ab-rise__media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.ab-rise__label{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:16px 0 0;
+  color:var(--ab-ink);
+  font-size:1rem;
+  font-weight:500;
+  letter-spacing:-.01em;
+}
+
+.ab-rise__label span{
+  font-family:'Orbitron', sans-serif;
+  font-size:.72rem;
+  font-weight:600;
+  color:var(--ab-accent);
+}
+
+@media(max-width:760px){
+  .ab-rise__cards{ grid-template-columns:1fr; gap:32px; }
+}
+
+/* ==========================================================================
+   WORK STRIP — image-forward gallery grid, minimal text
+   ========================================================================== */
+.ab-gallery{
+  padding:clamp(80px,9vw,130px) clamp(20px,4vw,56px);
+  background:#0c0c0c;
+}
+
+.ab-gallery__intro{
+  max-width:640px;
+  margin:0 auto clamp(48px,5vw,72px);
+  text-align:center;
+}
+
+.ab-gallery__kicker{
+  margin:0 0 14px;
+  color:var(--ab-accent);
+  font-size:13px;
+  font-weight:400;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+
+.ab-gallery__intro h2{
+  margin:0;
+  color:var(--ab-ink);
+  font-family:'Zalando Sans', sans-serif;
+  font-size:clamp(1.8rem,3vw,2.6rem);
+  line-height:1.08;
+  letter-spacing:-.03em;
+  font-weight:500;
+}
+
+.ab-gallery__grid{
+  max-width:1500px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:clamp(10px,1.2vw,16px);
+}
+
+.ab-gallery__item{
+  aspect-ratio:1/1;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.ab-gallery__item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform .5s ease;
+}
+
+.ab-gallery__item:hover img{
+  transform:scale(1.06);
+}
+
+@media(max-width:760px){
+  .ab-gallery__grid{ grid-template-columns:repeat(2,1fr); }
+}

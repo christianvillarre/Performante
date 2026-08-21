@@ -256,7 +256,7 @@
 }
 
 .wrap-branding-intro{
-  width:min(760px, calc(100% - 40px));
+  width:min(1060px, calc(100% - 40px));
   margin:clamp(10px,0.8vw,10px) auto 0;
   text-align:center;
 }
@@ -266,7 +266,7 @@
 .wrap-branding-intro h2{
   margin:0;
   color:#f2f2f2;
-  font-size:clamp(2.25rem,3.5vw,4.4rem);
+  font-size:clamp(2.4rem,3vw,4.6rem);
   line-height:.9;
   letter-spacing:-.055em;
   font-weight:500;
@@ -5836,6 +5836,7 @@ html{
 
 /* --- left half: copy, left-aligned, vertically centered --- */
 .vw-hero__col--copy{
+  position:relative;
   justify-content:center;
   padding:0 clamp(24px,3.5vw,42px);
 }
@@ -5886,6 +5887,55 @@ html{
   letter-spacing:.13em;
   text-transform:uppercase;
   white-space:nowrap;
+}
+
+/* --- Rotating white stripe of service names, bottom-aligned in the
+       copy column only — a decorative ticker, not a nav element. --- */
+.vw-hero__marquee{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:2rem;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 6px 20px rgba(0,0,0,.4);
+}
+
+.vw-hero__marquee-track{
+  display:flex;
+  width:max-content;
+  animation:vw-hero-marquee 14s linear infinite;
+}
+
+.vw-hero__marquee-group{
+  display:flex;
+  flex:0 0 auto;
+  align-items:center;
+}
+
+.vw-hero__marquee-item{
+  padding:.6rem 0;
+  color:#111;
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.vw-hero__marquee-dot{
+  margin:0 1.1rem;
+  color:rgba(17,17,17,.35);
+  font-size:.6rem;
+}
+
+@keyframes vw-hero-marquee{
+  from{ transform:translateX(0); }
+  to{ transform:translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .vw-hero__marquee-track{ animation:none; }
 }
 
 /* --- right half: image carousel, kept clear of the nav bar, with a
@@ -5959,6 +6009,8 @@ html{
 .vw-hero__dot.is-active{
   background:#fff;
   transform:scale(1.15);
+  width:12px;
+  border-radius:22px;
 }
 
 @media(max-width:900px){
@@ -5983,6 +6035,12 @@ html{
   }
   .vw-hero__title{ font-size:clamp(1.6rem,7vw,2.1rem); max-width:18ch; }
   .vw-hero__desc{ margin-bottom:24px; }
+  .vw-hero__marquee{
+    position:static;
+    left:auto;
+    right:auto;
+    margin-top:28px;
+  }
   .vw-hero__col--media{
     padding:24px 20px 28px;
   }
@@ -6255,7 +6313,7 @@ html{
 }
 
 .vw-faq-answer p{
-  margin:0 0 26px;
+  margin:0 5px 26px;
   color:#c9c9c9;
   font-size:15px;
   line-height:1.65;
@@ -6317,7 +6375,7 @@ html{
 
 .vws-intro-list{
   margin:0;
-  padding:0 clamp(24px,4.5vw,72px) 0 0;
+  padding:0 clamp(24px,4.5vw,42px) 0 0;
   list-style:none;
   display:grid;
 }
@@ -6359,8 +6417,8 @@ html{
 
 .vws-intro-list__arrow{
   flex:0 0 auto;
-  width:11px;
-  height:11px;
+  width:16px;
+  height:16px;
   stroke:rgba(255,255,255,.4);
   stroke-width:1.6;
   fill:none;
@@ -6378,7 +6436,7 @@ html{
   display:flex;
   flex-direction:column;
   justify-content:center;
-  padding:4rem clamp(24px,4.5vw,72px);
+  padding:4rem clamp(24px,4.5vw,42px);
 }
 
 .vws-intro-kicker{
@@ -6392,7 +6450,7 @@ html{
 
 .vws-intro-content .vws-intro-title{
   margin:0;
-  font-size:clamp(2.4rem,3vw,5.6rem);
+  font-size:clamp(2.4rem,3vw,4.6rem);
   line-height:.95; 
   letter-spacing:-.04em;
   font-weight:500;
@@ -6454,6 +6512,8 @@ html{
   list-style:none;
   display:grid;
   gap:.5rem;
+  
+  
 }
 
 .vws-links a{
@@ -6473,8 +6533,8 @@ html{
 }
 
 .vws-links svg{
-  width:11px;
-  height:11px;
+  width:16px;
+  height:16px;
   stroke:rgba(255,255,255,.55);
   stroke-width:1.6;
   fill:none;

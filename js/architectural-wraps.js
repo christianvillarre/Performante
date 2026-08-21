@@ -1,10 +1,11 @@
 /* ============================================================================
-   COMMERCIAL WRAPS — page-specific JS
-   Same structure/behavior as vehicle-wraps-2.js (this page reuses the same
-   vw-hero / vws-* / vw-benefits-* / vw-faq-* components): hero entrance
-   animation, scroll-reveal fades on section titles/text, and the gallery
-   track (arrow-scroll + drag) with its lightbox, if present. Nav/menu
-   toggling still comes from the shared js/navbar.js.
+   ARCHITECTURAL WRAPS — page-specific JS
+   Same structure/behavior as vehicle-wraps-2.js and commercial-wraps.js
+   (this page reuses the same vw-hero / vws-* / vw-benefits-* / vw-faq-*
+   components): hero entrance animation, scroll-reveal fades on section
+   titles/text, and the gallery track (arrow-scroll + drag) with its
+   lightbox, if present. Nav/menu toggling still comes from the shared
+   js/navbar.js.
 
    Animation approach: plain opacity fades only, no y-offset movement.
    ============================================================================ */
@@ -213,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ============================================================================
-   END COMMERCIAL WRAPS JS
+   END ARCHITECTURAL WRAPS JS
    ============================================================================ */
 /* =====================================================
    SHARED PILL BUTTONS — rollover circle fill
