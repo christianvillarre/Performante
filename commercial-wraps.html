@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/page-transitions.css">
+<script src="js/page-transitions.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Commercial Wraps | Performante Wraps</title>
@@ -20,7 +22,7 @@
      (vw-hero, vws-* stacking cards, vw-benefits-*, vw-faq-*, marquee,
      pw6-final-cta / pw5-closing-cta) — nothing commercial-specific
      needed a new stylesheet. -->
-<link rel="stylesheet" href="/css/vehicle-wraps-styles-8.css" />
+<link rel="stylesheet" href="/css/subpage.css" />
 <link rel="stylesheet" href="css/navbar.css" />
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
@@ -68,6 +70,8 @@
 }
 </script>
 
+<link rel="stylesheet" href="css/vehicle-slider.css">
+<link rel="stylesheet" href="css/commercial-upgrade.css">
 </head>
 
 <body data-black7-build="commercial-wraps-v1">
@@ -78,7 +82,7 @@
   </a>
 
   <div class="pw-nav__actions">
-    <a class="pw-nav__chat" href="/contact.html"><span class="pw-nav__chat-label">Let’s Talk</span></a>
+    <a class="pw-nav__chat" href="contact.html"><span class="pw-nav__chat-label">Let’s Talk</span></a>
     <button class="pw-nav__toggle" id="pwMenuToggle" type="button" aria-label="Open menu" aria-expanded="false">
       <span class="pw-nav__toggle-label">Menu</span>
       <span class="pw-nav__toggle-icon" aria-hidden="true">
@@ -97,13 +101,13 @@
   </div>
 
   <nav class="pw-menu__links" aria-label="Primary navigation">
-    <a href="/vehicle-wraps-2.html">Vehicle Wraps</a>
-    <a href="/wraps/commercial-fleet.html" aria-current="page">Commercial Wraps</a>
-    <a href="/paint-protection-film.html">Paint Protection</a>
-    <a href="/window-tint.html">Window Tint</a>
-    <a href="/gallery.html">Gallery</a>
-    <a href="/about.html">About</a>
-    <a href="/contact.html">Contact</a>
+    <a href="vehicle-wraps.html">Vehicle Wraps</a>
+    <a href="commercial-wraps.html" aria-current="page">Commercial Wraps</a>
+    <a href="architectural-wraps.html">Architectural Wraps</a>
+    <a href="paint-protection.html">Paint Protection</a>
+    <a href="projects.html">Projects &amp; Case Studies</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
   </nav>
 
   <div class="pw-menu__footer">
@@ -391,13 +395,32 @@
 <!-- ============================================================================
      COMMERCIAL WRAPS — BENEFITS
      ============================================================================ -->
-<section class="wrap-light-section vw-benefits-section">
+<section class="wrap-light-section pw-vehicles" id="commercial-vehicles" data-vehicle-free-flow aria-label="Commercial vehicle collection">
+ <div class="cw-collection-heading">
+  <div class="cw-collection-heading__copy"><p class="cw-eyebrow">Your fleet. Your identity.</p><h2>Built for your business.</h2><p>Pickups, service vans and everything your brand travels on.</p></div>
+  <div class="pw-vehicles__arrows" aria-label="Move vehicle collection">
+   <button type="button" data-vehicle-prev aria-label="Nudge vehicles left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg></button>
+   <button type="button" data-vehicle-next aria-label="Nudge vehicles right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+  </div>
+ </div>
+ <div class="pw-vehicles__track" tabindex="0" role="region" aria-label="Vehicle cards. Drag to explore or use arrow keys to nudge.">
+ <article class="pw-vehicles__card" data-brand="Ram 2500"><div class="pw-vehicles__card-top"><span>Heavy-duty pickup</span><span>01</span></div><img src="images/vehicles/commercial/ram-2500.webp" alt="White Ram 2500" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Ram</h3><p>2500</p><div class="pw-vehicles__details">Full wraps <span>·</span> Partial wraps <span>·</span> Fleet graphics</div></div></article>
+<article class="pw-vehicles__card" data-brand="Ford F-250 Super Duty"><div class="pw-vehicles__card-top"><span>Heavy-duty pickup</span><span>02</span></div><img src="images/vehicles/commercial/ford-f250-super-duty.webp" alt="White Ford F-250 Super Duty" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Ford</h3><p>F-250 Super Duty</p><div class="pw-vehicles__details">Full wraps <span>·</span> Partial wraps <span>·</span> Fleet graphics</div></div></article>
+<article class="pw-vehicles__card" data-brand="Chevrolet Silverado 2500 HD"><div class="pw-vehicles__card-top"><span>Heavy-duty pickup</span><span>03</span></div><img src="images/vehicles/commercial/chevrolet-silverado-2500-hd.webp" alt="White Chevrolet Silverado 2500 HD" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Chevrolet</h3><p>Silverado 2500 HD</p><div class="pw-vehicles__details">Full wraps <span>·</span> Partial wraps <span>·</span> Fleet graphics</div></div></article>
+<article class="pw-vehicles__card" data-brand="Mercedes-Benz Sprinter"><div class="pw-vehicles__card-top"><span>Cargo van</span><span>04</span></div><img src="images/vehicles/commercial/mercedes-benz-sprinter.webp" alt="White Mercedes-Benz Sprinter" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Mercedes-Benz</h3><p>Sprinter</p><div class="pw-vehicles__details">Full wraps <span>·</span> Partial wraps <span>·</span> Fleet graphics</div></div></article>
+<article class="pw-vehicles__card" data-brand="Ford Transit"><div class="pw-vehicles__card-top"><span>Cargo van</span><span>05</span></div><img src="images/vehicles/commercial/ford-transit.webp" alt="White Ford Transit" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Ford</h3><p>Transit</p><div class="pw-vehicles__details">Full wraps <span>·</span> Partial wraps <span>·</span> Fleet graphics</div></div></article>
+<article class="pw-vehicles__card" data-brand="Ram ProMaster"><div class="pw-vehicles__card-top"><span>Cargo van</span><span>06</span></div><img src="images/vehicles/commercial/ram-promaster.webp" alt="White Ram ProMaster" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Ram</h3><p>ProMaster</p><div class="pw-vehicles__details">Full wraps <span>·</span> Partial wraps <span>·</span> Fleet graphics</div></div></article>
+ </div>
+ <div class="pw-vehicles__bottom"><span class="pw-vehicles__hint">Drag to explore</span><button class="cw-vehicle-pause" type="button" data-vehicle-pause aria-pressed="false" aria-label="Pause automatic vehicle scrolling">Pause</button></div>
+ <p class="pw-vehicles__sr" aria-live="polite" data-vehicle-status></p>
+</section>
+<section class="wrap-light-section vw-benefits-section cw-business" id="fleet-benefits">
   <div class="wrap-light-section__inner">
     <div class="vw-benefits-row">
 
-      <div class="vw-benefits-row__left">
+      <div class="vw-benefits-row__left"><p class="cw-eyebrow">More than a moving billboard</p>
         <h2>The Business Case For Wrapping Your Fleet</h2>
-        <p>Every mile your vehicles drive is free advertising — if the vehicle is dressed for it.</p>
+        <p>Turn the routes you already drive into opportunities to be seen. One cohesive identity, from the first service call to the next vehicle you add.</p><a class="cw-text-link" href="/contact.html">Plan your fleet wrap <span aria-hidden="true">↗</span></a><p class="cw-process">Design <span>→</span> Print <span>→</span> Install</p>
       </div>
 
       <div class="vw-benefits-row__right">
@@ -410,8 +433,8 @@
                 <path d="M16.5 9C17.4 9.9 18 11.1 18 12.5C18 13.9 17.4 15.1 16.5 16" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
-            <h3>Lowest Cost-Per-Impression</h3>
-            <p>A wrap generates tens of thousands of daily impressions for a one-time cost — fractions of a cent per view over its lifespan.</p>
+            <h3>Visibility On Every Route</h3>
+            <p>Put your name, services and contact details in front of people wherever your vehicles work, travel and park.</p>
           </div>
 
           <div class="vw-benefit-card">
@@ -436,7 +459,7 @@
               </svg>
             </span>
             <h3>Built For The Road</h3>
-            <p>Commercial-grade film and laminate handle daily driving, weather and washing without fading or lifting.</p>
+            <p>Commercial-grade film and laminate are selected for daily driving and outdoor exposure, with care guidance to help your graphics last.</p>
           </div>
 
           <div class="vw-benefit-card">
@@ -474,7 +497,7 @@
 <!-- ============================================================================
      COMMERCIAL WRAPS — FAQ
      ============================================================================ -->
-<section class="wrap-light-section wrap-light-section--intro vw-faq-section">
+<section class="wrap-light-section wrap-light-section--intro vw-faq-section cw-faq">
   <div class="wrap-light-section__inner">
     <div class="wrap-branding-intro">
       <h2>Frequently Asked Questions</h2>
@@ -485,61 +508,55 @@
 
     <div class="vw-faq-list" id="cwFaqList">
       <div class="vw-faq-item">
-        <button class="vw-faq-question" type="button" aria-expanded="false">
-          <span>Do you offer pricing for multiple vehicles?</span>
+        <button class="vw-faq-question" id="cw-question-1" type="button" aria-expanded="false" aria-controls="cw-answer-1"><span>Do you offer pricing for multiple vehicles?</span>
           <span class="vw-faq-icon" aria-hidden="true">+</span>
         </button>
-        <div class="vw-faq-answer">
+        <div class="vw-faq-answer" id="cw-answer-1" role="region" aria-labelledby="cw-question-1" aria-hidden="true">
           <p>Yes. Fleets of three or more vehicles are quoted on a per-vehicle rate that drops as the fleet grows, and every vehicle is scheduled as one project instead of separate jobs.</p>
         </div>
       </div>
 
       <div class="vw-faq-item">
-        <button class="vw-faq-question" type="button" aria-expanded="false">
-          <span>Can new vehicles be matched to our existing fleet design later?</span>
+        <button class="vw-faq-question" id="cw-question-2" type="button" aria-expanded="false" aria-controls="cw-answer-2"><span>Can new vehicles be matched to our existing fleet design later?</span>
           <span class="vw-faq-icon" aria-hidden="true">+</span>
         </button>
-        <div class="vw-faq-answer">
+        <div class="vw-faq-answer" id="cw-answer-2" role="region" aria-labelledby="cw-question-2" aria-hidden="true">
           <p>Yes. We keep your fleet's design file on record, so a vehicle added months or years from now can be wrapped to match the rest of the fleet exactly.</p>
         </div>
       </div>
 
       <div class="vw-faq-item">
-        <button class="vw-faq-question" type="button" aria-expanded="false">
-          <span>Do you handle DOT and compliance markings?</span>
+        <button class="vw-faq-question" id="cw-question-3" type="button" aria-expanded="false" aria-controls="cw-answer-3"><span>Do you handle DOT and compliance markings?</span>
           <span class="vw-faq-icon" aria-hidden="true">+</span>
         </button>
-        <div class="vw-faq-answer">
+        <div class="vw-faq-answer" id="cw-answer-3" role="region" aria-labelledby="cw-question-3" aria-hidden="true">
           <p>Yes — required markings like USDOT numbers, weight ratings and hazard placards are built into the layout so they meet regulations without disrupting the graphic.</p>
         </div>
       </div>
 
       <div class="vw-faq-item">
-        <button class="vw-faq-question" type="button" aria-expanded="false">
-          <span>How do you minimize downtime for a large fleet?</span>
+        <button class="vw-faq-question" id="cw-question-4" type="button" aria-expanded="false" aria-controls="cw-answer-4"><span>How do you minimize downtime for a large fleet?</span>
           <span class="vw-faq-icon" aria-hidden="true">+</span>
         </button>
-        <div class="vw-faq-answer">
+        <div class="vw-faq-answer" id="cw-answer-4" role="region" aria-labelledby="cw-question-4" aria-hidden="true">
           <p>Vehicles are scheduled in staggered install windows, usually a few at a time, so the rest of your fleet stays on the road while each one is wrapped.</p>
         </div>
       </div>
 
       <div class="vw-faq-item">
-        <button class="vw-faq-question" type="button" aria-expanded="false">
-          <span>Can you service fleets across multiple locations?</span>
+        <button class="vw-faq-question" id="cw-question-5" type="button" aria-expanded="false" aria-controls="cw-answer-5"><span>Can you service fleets across multiple locations?</span>
           <span class="vw-faq-icon" aria-hidden="true">+</span>
         </button>
-        <div class="vw-faq-answer">
+        <div class="vw-faq-answer" id="cw-answer-5" role="region" aria-labelledby="cw-question-5" aria-hidden="true">
           <p>Yes — we coordinate install schedules across yards and branch locations so every vehicle gets the same design and finish.</p>
         </div>
       </div>
 
       <div class="vw-faq-item">
-        <button class="vw-faq-question" type="button" aria-expanded="false">
-          <span>Do you wrap trailers and box trucks too?</span>
+        <button class="vw-faq-question" id="cw-question-6" type="button" aria-expanded="false" aria-controls="cw-answer-6"><span>Do you wrap trailers and box trucks too?</span>
           <span class="vw-faq-icon" aria-hidden="true">+</span>
         </button>
-        <div class="vw-faq-answer">
+        <div class="vw-faq-answer" id="cw-answer-6" role="region" aria-labelledby="cw-question-6" aria-hidden="true">
           <p>Yes — trailers, box trucks and enclosed cargo vans are all common, and each gets film built for its own surface and typical driving conditions.</p>
         </div>
       </div>
@@ -555,8 +572,8 @@
 
     <div class="pw6-final-cta__top">
       <div class="pw6-final-cta__heading">
-        <p class="pw6-final-cta__eyebrow">Let’s Get Your Fleet On The Road.</p>
-        <h2 id="pw6FinalCtaTitle">Start Your Fleet Project</h2>
+        <p class="pw6-final-cta__eyebrow">Let’s Transform Your Brand.</p>
+        <h2 id="pw6FinalCtaTitle">Start Your Project</h2>
       </div>
       <a class="pw6-final-cta__button pw-btn" href="/contact.html">
         <span class="pw-btn__label">Contact Performante</span>
@@ -568,59 +585,63 @@
       </a>
     </div>
 
+    <!--<div class="pw6-final-cta__divider" aria-hidden="true"></div>-->
+
     <div class="pw6-final-cta__bottom">
 
-      <div class="pw6-final-cta__brand">
-        <img
-          class="pw6-final-cta__logo"
-          src="/images/logo-icon.png"
-          alt="Performante Wraps logo"
-        >
+  <div class="pw6-final-cta__brand">
+    <img
+      class="pw6-final-cta__logo"
+      src="/images/logo-icon.png"
+      alt="Performante Wraps logo"
+     loading="lazy" decoding="async" fetchpriority="low">
 
-        <div class="pw6-final-cta__bio">
-          <h3 class="pw6-final-cta__bio-name">Enrico Molina</h3>
-          <p class="pw6-final-cta__bio-title">Founder &amp; Creative Director</p>
-          <p class="pw6-final-cta__bio-desc">
-            Building bold visual identities through automotive,
-            architectural and commercial branding.
-          </p>
-        </div>
-
-        <p class="pw6-final-cta__copyright">
-          © <span id="pwFooterYear">2026</span> Performante Wraps. All rights reserved.
-        </p>
-      </div>
-
-      <div class="pw6-final-cta__info">
-
-        <div class="pw6-final-cta__info-col">
-          <p class="pw6-final-cta__info-label">Business Inquiry</p>
-
-          <a href="mailto:enrico@performantewraps.com">
-            <span class="pw6-final-cta__prefix">E.</span>
-            enrico@performantewraps.com
-          </a>
-
-          <a href="tel:8328014675">
-            <span class="pw6-final-cta__prefix">P.</span>
-            (832) 801-4675
-          </a>
-        </div>
-
-        <div class="pw6-final-cta__info-col">
-          <p class="pw6-final-cta__info-label">Social</p>
-
-          <div class="pw6-final-cta__social-grid">
-            <a href="#">Instagram</a>
-            <a href="#">Facebook</a>
-            <a href="#">Tiktok</a>
-            <a href="#">LinkedIn</a>
-          </div>
-        </div>
-
-      </div>
-
+    <div class="pw6-final-cta__bio">
+      <h3 class="pw6-final-cta__bio-name">Enrico Molina</h3>
+      <p class="pw6-final-cta__bio-title">Founder &amp; Creative Director</p>
+      <p class="pw6-final-cta__bio-desc">
+        Building bold visual identities through automotive,
+        architectural and commercial branding.
+      </p>
     </div>
+
+    <p class="pw6-final-cta__copyright">
+      © <span id="pwFooterYear">2026</span> Performante Wraps. All rights reserved.
+    </p>
+  </div>
+
+
+  <div class="pw6-final-cta__info">
+
+    <div class="pw6-final-cta__info-col">
+      <p class="pw6-final-cta__info-label">Business Inquiry</p>
+
+      <a href="mailto:enrico@performantewraps.com">
+        <span class="pw6-final-cta__prefix">E.</span>
+        enrico@performantewraps.com
+      </a>
+
+      <a href="tel:8328014675">
+        <span class="pw6-final-cta__prefix">P.</span>
+        (832) 801-4675
+      </a>
+    </div>
+
+
+    <div class="pw6-final-cta__info-col">
+      <p class="pw6-final-cta__info-label">Social</p>
+
+      <div class="pw6-final-cta__social-grid">
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Tiktok</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
 
   </div>
 </section>
@@ -631,10 +652,10 @@
      ============================================================================ -->
 <section class="pw5-closing-cta" aria-labelledby="pw5ClosingTitle">
   <div class="pw5-closing-cta__media" aria-hidden="true">
-    <img src="/images/fleet-closing.jpg" alt="" loading="lazy">
+    <img src="/images/stock15.jpeg" alt="" loading="lazy" decoding="async" fetchpriority="low">
   </div>
   <div class="pw5-closing-cta__veil" aria-hidden="true"></div>
-  <a class="pw5-closing-cta__wordmark" href="/contact.html" style="--pw5-wordmark-img:url('/images/fleet-closing.jpg')"><span id="pw5ClosingTitle">PERFORMANTE</span></a>
+  <a class="pw5-closing-cta__wordmark" href="/contact.html" style="--pw5-wordmark-img:url('/images/stock15.jpeg')"><span id="pw5ClosingTitle">PERFORMANTE</span></a>
 </section>
 
 </main>
@@ -646,40 +667,9 @@
 <script src="/js/commercial-wraps.js" defer></script>
 
 
-<!-- FAQ accordion — self-contained, no dependency on gsap.js -->
-<script>
-(function(){
-  var list = document.getElementById('cwFaqList');
-  if(!list) return;
 
-  list.addEventListener('click', function(e){
-    var btn = e.target.closest('.vw-faq-question');
-    if(!btn) return;
 
-    var item = btn.closest('.vw-faq-item');
-    var answer = item.querySelector('.vw-faq-answer');
-    var isOpen = item.classList.contains('is-open');
-
-    list.querySelectorAll('.vw-faq-item.is-open').forEach(function(openItem){
-      if(openItem !== item){
-        openItem.classList.remove('is-open');
-        openItem.querySelector('.vw-faq-question').setAttribute('aria-expanded','false');
-        openItem.querySelector('.vw-faq-answer').style.maxHeight = null;
-      }
-    });
-
-    if(isOpen){
-      item.classList.remove('is-open');
-      btn.setAttribute('aria-expanded','false');
-      answer.style.maxHeight = null;
-    } else {
-      item.classList.add('is-open');
-      btn.setAttribute('aria-expanded','true');
-      answer.style.maxHeight = answer.scrollHeight + 'px';
-    }
-  });
-})();
-</script>
-
+<script src="js/vehicle-slider.js" defer></script>
+<script src="js/commercial-footer.js?v=2" defer></script>
 </body>
 </html>

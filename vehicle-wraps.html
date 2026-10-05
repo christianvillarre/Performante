@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/page-transitions.css">
+<script src="js/page-transitions.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Vehicle Wraps | Performante Wraps</title>
@@ -16,8 +18,10 @@
 
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
 
-<link rel="stylesheet" href="/css/vehicle-wraps-styles-8.css" />
+<link rel="stylesheet" href="/css/subpage.css" />
 <link rel="stylesheet" href="css/navbar.css" />
+<link rel="stylesheet" href="css/vehicle-slider.css" />
+<link rel="stylesheet" href="css/vehicle-collection.css" />
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
@@ -59,7 +63,7 @@
   </a>
 
   <div class="pw-nav__actions">
-    <a class="pw-nav__chat" href="/contact.html"><span class="pw-nav__chat-label">Let’s Talk</span></a>
+    <a class="pw-nav__chat" href="contact.html"><span class="pw-nav__chat-label">Let’s Talk</span></a>
     <button class="pw-nav__toggle" id="pwMenuToggle" type="button" aria-label="Open menu" aria-expanded="false">
       <span class="pw-nav__toggle-label">Menu</span>
       <span class="pw-nav__toggle-icon" aria-hidden="true">
@@ -78,13 +82,13 @@
   </div>
 
   <nav class="pw-menu__links" aria-label="Primary navigation">
-    <a href="/vehicle-wraps-2.html" aria-current="page">Vehicle Wraps</a>
-    <a href="/wraps/commercial-fleet.html">Commercial Wraps</a>
-    <a href="/paint-protection-film.html">Paint Protection</a>
-    <a href="/window-tint.html">Window Tint</a>
-    <a href="/gallery.html">Gallery</a>
-    <a href="/about.html">About</a>
-    <a href="/contact.html">Contact</a>
+    <a href="vehicle-wraps.html" aria-current="page">Vehicle Wraps</a>
+    <a href="commercial-wraps.html">Commercial Wraps</a>
+    <a href="architectural-wraps.html">Architectural Wraps</a>
+    <a href="paint-protection.html">Paint Protection</a>
+    <a href="projects.html">Projects &amp; Case Studies</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
   </nav>
 
   <div class="pw-menu__footer">
@@ -373,6 +377,31 @@
   </div>
 </section>
 
+<!-- VEHICLE WRAPS — COLLECTION -->
+<section class="wrap-light-section pw-vehicles" id="vehicles" data-vehicle-free-flow aria-label="Vehicle collection">
+ <div class="vw-collection-heading">
+  <div class="vw-collection-heading__copy"><p class="vw-collection-eyebrow">Your car. Your vision.</p><h2>Made to stand apart.</h2><p>Explore the vehicles and finishes that inspire your next wrap.</p></div>
+  <div class="pw-vehicles__arrows" aria-label="Move vehicle collection">
+   <button type="button" data-vehicle-prev aria-label="Nudge vehicles left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg></button>
+   <button type="button" data-vehicle-next aria-label="Nudge vehicles right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+  </div>
+ </div>
+ <div class="pw-vehicles__track" tabindex="0" role="region" aria-label="Vehicle cards. Drag to explore or use arrow keys to nudge.">
+<article class="pw-vehicles__card" data-brand="Rolls-Royce"><div class="pw-vehicles__card-top"><span>Grand touring</span><span>01</span></div><img src="./images/vehicles/rolls-royce.webp" alt="Rolls-Royce Wraith" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Rolls-Royce</h3><p>Wraith</p><div class="pw-vehicles__details">Colour change <span>·</span> Paint protection</div></div></article>
+ <article class="pw-vehicles__card" data-brand="Bentley"><div class="pw-vehicles__card-top"><span>Grand touring</span><span>02</span></div><img src="./images/vehicles/bentley.webp" alt="Bentley Continental GT" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Bentley</h3><p>Continental GT</p><div class="pw-vehicles__details">Colour change <span>·</span> Paint protection</div></div></article>
+ <article class="pw-vehicles__card" data-brand="Ferrari"><div class="pw-vehicles__card-top"><span>Supercar</span><span>03</span></div><img src="./images/vehicles/ferrari.webp" alt="Ferrari 488 GTB" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Ferrari</h3><p>488 GTB</p><div class="pw-vehicles__details">Colour change <span>·</span> Paint protection</div></div></article>
+ <article class="pw-vehicles__card" data-brand="Lamborghini"><div class="pw-vehicles__card-top"><span>Supercar</span><span>04</span></div><img src="./images/vehicles/lamborghini.webp" alt="Lamborghini Huracán" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Lamborghini</h3><p>Huracán</p><div class="pw-vehicles__details">Colour change <span>·</span> Paint protection</div></div></article>
+ <article class="pw-vehicles__card" data-brand="McLaren"><div class="pw-vehicles__card-top"><span>Supercar</span><span>05</span></div><img src="./images/vehicles/mclaren.webp" alt="McLaren 720S" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>McLaren</h3><p>720S</p><div class="pw-vehicles__details">Colour change <span>·</span> Paint protection</div></div></article>
+ <article class="pw-vehicles__card" data-brand="Porsche"><div class="pw-vehicles__card-top"><span>Sports car</span><span>06</span></div><img src="./images/vehicles/porsche.webp" alt="Porsche 911 GT3" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Porsche</h3><p>911 GT3</p><div class="pw-vehicles__details">Colour change <span>·</span> Paint protection</div></div></article>
+ <article class="pw-vehicles__card" data-brand="Aston Martin"><div class="pw-vehicles__card-top"><span>Sports car</span><span>07</span></div><img src="./images/vehicles/aston-martin.webp" alt="Aston Martin Vantage" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Aston Martin</h3><p>Vantage</p><div class="pw-vehicles__details">Colour change <span>·</span> Paint protection</div></div></article>
+ <article class="pw-vehicles__card" data-brand="Mercedes-Benz"><div class="pw-vehicles__card-top"><span>Performance coupe</span><span>08</span></div><img src="./images/vehicles/mercedes-benz.webp" alt="Mercedes-Benz AMG GT" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Mercedes-Benz</h3><p>AMG GT</p><div class="pw-vehicles__details">Colour change <span>·</span> Paint protection</div></div></article>
+ <article class="pw-vehicles__card" data-brand="BMW M"><div class="pw-vehicles__card-top"><span>Performance coupe</span><span>09</span></div><img src="./images/vehicles/bmw-m.webp" alt="BMW M M4" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>BMW M</h3><p>M4</p><div class="pw-vehicles__details">Colour change <span>·</span> Paint protection</div></div></article>
+ <article class="pw-vehicles__card" data-brand="Audi RS"><div class="pw-vehicles__card-top"><span>Performance estate</span><span>10</span></div><img src="./images/vehicles/audi-rs.webp" alt="Audi RS RS 6 Avant" width="1536" height="1024" loading="lazy" decoding="async" draggable="false"><div class="pw-vehicles__copy"><h3>Audi RS</h3><p>RS 6 Avant</p><div class="pw-vehicles__details">Colour change <span>·</span> Paint protection</div></div></article>
+ </div>
+ <div class="pw-vehicles__bottom"><span class="pw-vehicles__hint">Drag to explore</span><button class="vw-vehicle-pause" type="button" data-vehicle-pause aria-pressed="false" aria-label="Pause automatic vehicle scrolling">Pause</button></div>
+ <p class="pw-vehicles__sr" aria-live="polite" data-vehicle-status></p>
+</section>
+
 <!-- ============================================================================
      VEHICLE WRAPS — BENEFITS
      Full-width row: title/text on the left, stats + icon cards on the right.
@@ -649,6 +678,8 @@
 <script src="js/navbar-black.js" defer></script>
 
 <script src="/js/vehicle-wraps-2.js" defer></script>
+<script src="js/vehicle-slider.js" defer></script>
+<script src="js/commercial-footer.js?v=2" defer></script>
 
 
 <!-- FAQ accordion — self-contained, no dependency on gsap.js -->

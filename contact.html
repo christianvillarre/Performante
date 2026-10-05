@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="css/page-transitions.css">
+<script src="js/page-transitions.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact | Performante Wraps</title>
+  <meta name="description" content="Start a vehicle, commercial, or architectural wrap project with Performante Wraps in Houston, Texas.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/subpage.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+  <link rel="stylesheet" href="/css/contact.css">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+</head>
+<body data-black7-build="contact-v1">
+<header class="pw-nav" id="pwNav">
+  <a class="pw-nav__logo" href="/" aria-label="Performante Wraps home">
+    <img src="/images/logo.png" alt="Performante Wraps">
+  </a>
+
+  <div class="pw-nav__actions">
+    <a class="pw-nav__chat" href="contact.html"><span class="pw-nav__chat-label">Let’s Talk</span></a>
+    <button class="pw-nav__toggle" id="pwMenuToggle" type="button" aria-label="Open menu" aria-expanded="false">
+      <span class="pw-nav__toggle-label">Menu</span>
+      <span class="pw-nav__toggle-icon" aria-hidden="true">
+        <span class="pw-nav__toggle-line pw-nav__toggle-line--one"></span>
+        <span class="pw-nav__toggle-line pw-nav__toggle-line--two"></span>
+      </span>
+    </button>
+  </div>
+</header>
+
+<div class="pw-menu-backdrop" id="pwMenuBackdrop" aria-hidden="true"></div>
+<aside class="pw-menu" id="pwMenu" aria-hidden="true">
+  <div class="pw-menu__top">
+    <span class="pw-menu__label"></span>
+    <button class="pw-menu__close" id="pwMenuClose" type="button" aria-label="Close menu"></button>
+  </div>
+
+  <nav class="pw-menu__links" aria-label="Primary navigation">
+    <a href="vehicle-wraps.html">Vehicle Wraps</a>
+    <a href="commercial-wraps.html">Commercial Wraps</a>
+    <a href="architectural-wraps.html">Architectural Wraps</a>
+    <a href="paint-protection.html">Paint Protection</a>
+    <a href="projects.html">Projects &amp; Case Studies</a>
+    <a href="about.html">About</a>
+    <a href="contact.html" aria-current="page">Contact</a>
+  </nav>
+
+  <div class="pw-menu__footer">
+    <div class="pw-menu__footer-block">
+      <p class="pw-menu__footer-label">Business Inquiry</p>
+      <a href="mailto:enrico@performantewraps.com"><span class="pw-menu__footer-tag">E:</span> enrico@performantewraps.com</a>
+      <a href="tel:8328014675"><span class="pw-menu__footer-tag">P:</span> (832) 801-4675</a>
+    </div>
+
+    <div class="pw-menu__socials">
+      <p class="pw-menu__footer-label">Social</p>
+      <div class="pw-menu__socials-grid">
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Tiktok</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</aside>
+
+
+
+<div id="scroll-container">
+<main id="site">
+<div class="ct-page">
+  <section class="ct-hero" aria-labelledby="contactTitle">
+    <div class="ct-hero__top"><span>CONTACT / PERFORMANTE</span><span>HOUSTON, TEXAS</span></div>
+    <div class="ct-hero__body">
+      <p class="ct-eyebrow ct-reveal">HAVE A PROJECT IN MIND?</p>
+      <h1 id="contactTitle" class="ct-reveal">Let’s talk<br><em>about it.</em></h1>
+      <p class="ct-hero__intro ct-reveal">From a single vehicle to a full fleet or branded space, tell us what you have in mind. We’ll help shape the next step.</p>
+    </div>
+    <div class="ct-hero__media ct-reveal"><img src="/images/stock6.jpeg" alt="A wrap specialist applying film by hand" fetchpriority="high"><span>PRECISION IN EVERY DETAIL / HOUSTON, TX</span></div>
+    <a class="ct-hero__scroll" href="#inquiry">START YOUR INQUIRY <span aria-hidden="true">↘</span></a>
+  </section>
+
+  <section class="ct-inquiry" id="inquiry" aria-labelledby="inquiryTitle">
+    <div class="ct-inquiry__intro ct-reveal">
+      <span class="ct-eyebrow">YOUR INQUIRY</span>
+      <h2 id="inquiryTitle">Tell us what<br>you’re <em>working on.</em></h2>
+      <p>Vehicle, fleet, or space — share the basics, your goals, and any timing you have in mind. We’ll follow up to discuss the details.</p>
+      <div class="ct-contact-info">
+        <div><span>EMAIL</span><a href="mailto:enrico@performantewraps.com">enrico@performantewraps.com <b aria-hidden="true">↗</b></a></div>
+        <div><span>PHONE</span><a href="tel:8328014675">(832) 801-4675 <b aria-hidden="true">↗</b></a></div>
+        <div><span>BASED IN</span><p>Houston, Texas</p></div>
+      </div>
+    </div>
+
+    <form class="ct-form ct-reveal" id="contactForm" novalidate>
+      <div class="ct-form__head"><span>PROJECT INQUIRY</span><span>PERFORMANTE WRAPS</span></div>
+      <div class="ct-form__row">
+        <div class="ct-field"><label for="ctName">Your name <span>*</span></label><input id="ctName" name="name" type="text" autocomplete="name" placeholder="How should we address you?" required></div>
+        <div class="ct-field"><label for="ctEmail">Email address <span>*</span></label><input id="ctEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></div>
+      </div>
+      <div class="ct-form__row">
+        <div class="ct-field"><label for="ctPhone">Phone number <small>OPTIONAL</small></label><input id="ctPhone" name="phone" type="tel" autocomplete="tel" placeholder="(000) 000-0000"></div>
+        <div class="ct-field"><label for="ctProject">Project type <span>*</span></label><select id="ctProject" name="project" required><option value="" disabled selected>Select a service</option><option>Vehicle Wraps</option><option>Commercial &amp; Fleet Wraps</option><option>Architectural Wraps</option><option>Paint Protection Film</option><option>Something Else</option></select></div>
+      </div>
+      <div class="ct-field ct-field--message"><label for="ctDetails">Tell us about your project <span>*</span></label><textarea id="ctDetails" name="details" rows="5" placeholder="What are you looking to create? Include your vehicle, space, timing, or any ideas you already have." required></textarea></div>
+      <div class="ct-form__bottom"><p>Submitting opens your email app with these details ready to send.</p><button type="submit"><span>PREPARE MY INQUIRY</span><span aria-hidden="true">↗</span></button></div>
+      <p class="ct-form__status" id="contactStatus" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section class="ct-outro" aria-label="Start a project"><div class="ct-outro__image" aria-hidden="true"></div><div class="ct-outro__marquee" aria-hidden="true"><span>MAKE IT UNMISTAKABLE&nbsp; / &nbsp;MAKE IT UNMISTAKABLE&nbsp; / &nbsp;</span><span>MAKE IT UNMISTAKABLE&nbsp; / &nbsp;MAKE IT UNMISTAKABLE&nbsp; / &nbsp;</span></div><div class="ct-outro__content"><span class="ct-eyebrow">FROM IDEA TO IMPACT</span><p>Bring us the brief.<br><em>We’ll make it unmistakable.</em></p><a href="#inquiry">TELL US WHAT YOU HAVE IN MIND <span aria-hidden="true">↗</span></a></div></section>
+</div>
+<section class="pw6-final-cta" aria-labelledby="pw6FinalCtaTitle">
+  <div class="pw6-final-cta__inner">
+
+    <div class="pw6-final-cta__top">
+      <div class="pw6-final-cta__heading">
+        <p class="pw6-final-cta__eyebrow">Prefer to talk?</p>
+        <h2 id="pw6FinalCtaTitle">Let’s Connect</h2>
+      </div>
+      <a class="pw6-final-cta__button pw-btn" href="tel:8328014675">
+        <span class="pw-btn__label">Call Performante</span>
+        <span class="pw-btn__arrow" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+    </div>
+
+    <div class="pw6-final-cta__bottom">
+
+      <div class="pw6-final-cta__brand">
+        <img
+          class="pw6-final-cta__logo"
+          src="/images/logo-icon.png"
+          alt="Performante Wraps logo"
+        >
+
+        <div class="pw6-final-cta__bio">
+          <h3 class="pw6-final-cta__bio-name">Enrico Molina</h3>
+          <p class="pw6-final-cta__bio-title">Founder &amp; Creative Director</p>
+          <p class="pw6-final-cta__bio-desc">
+            Building bold visual identities through automotive,
+            architectural and commercial branding.
+          </p>
+        </div>
+
+        <p class="pw6-final-cta__copyright">
+          © <span id="pwFooterYear">2026</span> Performante Wraps. All rights reserved.
+        </p>
+      </div>
+
+      <div class="pw6-final-cta__info">
+
+        <div class="pw6-final-cta__info-col">
+          <p class="pw6-final-cta__info-label">Business Inquiry</p>
+
+          <a href="mailto:enrico@performantewraps.com">
+            <span class="pw6-final-cta__prefix">E.</span>
+            enrico@performantewraps.com
+          </a>
+
+          <a href="tel:8328014675">
+            <span class="pw6-final-cta__prefix">P.</span>
+            (832) 801-4675
+          </a>
+        </div>
+
+        <div class="pw6-final-cta__info-col">
+          <p class="pw6-final-cta__info-label">Social</p>
+
+          <div class="pw6-final-cta__social-grid">
+            <a href="#">Instagram</a>
+            <a href="#">Facebook</a>
+            <a href="#">Tiktok</a>
+            <a href="#">LinkedIn</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+<script>document.getElementById('pwFooterYear').textContent = new Date().getFullYear();</script>
+
+<!-- ============================================================================
+     CLOSING PROJECT CTA — full-bleed image + wordmark
+     ============================================================================ -->
+<section class="pw5-closing-cta" aria-labelledby="pw5ClosingTitle">
+  <div class="pw5-closing-cta__media" aria-hidden="true">
+    <img src="/images/stock15.jpeg" alt="" loading="lazy">
+  </div>
+  <div class="pw5-closing-cta__veil" aria-hidden="true"></div>
+  <a class="pw5-closing-cta__wordmark" href="/contact.html" style="--pw5-wordmark-img:url('/images/stock15.jpeg')"><span id="pw5ClosingTitle">PERFORMANTE</span></a>
+</section>
+
+
+</main>
+</div>
+<script src="/js/navbar-black.js" defer></script>
+<script src="/js/commercial-footer.js?v=2" defer></script>
+<script src="/js/contact.js" defer></script>
+</body>
+</html>

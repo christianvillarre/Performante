@@ -115,10 +115,7 @@ if (terrainContainer) {
   );
 
   terrainRenderer.setPixelRatio(
-    Math.min(
-      window.devicePixelRatio || 1,
-      2
-    )
+    Math.min(window.devicePixelRatio || 1, window.matchMedia("(pointer: coarse)").matches ? 1.1 : 1.5)
   );
 
   terrainRenderer.outputColorSpace =
@@ -686,6 +683,7 @@ if (terrainContainer) {
     terrainBaseZ
   );
 
+  terrainWire.visible=finalWireOpacity>0;
   terrainScene.add(
     terrainWire
   );
@@ -1313,11 +1311,18 @@ if (terrainContainer) {
   const terrainClock =
     new THREE.Clock();
 
-  function animateTerrain(){
+  let terrainVisible=true,lastTerrainFrame=0;
+  new IntersectionObserver(entries=>{terrainVisible=entries[0].isIntersecting;},
+    {rootMargin:'80px'}).observe(terrainContainer);
+  function animateTerrain(now=performance.now()){
     requestAnimationFrame(
       animateTerrain
     );
 
+    if(document.hidden || !terrainVisible){terrainClock.getDelta();lastTerrainFrame=0;return;}
+    // The slow background needs fewer frames than the interactive logo.
+    if(lastTerrainFrame && now-lastTerrainFrame<1000/30-.5)return;
+    lastTerrainFrame=now;
     const deltaTime =
       Math.min(
         terrainClock.getDelta(),
@@ -1572,10 +1577,7 @@ if (terrainContainer) {
     );
 
     terrainRenderer.setPixelRatio(
-      Math.min(
-        window.devicePixelRatio || 1,
-        2
-      )
+      Math.min(window.devicePixelRatio || 1, window.matchMedia("(pointer: coarse)").matches ? 1.1 : 1.5)
     );
   }
 
@@ -1607,6 +1609,17 @@ const symbolContainer =
 
 let symbolRenderer = null;
 let symbolCamera = null;
+let repaintSymbol = null;
+const symbolRenderSize = new THREE.Vector2();
+
+// Expand the camera view instead of scaling the model. The old canvas was
+// 70vh on desktop or 360px on mobile; preserve its pixels-per-world-unit.
+function symbolViewportFov(height){
+  const referenceHeight=window.innerWidth<=760 ? Math.min(240,window.innerWidth*.58) : window.innerHeight*(window.matchMedia("(pointer: coarse)").matches ? .46 : .63);
+  return THREE.MathUtils.radToDeg(2*Math.atan(
+    Math.tan(THREE.MathUtils.degToRad(35)/2)*height/Math.max(referenceHeight,1)
+  ));
+}
 
 if (symbolContainer) {
   const symbolScene =
@@ -1614,9 +1627,9 @@ if (symbolContainer) {
 
   symbolCamera =
     new THREE.PerspectiveCamera(
-      35,
-      symbolContainer.clientWidth /
-        symbolContainer.clientHeight,
+      symbolViewportFov(Math.max(symbolContainer.clientHeight,1)),
+      Math.max(symbolContainer.clientWidth,1) /
+        Math.max(symbolContainer.clientHeight,1),
       0.1,
       100
     );
@@ -1651,12 +1664,8 @@ if (symbolContainer) {
     symbolContainer.clientHeight
   );
 
-  symbolRenderer.setPixelRatio(
-    Math.min(
-      window.devicePixelRatio,
-      2
-    )
-  );
+  symbolRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1,window.matchMedia("(pointer: coarse)").matches?1.25:1.5));
+  repaintSymbol=()=>symbolRenderer.render(symbolScene,symbolCamera);
 
   symbolRenderer.outputColorSpace =
     THREE.SRGBColorSpace;
@@ -1784,8 +1793,8 @@ if (symbolContainer) {
   const studioTopStrip = new THREE.RectAreaLight(
     0xffffff,
     5.4,
-    34,
-    8
+    24,
+    3.5
   );
   studioTopStrip.position.set(0, 12, 10);
   studioTopStrip.lookAt(0, 0, 0);
@@ -1826,688 +1835,732 @@ if (symbolContainer) {
   lowerRedRim.target.position.set(0, -0.4, 0);
   symbolScene.add(lowerRedRim, lowerRedRim.target);
 
-  let logoHoverAmount = 0;
+  /* HERO ORBIT — one unfolding sculpture, with surface-matched glass layers. */
+  const heroMotion=window.matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)');
+  const heroFinePointer=window.matchMedia('(hover: hover) and (pointer: fine)');
+  const orbitSettings={openRate:0.85,closeRate:1.4,width:1.55,height:.95,depth:.9};
+  let model=null,modelSpan=3,openAmount=0,hovered=false,sceneVisible=true;
+  let orbitTime=0,lightTime=0,previousSymbolTime=0,automaticRotation=0;
+  let scrollOrbitActive=false,scrollOrbitOrigin=0,scrollOrbitSpread=1;
+  const orbitMarquee=document.querySelector(".wrap-marquee-pin-group");
+  let targetRotationX=0,targetRotationY=0;
+  const modelParts=[],glassLayers=[],orbitLines=[];
+  let heroWarming=false;
+  const pointer={x:0,y:0,seen:false,blocked:false};
+  const raycaster=new THREE.Raycaster();
+  const pointerNdc=new THREE.Vector2();
+  const closedCenter=new THREE.Vector3();
+  const scratchPoint=new THREE.Vector3();
+  const inverseRoot=new THREE.Matrix4();
+  const orbitWorldRotation=new THREE.Quaternion();
+  const orbitInverseRotation=new THREE.Quaternion();
+  const solidColor=new THREE.Color(0x16191d);
+  const shellColor=new THREE.Color(0x101820);
+  const smokeAbsorption=new THREE.Color(0x263541);
+  const hoverPadding=48; // CSS pixels beyond the assembled icon, not its orbit.
 
-  let model = null;
+  // Soft reflection strips give transparent layers something to reflect even
+  // between light passes. This texture is lighting only, never a background.
+  const environmentCanvas=document.createElement('canvas');
+  environmentCanvas.width=512;environmentCanvas.height=256;
+  const environmentContext=environmentCanvas.getContext('2d');
+  if(environmentContext){
+    environmentContext.fillStyle='#0a0c12';environmentContext.fillRect(0,0,512,256);
+    [[42,22,62,160,'#ffffff'],[210,38,32,195,'#b1cfff'],[350,65,60,138,'#ffd2d3'],[120,12,230,18,'#eeeeff']].forEach(([x,y,w,h,color])=>{
+      const gradient=environmentContext.createLinearGradient(x,y,x+w,y);
+      gradient.addColorStop(0,'rgba(0,0,0,0)');gradient.addColorStop(.3,color);
+      gradient.addColorStop(.7,color);gradient.addColorStop(1,'rgba(0,0,0,0)');
+      environmentContext.fillStyle=gradient;environmentContext.fillRect(x,y,w,h);
+    });
+    const texture=new THREE.CanvasTexture(environmentCanvas);
+    texture.mapping=THREE.EquirectangularReflectionMapping;texture.colorSpace=THREE.SRGBColorSpace;
+    const generator=new THREE.PMREMGenerator(symbolRenderer);
+    const environment=generator.fromEquirectangular(texture);
+    symbolScene.environment=environment.texture;
+    generator.dispose();texture.dispose();
+  }
 
-  const modelParts = [];
-
-  const startRotationX = 0;
-  const startRotationY = 0;
-
-  let targetRotationX =
-    startRotationX;
-
-  let targetRotationY =
-    startRotationY;
-
-  const expansionDistance =
-    0.8;
-
-  const influenceRadius =
-    280;
-
-  const fullStrengthRadius =
-    48;
-
-  const expansionSmoothing =
-    0.095;
-
-  const rotationSmoothing =
-    0.28;
-
-  const pointer = {
-    x: window.innerWidth / 2,
-    y: window.innerHeight / 2,
-    active: false
-  };
-
-  /*
-    Raycasting is used so hover activates only when the cursor is
-    over actual visible logo geometry—not anywhere inside its canvas.
-  */
-  const logoRaycaster = new THREE.Raycaster();
-  const logoPointerNdc = new THREE.Vector2();
-
-  let wasPointerActive = false;
-
-  function randomizeExpansionDirections(){
-    modelParts.forEach((part, index) => {
-      /* Keep the recognizable outward split, but vary each rollover slightly. */
-      const randomVariation = new THREE.Vector3(
-        (Math.random() - 0.5) * 0.34,
-        (Math.random() - 0.5) * 0.30,
-        (Math.random() - 0.5) * 0.42
-      );
-
-      const patternedVariation = new THREE.Vector3(
-        Math.sin(index * 1.91 + Math.random() * 0.8) * 0.12,
-        Math.cos(index * 1.47 + Math.random() * 0.8) * 0.10,
-        Math.sin(index * 2.53 + Math.random()) * 0.16
-      );
-
-      part.movementDirection
-        .copy(part.baseMovementDirection)
-        .multiplyScalar(0.86)
-        .add(randomVariation)
-        .add(patternedVariation)
-        .normalize();
-
-      part.distanceVariation = THREE.MathUtils.clamp(
-        part.baseDistanceVariation * (0.90 + Math.random() * 0.22),
-        0.72,
-        1.28
-      );
+  // Four hidden emitters orbit independently in the SAME scene as the logo. Their
+  // PointLights illuminate every solid piece and physical glass layer.
+  const glowCanvas=document.createElement('canvas');glowCanvas.width=64;glowCanvas.height=64;
+  const glowContext=glowCanvas.getContext('2d');
+  if(glowContext){
+    const glow=glowContext.createRadialGradient(32,32,0,32,32,32);
+    glow.addColorStop(0,'rgba(255,255,255,1)');glow.addColorStop(.12,'rgba(255,255,255,.65)');
+    glow.addColorStop(.35,'rgba(255,255,255,.16)');glow.addColorStop(1,'rgba(255,255,255,0)');
+    glowContext.fillStyle=glow;glowContext.fillRect(0,0,64,64);
+  }
+  const glowTexture=new THREE.CanvasTexture(glowCanvas);
+  const lightGeometry=new THREE.SphereGeometry(1,10,8);
+  const orbitLights=[0xf1f6ff,0xb5d8ff,0xff6770,0xddc5ff].map((color,index)=>{
+    const light=new THREE.PointLight(color,0,0,2);
+    const core=new THREE.Mesh(lightGeometry,new THREE.MeshBasicMaterial({color,transparent:true,opacity:.85,depthWrite:false}));
+    const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTexture,color,transparent:true,opacity:.35,blending:THREE.AdditiveBlending,depthWrite:false}));
+    core.visible=false;glow.visible=false; // Emit light without visible orb markers.
+    light.add(core,glow);symbolScene.add(light);
+    // A broad moving softbox accompanies each small emitter. Large reflections
+    // remain legible on thin panels even when they rotate away from a point light.
+    const softbox=new THREE.RectAreaLight(color,5,1,1);
+    symbolScene.add(softbox);
+    return {light,softbox,core,glow,index};
+  });
+  function updateOrbitLights(dt){
+    if(!heroMotion.matches)lightTime+=dt;
+    orbitLights.forEach(({light,softbox,core,glow,index})=>{
+      const angle=lightTime*(.17+index*.035)*(index%2?-1:1)+index*Math.PI*.5;
+      const radius=modelSpan*.78;
+      light.position.set(Math.cos(angle)*radius*1.35,
+        Math.sin(angle*.79+index)*radius*.6,
+        Math.sin(angle)*radius*.72+.35*modelSpan);
+      light.intensity=modelSpan*modelSpan*1.15*(index===2?.72:1);
+      light.distance=modelSpan*7;
+      panelLightStrength.value[index]=light.intensity/(modelSpan*modelSpan);
+      softbox.position.copy(light.position).multiplyScalar(1.12);
+      softbox.width=modelSpan*.75;
+      softbox.height=modelSpan*.48;
+      softbox.intensity=6;
+      softbox.lookAt(0,0,0);
+      core.scale.setScalar(modelSpan*.009);
+      glow.scale.setScalar(modelSpan*.18);
     });
   }
 
-  const loader =
-    new GLTFLoader();
-
-  loader.load(
-    "/images/icon2.glb",
-
-    function(gltf){
-      model = gltf.scene;
-
-      /*
-        The foreground camera is separate,
-        so zero is truly centered.
-      */
-      model.position.set(
-        0,
-        0,
-        0
-      );
-
-      model.scale.set(
-        1,
-        1,
-        1
-      );
-
-      symbolScene.add(
-        model
-      );
-
-      model.updateMatrixWorld(
-        true
-      );
-
-      const modelBox =
-        new THREE.Box3()
-          .setFromObject(model);
-
-      const modelCenter =
-        new THREE.Vector3();
-
-      modelBox.getCenter(
-        modelCenter
-      );
-
-      /*
-        Center the actual geometry, not just
-        the GLB object's origin.
-      */
-      model.position.sub(
-        modelCenter
-      );
-
-      model.updateMatrixWorld(
-        true
-      );
-
-      const centeredBox =
-        new THREE.Box3()
-          .setFromObject(model);
-
-      const centeredModelCenter =
-        new THREE.Vector3();
-
-      centeredBox.getCenter(
-        centeredModelCenter
-      );
-
-      model.traverse(
-        function(child){
-          if(!child.isMesh) return;
-
-          const sourceMaterial = Array.isArray(child.material)
-            ? child.material[0]
-            : child.material;
-
-          child.material = new THREE.MeshPhysicalMaterial({
-            /*
-              Solid smoked-glass finish:
-              visually glassy and reflective, but fully opaque.
-            */
-            color: new THREE.Color(0x16191d),
-            metalness: 0.42,
-            roughness: 0.085,
-
-            /* Keep the logo solid—no background can be seen through it. */
-            transparent: false,
-            opacity: 1,
-            transmission: 0,
-
-            ior: 1.52,
-
-            /* Strong polished outer coating creates the glass-like surface. */
-            clearcoat: 1,
-            clearcoatRoughness: 0.045,
-
-            /* Controlled cool reflections without turning the body blue. */
-            specularIntensity: 1,
-            specularColor: new THREE.Color(0xf2f4f7),
-
-            sheen: 0.24,
-            sheenColor: new THREE.Color(0xc7cbd1),
-            sheenRoughness: 0.28,
-
-            /* Extremely subtle optical color shift at grazing angles. */
-            iridescence: 0.035,
-            iridescenceIOR: 1.2,
-            iridescenceThicknessRange: [70, 150],
-
-            side: THREE.DoubleSide,
-            depthWrite: true,
-
-            /* Keeps the dark faces readable between moving light passes. */
-            emissive: new THREE.Color(0x08090b),
-            emissiveIntensity: 0.24
-          });
-
-          if(sourceMaterial && sourceMaterial.map){
-            child.material.map = sourceMaterial.map;
-            child.material.needsUpdate = true;
-          }
-
-          const originalPosition =
-            child.position.clone();
-            
-
-          const partBox =
-            new THREE.Box3()
-              .setFromObject(child);
-
-          const partWorldCenter =
-            new THREE.Vector3();
-
-          partBox.getCenter(
-            partWorldCenter
-          );
-
-          const localCenter =
-            child.worldToLocal(
-              partWorldCenter.clone()
-            );
-
-          const worldDirection =
-            partWorldCenter
-              .clone()
-              .sub(
-                centeredModelCenter
-              );
-
-          if(
-            worldDirection.lengthSq() <
-            0.00001
-          ){
-            worldDirection.set(
-              0,
-              1,
-              0
-            );
-          }
-
-          worldDirection.normalize();
-
-          const localDirection =
-            worldDirection.clone();
-
-          if(child.parent){
-            const parentQuaternion =
-              new THREE.Quaternion();
-
-            child.parent
-              .getWorldQuaternion(
-                parentQuaternion
-              );
-
-            parentQuaternion.invert();
-
-            localDirection
-              .applyQuaternion(
-                parentQuaternion
-              );
-          }
-
-          localDirection.normalize();
-
-          const partIndex =
-            modelParts.length;
-
-          const variation =
-            new THREE.Vector3(
-              Math.sin(
-                partIndex * 2.17
-              ) * 0.34,
-
-              Math.cos(
-                partIndex * 1.73
-              ) * 0.27,
-
-              Math.sin(
-                partIndex * 3.11 +
-                0.8
-              ) * 0.58
-            );
-
-          const movementDirection =
-            localDirection
-              .clone()
-              .multiplyScalar(0.76)
-              .add(variation)
-              .normalize();
-
-          const distanceVariation =
-            0.8 +
-            Math.abs(
-              Math.sin(
-                partIndex * 1.91
-              )
-            ) * 0.24;
-
-          modelParts.push({
-            mesh: child,
-            originalPosition,
-            localCenter,
-            movementDirection: movementDirection.clone(),
-            baseMovementDirection: movementDirection.clone(),
-            distanceVariation,
-            baseDistanceVariation: distanceVariation,
-            currentInfluence: 0,
-            targetInfluence: 0,
-            wobblePhase: partIndex * 0.61 + Math.random() * Math.PI * 2,
-            wobbleSpeed: 0.55 + Math.random() * 0.65,
-            wobbleAxis: new THREE.Vector3(
-              Math.random() - 0.5,
-              Math.random() - 0.5,
-              Math.random() - 0.5
-            ).normalize(),
-            worldCenter:
-              new THREE.Vector3(),
-            projectedCenter:
-              new THREE.Vector3(),
-            targetPosition:
-              new THREE.Vector3()
-          });
+  // Every detached surface gets its own additive reflection pass, attached to
+  // that exact mesh. This runs AFTER the physical transmission pass, so glass
+  // transparency cannot wash away the reflected highlights. No central-shell
+  // material changes and no billboard/sprite substitutes for panel lighting.
+  const panelLightStrength={value:new Float32Array(4)};
+  function addPanelReflections(mesh,isStrip=false){
+    const material=new THREE.ShaderMaterial({
+      uniforms:{
+        pwLightPositions:{value:orbitLights.map(item=>item.light.position)},
+        pwLightColors:{value:orbitLights.map(item=>item.light.color)},
+        pwLightStrength:panelLightStrength,
+        pwSpan:{value:modelSpan},pwFade:{value:0},pwGain:{value:isStrip?.8:.65}
+      },
+      vertexShader:`
+        varying vec3 pwViewPosition;
+        varying vec3 pwNormal;
+        void main(){
+          vec4 viewPosition=modelViewMatrix*vec4(position,1.0);
+          pwViewPosition=viewPosition.xyz;
+          pwNormal=normalize(normalMatrix*normal);
+          gl_Position=projectionMatrix*viewPosition;
         }
-      );
-    },
-
-    undefined,
-
-    function(error){
-      console.error(
-        "GLB Load Failed:",
-        error
-      );
-    }
-  );
-
-  window.addEventListener(
-    "pointermove",
-    function(event){
-      pointer.x =
-        event.clientX;
-
-      pointer.y =
-        event.clientY;
-
-      const rect =
-        symbolContainer
-          .getBoundingClientRect();
-
-      let isDirectlyOverLogo = false;
-
-      if(model){
-        logoPointerNdc.x =
-          ((pointer.x - rect.left) / Math.max(rect.width, 1)) * 2 - 1;
-
-        logoPointerNdc.y =
-          -((pointer.y - rect.top) / Math.max(rect.height, 1)) * 2 + 1;
-
-        logoRaycaster.setFromCamera(
-          logoPointerNdc,
-          symbolCamera
-        );
-
-        const logoHits =
-          logoRaycaster.intersectObject(
-            model,
-            true
-          );
-
-        isDirectlyOverLogo =
-          logoHits.length > 0;
-      }
-
-      window.performanteLogoHover =
-        isDirectlyOverLogo;
-
-      pointer.active =
-        pointer.x >=
-          rect.left -
-          influenceRadius &&
-
-        pointer.x <=
-          rect.right +
-          influenceRadius &&
-
-        pointer.y >=
-          rect.top -
-          influenceRadius &&
-
-        pointer.y <=
-          rect.bottom +
-          influenceRadius;
-
-      if(pointer.active && !wasPointerActive){
-        randomizeExpansionDirections();
-      }
-
-      wasPointerActive = pointer.active;
-
-      const normalizedX =
-        (
-          event.clientX -
-          rect.left
-        ) /
-        Math.max(
-          rect.width,
-          1
-        ) -
-        0.5;
-
-      const normalizedY =
-        (
-          event.clientY -
-          rect.top
-        ) /
-        Math.max(
-          rect.height,
-          1
-        ) -
-        0.5;
-
-      targetRotationY =
-        startRotationY +
-        normalizedX * 0.4;
-
-      targetRotationX =
-        startRotationX +
-        normalizedY * 0.32;
-    }
-  );
-
-  document.addEventListener(
-    "mouseleave",
-    function(){
-      pointer.active = false;
-      wasPointerActive = false;
-      window.performanteLogoHover = false;
-
-      targetRotationX =
-        startRotationX;
-
-      targetRotationY =
-        startRotationY;
-    }
-  );
-
-  function updateParts(time){
-    if(!model) return;
-
-    const rect =
-      symbolRenderer.domElement
-        .getBoundingClientRect();
-
-    model.updateMatrixWorld(
-      true
-    );
-
-    modelParts.forEach(
-      function(part){
-        part.worldCenter.copy(
-          part.localCenter
-        );
-
-        part.mesh.localToWorld(
-          part.worldCenter
-        );
-
-        part.projectedCenter
-          .copy(
-            part.worldCenter
-          )
-          .project(
-            symbolCamera
-          );
-
-        const screenX =
-          rect.left +
-          (
-            part.projectedCenter.x *
-            0.5 +
-            0.5
-          ) *
-          rect.width;
-
-        const screenY =
-          rect.top +
-          (
-            -part.projectedCenter.y *
-            0.5 +
-            0.5
-          ) *
-          rect.height;
-
-        const dx =
-          pointer.x -
-          screenX;
-
-        const dy =
-          pointer.y -
-          screenY;
-
-        const distance =
-          Math.sqrt(
-            dx * dx +
-            dy * dy
-          );
-
-        let influence = 0;
-
-        if(pointer.active){
-          influence =
-            1 -
-            THREE.MathUtils
-              .smoothstep(
-                distance,
-                fullStrengthRadius,
-                influenceRadius
-              );
+      `,
+      fragmentShader:`
+        uniform vec3 pwLightPositions[4],pwLightColors[4];
+        uniform float pwLightStrength[4],pwSpan,pwFade,pwGain;
+        varying vec3 pwViewPosition;
+        varying vec3 pwNormal;
+        void main(){
+          vec3 N=normalize(pwNormal);
+          vec3 V=normalize(-pwViewPosition);
+          vec3 shine=vec3(0.0);
+          float rim=pow(1.0-abs(dot(N,V)),2.0);
+          for(int i=0;i<4;i++){
+            vec3 lightView=(viewMatrix*vec4(pwLightPositions[i],1.0)).xyz;
+            vec3 toLight=lightView-pwViewPosition;
+            float distanceToLight=max(length(toLight),0.0001);
+            vec3 L=toLight/distanceToLight;
+            vec3 halfVector=L+V;
+            vec3 H=halfVector/max(length(halfVector),0.0001);
+            float aligned=clamp(abs(dot(N,H)),0.0,1.0);
+            float falloff=1.0/(1.0+pow(distanceToLight/pwSpan,2.0)*0.45);
+            // Broad softbox reflection plus a crisp moving glint on each face.
+            float reflection=pow(aligned,10.0)*0.24+pow(aligned,90.0)*2.4;
+            reflection+=rim*abs(dot(N,L))*0.06;
+            shine+=pwLightColors[i]*pwLightStrength[i]*falloff*reflection;
+          }
+          // Fade radiance, not coverage: dark glass and transparent holes stay
+          // intact while the rotating surfaces catch clearly visible light.
+          gl_FragColor=vec4(shine*pwGain,clamp(pwFade,0.0,1.0));
+          #include <tonemapping_fragment>
+          #include <colorspace_fragment>
         }
-
-        part.targetInfluence =
-          influence;
-
-        part.currentInfluence +=
-          (
-            part.targetInfluence -
-            part.currentInfluence
-          ) *
-          expansionSmoothing;
-
-        part.targetPosition
-          .copy(
-            part.originalPosition
-          )
-          .addScaledVector(
-            part.movementDirection,
-            expansionDistance *
-            part.distanceVariation *
-            part.currentInfluence
-          );
-
-        /*
-          Each part nudges on its own, independent of the
-          shared outward direction, so the spread doesn't
-          look identical every time it triggers.
-        */
-        const wobbleAmount =
-          0.22 *
-          part.currentInfluence;
-
-        part.targetPosition.addScaledVector(
-          part.wobbleAxis,
-          Math.sin(
-            time * part.wobbleSpeed +
-            part.wobblePhase
-          ) *
-          wobbleAmount
-        );
-
-        part.mesh.position.lerp(
-          part.targetPosition,
-          expansionSmoothing
-        );
-      }
-    );
+      `,
+      transparent:true,blending:THREE.AdditiveBlending,
+      side:THREE.DoubleSide,depthTest:true,depthWrite:false,
+      polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2
+    });
+    const reflection=new THREE.Mesh(mesh.geometry,material);
+    reflection.name='Detached surface reflection';
+    reflection.renderOrder=20;reflection.raycast=()=>{};
+    reflection.onBeforeRender=()=>{
+      material.uniforms.pwFade.value=Math.min(1,mesh.material.opacity/(isStrip?.52:.42));
+    };
+    mesh.add(reflection);
+    return reflection;
+  }
+  function makeOrbit(glass=false,index=0){
+    const u=new THREE.Vector3(Math.random()*2-1,Math.random()*1.4-.7,Math.random()-.5).normalize();
+    const normal=new THREE.Vector3(Math.random()-.5,Math.random()-.5,1).normalize();
+    const v=new THREE.Vector3().crossVectors(normal,u).normalize();
+    if(v.lengthSq()<.001)v.set(0,1,0);
+    return {u,v,phase:Math.random()*Math.PI*2,speed:(.12+Math.random()*.14)*(index%2?-1:1),
+      radius:modelSpan*((glass?.53:.38)+Math.random()*(glass?.21:.16)),
+      axis:new THREE.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize(),
+      spin:(Math.random()-.5)*(glass?1.2:.55)};
+  }
+  function randomizeOrbits(){
+    glassLayers.forEach((layer,index)=>layer.orbit=makeOrbit(true,index));
+    orbitTime=0;
+  }
+  function orbitPosition(layer,out){
+    // Travel on one straight axis from the attachment face, with no upward
+    // drift or curved transition into a second flight direction.
+    return out.copy(layer.flightOffset).multiplyScalar(scrollOrbitSpread).add(layer.homeRoot);
   }
 
-  const symbolClock = new THREE.Clock();
-  let automaticRotation = 0;
+  function createOrbitLines(){
+    for(let index=0;index<3;index++){
+      const points=[];
+      const radius=modelSpan*(.7+index*.12);
+      for(let step=0;step<=96;step++){
+        const angle=step/96*Math.PI*1.45;
+        points.push(new THREE.Vector3(Math.cos(angle)*radius,Math.sin(angle)*radius*.7,0));
+      }
+      const geometry=new THREE.BufferGeometry().setFromPoints(points);
+      const material=new THREE.LineBasicMaterial({color:0xa4c5df,
+        transparent:true,opacity:0,depthWrite:false});
+      const line=new THREE.Line(geometry,material);
+      line.raycast=()=>{};line.visible=false;
+      model.add(line);orbitLines.push(line);
+    }
+  }
+  function updateOrbitLines(amount){
+    orbitLines.forEach((line,index)=>{
+      line.visible=amount>0 && !heroMotion.matches;
+      if(!line.visible)return;
+      line.position.copy(closedCenter);
+      line.scale.setScalar((.65+.35*amount)*scrollOrbitSpread);
+      line.rotation.set(.35+index*.45,.2+index*.6,
+        index*2.1+orbitTime*(index%2?-.18:.14));
+      line.material.opacity=(.24+index*.035)*amount;
+    });
+  }
 
-  function animateSymbol(){
-    requestAnimationFrame(animateSymbol);
+  // Extract connected coplanar islands from the real GLB triangle topology.
+  // Original vertices are copied exactly: concave boundaries, cutouts, and
+  // narrow faces retain the source logo shape. Nothing is projected to a box.
+  function extractLogoFaces(part){
+    const relative=new THREE.Matrix4().multiplyMatrices(inverseRoot,part.mesh.matrixWorld);
+    const source=part.mesh.geometry.clone().applyMatrix4(relative);
+    const position=source.getAttribute('position'),index=source.getIndex();
+    if(!position){source.dispose();return [];}
+    const count=index?index.count:position.count;
+    const first=Math.max(0,source.drawRange.start || 0);
+    const last=Math.min(count,first+source.drawRange.count);
+    const tolerance=Math.max(modelSpan*1e-6,1e-8);
+    const planeTolerance=modelSpan*1e-5;
+    const faces=[],edgeMap=new Map(),parent=[];
+    const a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3();
+    const ab=new THREE.Vector3(),ac=new THREE.Vector3();
+    const key=v=>`${Math.round(v.x/tolerance)},${Math.round(v.y/tolerance)},${Math.round(v.z/tolerance)}`;
+    const root=i=>{while(parent[i]!==i){parent[i]=parent[parent[i]];i=parent[i];}return i;};
+    for(let offset=first;offset+2<last;offset+=3){
+      a.fromBufferAttribute(position,index?index.getX(offset):offset);
+      b.fromBufferAttribute(position,index?index.getX(offset+1):offset+1);
+      c.fromBufferAttribute(position,index?index.getX(offset+2):offset+2);
+      ab.subVectors(b,a);ac.subVectors(c,a);
+      const normal=new THREE.Vector3().crossVectors(ab,ac);
+      const twiceArea=normal.length();if(twiceArea<tolerance*tolerance)continue;
+      normal.divideScalar(twiceArea);
+      const id=faces.length;parent.push(id);
+      faces.push({vertices:[a.clone(),b.clone(),c.clone()],normal,d:normal.dot(a),area:twiceArea*.5});
+      const keys=[key(a),key(b),key(c)];
+      for(let e=0;e<3;e++){
+        const x=keys[e],y=keys[(e+1)%3];const edge=x<y?x+'|'+y:y+'|'+x;
+        const neighbors=edgeMap.get(edge)||[];
+        for(const neighbor of neighbors){
+          const r=root(neighbor),prior=faces[r];
+          if(prior.normal.dot(normal)>1-1e-6 && Math.abs(prior.normal.dot(a)-prior.d)<planeTolerance){parent[root(id)]=r;}
+        }
+        neighbors.push(id);edgeMap.set(edge,neighbors);
+      }
+    }
+    const groups=new Map();
+    faces.forEach((face,i)=>{const r=root(i);if(!groups.has(r))groups.set(r,{faces:[],area:0,normal:face.normal});const group=groups.get(r);group.faces.push(face);group.area+=face.area;});
+    source.dispose();
+    // Every nondegenerate planar island in the Blender mesh gets a panel.
+    return [...groups.values()].sort((a,b)=>b.area-a.area).map(group=>({part,group}));
+  }
+  function makeSurfaceGeometry(group){
+    const vertices=[];
+    group.faces.forEach(face=>face.vertices.forEach(v=>vertices.push(v.x,v.y,v.z)));
+    const geometry=new THREE.BufferGeometry();
+    geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
+    geometry.computeVertexNormals();geometry.computeBoundingBox();
+    const homeRoot=geometry.boundingBox.getCenter(new THREE.Vector3());
+    geometry.translate(-homeRoot.x,-homeRoot.y,-homeRoot.z);
+    return {geometry,homeRoot};
+  }
+  // Build thin, light-reactive ribbons along the actual surface boundary.
+  // A physical mesh material allows the moving lights to create specular sweeps;
+  // LineBasicMaterial would leave these lines unaffected by illumination.
+  function makeSeamGeometry(surface,normal){
+    const boundary=new THREE.EdgesGeometry(surface,10);
+    const points=boundary.getAttribute('position');
+    const vertices=[],normals=[];
+    const width=modelSpan*.0014;
+    const a=new THREE.Vector3(),b=new THREE.Vector3(),across=new THREE.Vector3();
+    for(let i=0;i+1<points.count;i+=2){
+      a.fromBufferAttribute(points,i);b.fromBufferAttribute(points,i+1);
+      across.subVectors(b,a).cross(normal).normalize().multiplyScalar(width*.5);
+      const corners=[a.clone().sub(across),a.clone().add(across),b.clone().add(across),b.clone().sub(across)];
+      for(const k of [0,1,2,0,2,3]){const v=corners[k];vertices.push(v.x,v.y,v.z);normals.push(normal.x,normal.y,normal.z);}
+    }
+    boundary.dispose();
+    const geometry=new THREE.BufferGeometry();
+    geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
+    geometry.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));
+    return geometry;
+  }
+  // Blend the original solid finish into the hollow shell as the faces leave.
+  // Hover and scroll share the same expansion amount, including their return.
+  function updateShellMaterial(amount){
+    // Restore the exact reference finish before the final docking movement.
+    // The same face meshes and reflections remain present after docking.
+    const hollow=THREE.MathUtils.smoothstep(amount,.018,.12);
+    modelParts.forEach(part=>{
+      const material=part.mesh.material;
+      material.color.copy(solidColor).lerp(shellColor,hollow);
+      material.opacity=THREE.MathUtils.lerp(1,.42,hollow);
+      material.transmission=THREE.MathUtils.lerp(.001,.301,hollow);
+      material.attenuationColor.setRGB(1,1,1).lerp(smokeAbsorption,hollow);
+      material.attenuationDistance=hollow>0?modelSpan*.18/hollow:Infinity;
+      material.thickness=modelSpan*THREE.MathUtils.lerp(.008,.033,hollow);
+      // Keep the reference logo's resting render state for the entire cycle.
+      // Toggling these when hollow reaches zero changes which faces contribute
+      // to the image, producing a lighting pop even with continuous lights.
+      material.depthWrite=true;
+      material.polygonOffset=false;
+    });
+  }
 
-    const symbolTime = symbolClock.getElapsedTime();
-    automaticRotation += 0.0016;
+  function seamMaterial(){
+    return new THREE.MeshPhysicalMaterial({
+      color:0x657f99,metalness:.65,roughness:.095,clearcoat:1,clearcoatRoughness:.04,
+      envMapIntensity:1.8,transmission:.18,thickness:modelSpan*.002,
+      transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false,
+      emissive:0x1a2d48,emissiveIntensity:.04
+    });
+  }
 
-    const logoHoverTarget = window.performanteLogoHover ? 1 : 0;
-    logoHoverAmount += (logoHoverTarget - logoHoverAmount) * 0.075;
+  const loader=new GLTFLoader();
+  loader.load('/images/icon6.glb',async gltf=>{
+    heroWarming=true;
+    // Rotate a centered wrapper, never the GLB's possibly off-center origin.
+    // Child geometry receives the centering offset once; the pivot stays at 0.
+    const content=gltf.scene;
+    content.position.set(0,0,0);content.scale.set(1,1,1);
+    content.updateMatrixWorld(true);
+    const box=new THREE.Box3().setFromObject(content);
+    const center=box.getCenter(new THREE.Vector3());
+    content.position.sub(center);
+    model=new THREE.Group();model.name='Fixed logo center';model.add(content);
+    symbolScene.add(model);model.updateMatrixWorld(true);
+    const size=box.getSize(new THREE.Vector3());modelSpan=Math.max(size.x,size.y,size.z,.1);
+    // Model-local coordinates keep nested GLB parts and their glass aligned.
+    inverseRoot.copy(model.matrixWorld).invert();
+    // After centering, world origin is the closed icon center.
+    closedCenter.set(0,0,0).applyMatrix4(inverseRoot);
+    const originals=[];
+    model.traverse(child=>{if(child.isMesh)originals.push(child);});
+    originals.forEach((child,index)=>{
+      const source=Array.isArray(child.material)?child.material[0]:child.material;
+      child.material=new THREE.MeshPhysicalMaterial({
+        color:0x16191d,metalness:.32,roughness:.12,clearcoat:1,clearcoatRoughness:.055,
+        ior:1.52,specularIntensity:1,envMapIntensity:.8,side:THREE.DoubleSide,
+        // Keep transmission enabled so fading to the shell does not recompile
+        // the shader during hover. At .001 the resting icon remains solid.
+        transparent:true,opacity:1,transmission:.001,thickness:modelSpan*.008,
+        // Match the original closed logo throughout hover, scroll and return.
+        depthWrite:true,polygonOffset:false,
+        emissive:0x08090b,emissiveIntensity:.2,map:source?.map || null
+      });
+      if(!child.geometry.boundingBox)child.geometry.computeBoundingBox();
+      const localCenter=child.geometry.boundingBox.getCenter(new THREE.Vector3());
+      const homeRoot=child.localToWorld(localCenter.clone()).applyMatrix4(inverseRoot);
+      modelParts.push({mesh:child,localCenter,homeRoot,
+        originalPosition:child.position.clone(),originalQuaternion:child.quaternion.clone()});
+    });
+    updateShellMaterial(0);
+    // The source meshes retain their original shape as the central shell.
+    // Only these extracted panels and seam frames enter the orbit.
+    // A ray from outside must reach a panel before passing through another
+    // source face. This keeps recessed exterior details but rejects inner walls.
+    const sourceMeshes=modelParts.map(part=>part.mesh);
+    const surfaceRaycaster=new THREE.Raycaster();
+    const sample=new THREE.Vector3(),radial=new THREE.Vector3();
+    const visibilityTolerance=modelSpan*.001;
+    function exteriorFace(candidate){
+      let visibleArea=0;
+      const outward=new THREE.Vector3();
+      for(const face of candidate.group.faces){
+        sample.copy(face.vertices[0]).add(face.vertices[1]).add(face.vertices[2]).multiplyScalar(1/3);
+        radial.copy(sample).sub(closedCenter);
+        if(radial.lengthSq()<1e-10)radial.copy(face.normal);
+        radial.normalize();
+        const worldSample=sample.clone().applyMatrix4(model.matrixWorld);
+        const worldRadial=radial.clone().transformDirection(model.matrixWorld);
+        surfaceRaycaster.set(worldSample.clone().addScaledVector(worldRadial,modelSpan*4),worldRadial.negate());
+        const hit=surfaceRaycaster.intersectObjects(sourceMeshes,false)[0];
+        if(hit && hit.point.distanceTo(worldSample)<visibilityTolerance){
+          visibleArea+=face.area;
+          outward.addScaledVector(radial,face.area);
+        }
+      }
+      if(visibleArea<candidate.group.area*.1)return false;
+      candidate.landingNormal=candidate.group.normal.clone();
+      if(candidate.landingNormal.dot(outward)<0)candidate.landingNormal.negate();
+      return true;
+    }
+    const perPart=modelParts.map(part=>extractLogoFaces(part).filter(exteriorFace));
+    const selected=[];
+    const maxRank=Math.max(0,...perPart.map(candidates=>candidates.length));
+    for(let rank=0;rank<maxRank;rank++){
+      for(const candidates of perPart){
+        if(candidates[rank])selected.push(candidates[rank]);
+      }
+    }
+    selected.forEach(({group,landingNormal},index)=>{
+      const {geometry,homeRoot}=makeSurfaceGeometry(group);
+      const seams=makeSeamGeometry(geometry,group.normal);
+      const material=new THREE.MeshPhysicalMaterial({
+        color:0x354454,metalness:.2,roughness:.16,transmission:.34,
+        thickness:modelSpan*.006,ior:1.48,transparent:true,opacity:0,
+        clearcoat:1,clearcoatRoughness:.04,envMapIntensity:1.5,specularIntensity:1,
+        iridescence:.14,iridescenceIOR:1.3,iridescenceThicknessRange:[120,260],
+        side:THREE.DoubleSide,depthWrite:false,
+        // Keep attached faces in front of the coincident source shell.
+        polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1
+      });
+      const mesh=new THREE.Mesh(geometry,material);mesh.position.copy(homeRoot);
+      const edgeMaterial=seamMaterial();
+      const edges=new THREE.Mesh(seams,edgeMaterial);
+      edges.position.copy(group.normal).multiplyScalar(modelSpan*.0002);
+      mesh.add(edges);model.add(mesh);
+      addPanelReflections(mesh);addPanelReflections(edges,true);
+      const outward=homeRoot.clone().sub(closedCenter);
+      if(outward.lengthSq()<modelSpan*modelSpan*1e-8)outward.copy(group.normal);
+      outward.normalize();
+      const tangent=new THREE.Vector3().crossVectors(outward,new THREE.Vector3(0,0,1));
+      if(tangent.lengthSq()<1e-8)tangent.crossVectors(outward,new THREE.Vector3(0,1,0));
+      tangent.normalize();
+      // Fan away from each home position, tangential to its safe exterior plane.
+      const lateral=homeRoot.clone().sub(closedCenter);
+      lateral.addScaledVector(landingNormal,-lateral.dot(landingNormal));
+      if(lateral.lengthSq()<modelSpan*modelSpan*1e-8){
+        lateral.copy(tangent);
+        if(lateral.lengthSq()<1e-8)lateral.set(1,0,0).cross(landingNormal);
+        if(lateral.lengthSq()<1e-8)lateral.set(0,1,0).cross(landingNormal);
+      }
+      lateral.normalize();
+      const flightOffset=landingNormal.clone().multiplyScalar(modelSpan*(.9+(index%3)*.14))
+        .addScaledVector(lateral,modelSpan*.65);
+      glassLayers.push({mesh,edges,isStrip:false,homeRoot:homeRoot.clone(),outward,tangent,
+        landingNormal,flightOffset,landingVertex:new THREE.Vector3(),orbit:makeOrbit(true,index),
+        targetPosition:new THREE.Vector3(),targetQuaternion:new THREE.Quaternion()});
+      // One filled glass panel and its attached lit outline per source face.
+      // Avoid a second overlapping copy competing for the same visual space.
+    });
+    // Separate crowded destinations along the exterior plane, never inward.
+    for(let pass=0;pass<12;pass++)for(let a=0;a<glassLayers.length;a++)for(let b=a+1;b<glassLayers.length;b++){
+      const first=glassLayers[a],second=glassLayers[b];
+      const delta=first.homeRoot.clone().add(first.flightOffset).sub(second.homeRoot).sub(second.flightOffset);
+      const distance=delta.length(),spacing=modelSpan*.52;
+      if(distance>=spacing)continue;
+      if(distance<1e-8)delta.copy(first.tangent).normalize();else delta.divideScalar(distance);
+      const firstShift=delta.clone().addScaledVector(first.landingNormal,-delta.dot(first.landingNormal));
+      const secondShift=delta.clone().addScaledVector(second.landingNormal,-delta.dot(second.landingNormal));
+      first.flightOffset.addScaledVector(firstShift,(spacing-distance)*.55);
+      second.flightOffset.addScaledVector(secondShift,-(spacing-distance)*.55);
+    }
+    createOrbitLines();
+    // Compile and render both glass and reflection materials behind the loader.
+    // First hover should not pay for shader compilation / texture upload.
+    try{
+      updateSymbolLighting(0);
+      glassLayers.forEach(layer=>{layer.mesh.visible=true;layer.mesh.material.opacity=.42;layer.edges.material.opacity=.52;});
+      if(symbolRenderer.compileAsync)await symbolRenderer.compileAsync(symbolScene,symbolCamera);
+      else symbolRenderer.compile(symbolScene,symbolCamera);
+      symbolRenderer.render(symbolScene,symbolCamera);
+      updateParts(0);
+      symbolRenderer.render(symbolScene,symbolCamera);
+      window.pwBoot?.heroReady();
+    }catch(error){
+      updateParts(0);console.error('Hero preparation failed:',error);
+      window.pwBoot?.heroReady(error);
+    }finally{heroWarming=false;}
+  },event=>window.pwBoot?.heroProgress(event.loaded,event.total),error=>{
+    console.error('GLB Load Failed:',error);heroWarming=false;window.pwBoot?.heroReady(error);
+  });
 
-    /*
-      Slow, broad movement keeps the reflected color transitions soft.
-      The lights travel large distances very gradually, preventing hard
-      circular hot spots from crossing the logo.
-    */
-    whiteLight.position.x = 11 + Math.cos(symbolTime * 0.09) * 7.5;
-    whiteLight.position.y = 6 + Math.sin(symbolTime * 0.075) * 3.2;
-    whiteLight.position.z = 16 + Math.sin(symbolTime * 0.065) * 2.0;
-    whiteLight.target.position.x = Math.sin(symbolTime * 0.055) * 1.0;
-    whiteLight.target.position.y = Math.cos(symbolTime * 0.05) * 0.5;
-    whiteLight.intensity = 32 + Math.sin(symbolTime * 0.12) * 3.5;
+  function setHovered(value){
+    value=value && (window.scrollY || 0)<=2;
+    if(value && !hovered && openAmount===0)randomizeOrbits();
+    hovered=value;window.performanteLogoHover=value;
+  }
+  function insideLogoRegion(){
+    const rect=symbolContainer.getBoundingClientRect();
+    if(pointer.x<rect.left || pointer.x>rect.right || pointer.y<rect.top || pointer.y>rect.bottom)return false;
+    let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+    // Project only the assembled source meshes. Detached panels must never
+    // enlarge the interaction area or keep a closing animation open.
+    for(const {mesh} of modelParts){
+      const box=mesh.geometry.boundingBox;
+      for(const x of [box.min.x,box.max.x])for(const y of [box.min.y,box.max.y])for(const z of [box.min.z,box.max.z]){
+        scratchPoint.set(x,y,z).applyMatrix4(mesh.matrixWorld).project(symbolCamera);
+        const px=rect.left+(scratchPoint.x*.5+.5)*rect.width;
+        const py=rect.top+(-scratchPoint.y*.5+.5)*rect.height;
+        minX=Math.min(minX,px);maxX=Math.max(maxX,px);
+        minY=Math.min(minY,py);maxY=Math.max(maxY,py);
+      }
+    }
+    const dx=Math.max(minX-pointer.x,0,pointer.x-maxX);
+    const dy=Math.max(minY-pointer.y,0,pointer.y-maxY);
+    return dx*dx+dy*dy<=hoverPadding*hoverPadding;
+  }
+  function updateHover(){
+    if(!model || (window.scrollY || 0)>2 || !pointer.seen || pointer.blocked || !heroFinePointer.matches || heroMotion.matches){setHovered(false);return;}
+    model.updateMatrixWorld(true);symbolCamera.updateMatrixWorld();
+    const rect=symbolContainer.getBoundingClientRect();
+    if(hovered){
+      // Start easing home on the very next frame after leaving the logo zone.
+      setHovered(insideLogoRegion());
+      return;
+    }
+    if(pointer.x<rect.left || pointer.x>rect.right || pointer.y<rect.top || pointer.y>rect.bottom){setHovered(false);return;}
+    pointerNdc.set((pointer.x-rect.left)/Math.max(rect.width,1)*2-1,-(pointer.y-rect.top)/Math.max(rect.height,1)*2+1);
+    raycaster.setFromCamera(pointerNdc,symbolCamera);
+    const hits=raycaster.intersectObjects(modelParts.map(part=>part.mesh),false);
+    // Re-enter the actual logo to reopen, including while the pieces return.
+    setHovered(hits.length>0);
+  }
+  function resetInteraction(){
+    pointer.seen=false;pointer.blocked=false;setHovered(false);
+    targetRotationX=0;targetRotationY=0;
+  }
+  window.addEventListener('pointermove',event=>{
+    if(event.pointerType==='touch')return;
+    pointer.seen=true;pointer.x=event.clientX;pointer.y=event.clientY;
+    pointer.blocked=!!event.target.closest?.('a,button,input,textarea,select,[contenteditable]');
+    const rect=symbolContainer.getBoundingClientRect();
+    targetRotationY=THREE.MathUtils.clamp((pointer.x-rect.left)/Math.max(rect.width,1)-.5,-.6,.6)*.7;
+    targetRotationX=THREE.MathUtils.clamp((pointer.y-rect.top)/Math.max(rect.height,1)-.5,-.6,.6)*.32;
+  },{passive:true});
+  window.addEventListener('scroll',resetInteraction,{passive:true});
+  window.addEventListener('blur',resetInteraction);
+  window.addEventListener('pointercancel',resetInteraction);
+  document.addEventListener('mouseleave',resetInteraction);
+  heroMotion.addEventListener('change',resetInteraction);
+  heroFinePointer.addEventListener('change',resetInteraction);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)resetInteraction();});
+  new IntersectionObserver(entries=>{
+    sceneVisible=entries[0].isIntersecting;
+    if(!sceneVisible)resetInteraction();
+  },{rootMargin:'80px'}).observe(symbolContainer);
 
-    softLight.position.x = -12 + Math.cos(symbolTime * 0.075 + Math.PI) * 7.0;
-    softLight.position.y = -1 + Math.cos(symbolTime * 0.06) * 3.0;
-    softLight.position.z = 15 + Math.sin(symbolTime * 0.07 + Math.PI) * 1.8;
-    softLight.target.position.x = Math.cos(symbolTime * 0.045) * 0.8;
-    softLight.target.position.y = Math.sin(symbolTime * 0.055) * 0.6;
-    softLight.intensity = 25 + Math.sin(symbolTime * 0.105 + 1.5) * 2.8;
+  function scrollOrbitState(){
+    const scroll=Math.max(0,window.scrollY || 0);
+    const height=Math.max(1,window.innerWidth<=760?symbolContainer.clientHeight:window.innerHeight);
+    if(scroll<=2 || !orbitMarquee)return {active:false,progress:0,growth:0,returning:0};
+    // The marquee is pinned later in its own transition. Its trigger's start
+    // preserves the original document position even while its DOM is pinned.
+    const trigger=window.ScrollTrigger?.getAll?.().find(item=>item.trigger===orbitMarquee);
+    const marqueeTop=trigger?trigger.start+height*.3:orbitMarquee.getBoundingClientRect().top+scroll;
+    // Fit the entire sequence to the existing hero/About layout, with no added
+    // space. Reassembly finishes just inside the existing transition.
+    const transitionStart=trigger?trigger.start:marqueeTop-height*.3;
+    const finish=Math.max(height*.65,transitionStart+height*.25);
+    const progress=THREE.MathUtils.clamp(scroll/finish,0,1);
+    return {active:true,progress,
+      // Open for 40%, linger fully open until 58%, then return for 42%.
+      // updateParts already smoothsteps the geometry interpolation; do not
+      // smoothstep twice and concentrate the movement into a short middle burst.
+      growth:THREE.MathUtils.clamp(progress/.40,0,1),
+      returning:THREE.MathUtils.clamp((progress-.58)/.42,0,1)};
+  }
 
-    rimLight.position.x = 4 + Math.sin(symbolTime * 0.06) * 4.5;
-    rimLight.position.y = 10 + Math.cos(symbolTime * 0.07) * 3.2;
-    rimLight.intensity = 20 + Math.sin(symbolTime * 0.11) * 2.4;
+  function updateParts(dt){
+    if(!model)return;
+    const scrollState=scrollOrbitState();
+    if(scrollState.active && !heroMotion.matches){
+      if(!scrollOrbitActive){
+        scrollOrbitOrigin=openAmount;
+        if(openAmount===0)randomizeOrbits();
+      }
+      scrollOrbitActive=true;
+      // Capture the current hover opening once, so starting to scroll while
+      // hovering cannot snap the pieces closed. Thereafter scroll owns spread.
+      openAmount=THREE.MathUtils.lerp(scrollOrbitOrigin,1,scrollState.growth)*(1-scrollState.returning);
+      scrollOrbitSpread=1+.22*scrollState.growth*(1-scrollState.returning);
+    }else{
+      scrollOrbitActive=false;scrollOrbitSpread=1;
+      const target=hovered && !heroMotion.matches?1:0;
+      const rate=target?orbitSettings.openRate:orbitSettings.closeRate;
+      openAmount+=(target-openAmount)*(1-Math.exp(-dt*rate));
+      if(!target && openAmount<.001)openAmount=0;
+      if(heroMotion.matches)openAmount=0;
+    }
+    if(openAmount>.001 && !heroMotion.matches)orbitTime+=dt*openAmount;
+    const amount=openAmount*openAmount*(3-2*openAmount);
+    updateShellMaterial(amount);
+    updateOrbitLines(amount);
+    model.updateMatrixWorld(true);
+    model.getWorldQuaternion(orbitWorldRotation);
+    orbitInverseRotation.copy(orbitWorldRotation).invert();
+    // The hollow shell stays assembled; its actual flat faces orbit and return.
+    glassLayers.forEach((layer,index)=>{
+      layer.mesh.visible=true;
+      // At zero spread these exact faces stay attached, with the same lighting.
+      orbitPosition(layer,layer.targetPosition);
+      const flight=THREE.MathUtils.smoothstep(amount,.18,.65);
+      // Follow the same straight path out and back; align before docking.
+      layer.targetPosition.sub(layer.homeRoot).multiplyScalar(amount);
+      layer.mesh.position.copy(layer.targetPosition);
+      // Keep the floating tilt bounded. Accumulated full turns would unwind
+      // rapidly as the docking envelope shrinks, causing visible flips.
+      const floatingTilt=layer.orbit.spin*.55+
+        Math.sin(orbitTime*layer.orbit.speed*.55+layer.orbit.phase)*.32;
+      const spin=floatingTilt*amount*flight;
+      layer.targetQuaternion.setFromAxisAngle(layer.orbit.axis,spin);
+      layer.mesh.quaternion.copy(layer.targetQuaternion);
+      // Keep every rotating corner outside its attachment plane. Use actual
+      // vertices so narrow and irregular panels receive only needed clearance.
+      const vertices=layer.mesh.geometry.getAttribute('position');
+      let clearance=0;
+      for(let vertex=0;vertex<vertices.count;vertex++){
+        layer.landingVertex.fromBufferAttribute(vertices,vertex);
+        const homeDepth=layer.landingVertex.dot(layer.landingNormal);
+        layer.landingVertex.applyQuaternion(layer.targetQuaternion);
+        clearance=Math.max(clearance,homeDepth-layer.landingVertex.dot(layer.landingNormal));
+      }
+      const approachDepth=layer.mesh.position.dot(layer.landingNormal);
+      layer.mesh.position.addScaledVector(layer.landingNormal,Math.max(0,clearance-approachDepth))
+        .add(layer.homeRoot);
+      // Keep the same finish and reflection pass in flight and at rest.
+      // Docking changes only the transform, never visibility or material.
+      // Slightly denser at full spread; preserve the established docked finish.
+      const spreadOpacity=THREE.MathUtils.smoothstep(amount,.35,.9);
+      layer.mesh.material.opacity=THREE.MathUtils.lerp(layer.isStrip?.58:.48,layer.isStrip?.68:.60,spreadOpacity);
+      if(layer.edges)layer.edges.material.opacity=THREE.MathUtils.lerp(.58,.68,spreadOpacity);
+    });
+  }
 
-    redAccentLight.position.x = -8 + Math.sin(symbolTime * 0.065) * 4.0;
-    redAccentLight.position.y = -7 + Math.cos(symbolTime * 0.06) * 2.6;
+  // Lighting has its own uninterrupted clock and fixed power/path settings.
+  // Hover, panel orbit time and reassembly never retune or reset this rig.
+  function updateSymbolLighting(dt){
+    updateOrbitLights(dt);
+    whiteLight.position.x = 11 + Math.cos(lightTime * 0.09) * 7.5;
+    whiteLight.position.y = 6 + Math.sin(lightTime * 0.075) * 3.2;
+    whiteLight.position.z = 16 + Math.sin(lightTime * 0.065) * 2.0;
+    whiteLight.target.position.x = Math.sin(lightTime * 0.055) * 1.0;
+    whiteLight.target.position.y = Math.cos(lightTime * 0.05) * 0.5;
+    whiteLight.intensity = 32 + Math.sin(lightTime * 0.12) * 3.5;
+
+    softLight.position.x = -12 + Math.cos(lightTime * 0.075 + Math.PI) * 7.0;
+    softLight.position.y = -1 + Math.cos(lightTime * 0.06) * 3.0;
+    softLight.position.z = 15 + Math.sin(lightTime * 0.07 + Math.PI) * 1.8;
+    softLight.target.position.x = Math.cos(lightTime * 0.045) * 0.8;
+    softLight.target.position.y = Math.sin(lightTime * 0.055) * 0.6;
+    softLight.intensity = 25 + Math.sin(lightTime * 0.105 + 1.5) * 2.8;
+
+    rimLight.position.x = 4 + Math.sin(lightTime * 0.06) * 4.5;
+    rimLight.position.y = 10 + Math.cos(lightTime * 0.07) * 3.2;
+    rimLight.intensity = 20 + Math.sin(lightTime * 0.11) * 2.4;
+
+    redAccentLight.position.x = -8 + Math.sin(lightTime * 0.065) * 4.0;
+    redAccentLight.position.y = -7 + Math.cos(lightTime * 0.06) * 2.6;
     redAccentLight.intensity =
       6.5 +
       Math.max(
         0,
-        Math.sin(symbolTime * 0.09 - 1.1)
+        Math.sin(lightTime * 0.09 - 1.1)
       ) * 3.0;
 
-    visibilityLight.intensity = 4.75 + Math.sin(symbolTime * 0.24) * 0.34;
-    logoKeyLight.intensity = 3.45 + Math.sin(symbolTime * 0.19 + 0.7) * 0.26;
-    logoSideFill.intensity = 2.65 + Math.sin(symbolTime * 0.16 + 1.1) * 0.18;
-    logoLowerFill.intensity = 2.05 + Math.sin(symbolTime * 0.21 + 2.0) * 0.16;
+    visibilityLight.intensity = 3.8 + Math.sin(lightTime * 0.24) * 0.34;
+    logoKeyLight.intensity = 3.45 + Math.sin(lightTime * 0.19 + 0.7) * 0.26;
+    logoSideFill.intensity = 2.65 + Math.sin(lightTime * 0.16 + 1.1) * 0.18;
+    logoLowerFill.intensity = 1.55 + Math.sin(lightTime * 0.21 + 2.0) * 0.16;
 
     /*
       Very slow oversized softbox drift creates broad gradient bands.
       Their dimensions and distance keep the panel edges out of view.
     */
-    studioKey.position.x = -10 + Math.sin(symbolTime * 0.055) * 5.0;
-    studioKey.position.y = 8 + Math.cos(symbolTime * 0.045) * 2.0;
-    studioKey.position.z = 15 + Math.sin(symbolTime * 0.04) * 1.2;
-    studioKey.intensity = 7.0 + Math.sin(symbolTime * 0.085) * 0.75;
+    studioKey.position.x = -10 + Math.sin(lightTime * 0.055) * 5.0;
+    studioKey.position.y = 8 + Math.cos(lightTime * 0.045) * 2.0;
+    studioKey.position.z = 15 + Math.sin(lightTime * 0.04) * 1.2;
+    studioKey.intensity = 7.0 + Math.sin(lightTime * 0.085) * 0.75;
     studioKey.lookAt(0, 0.15, 0);
 
-    studioSweep.position.x = 11 + Math.cos(symbolTime * 0.05) * 5.5;
-    studioSweep.position.y = 2 + Math.sin(symbolTime * 0.06) * 2.8;
-    studioSweep.position.z = 15 + Math.cos(symbolTime * 0.04) * 1.1;
-    studioSweep.intensity = 5.6 + Math.sin(symbolTime * 0.075 + 1.4) * 0.65;
+    studioSweep.position.x = 11 + Math.cos(lightTime * 0.05) * 5.5;
+    studioSweep.position.y = 2 + Math.sin(lightTime * 0.06) * 2.8;
+    studioSweep.position.z = 15 + Math.cos(lightTime * 0.04) * 1.1;
+    studioSweep.intensity = 5.6 + Math.sin(lightTime * 0.075 + 1.4) * 0.65;
     studioSweep.lookAt(0, 0, 0);
 
-    studioTopStrip.position.x = Math.sin(symbolTime * 0.04) * 5.0;
-    studioTopStrip.position.y = 12 + Math.cos(symbolTime * 0.045) * 1.3;
-    studioTopStrip.position.z = 10 + Math.cos(symbolTime * 0.05) * 1.5;
-    studioTopStrip.intensity = 5.2 + Math.sin(symbolTime * 0.07 + 0.5) * 0.6;
+    studioTopStrip.position.x = Math.sin(lightTime * 0.04) * 5.0;
+    studioTopStrip.position.y = 12 + Math.cos(lightTime * 0.045) * 1.3;
+    studioTopStrip.position.z = 10 + Math.cos(lightTime * 0.05) * 1.5;
+    studioTopStrip.intensity = 5.2 + Math.sin(lightTime * 0.07 + 0.5) * 0.6;
     studioTopStrip.lookAt(0, 0.1, 0);
 
-    studioRedStrip.position.x = -9 + Math.sin(symbolTime * 0.05 + 1.7) * 5.0;
-    studioRedStrip.position.y = -8 + Math.cos(symbolTime * 0.045) * 1.8;
+    studioRedStrip.position.x = -9 + Math.sin(lightTime * 0.05 + 1.7) * 5.0;
+    studioRedStrip.position.y = -8 + Math.cos(lightTime * 0.045) * 1.8;
     studioRedStrip.intensity =
       1.7 +
       Math.max(
         0,
-        Math.sin(symbolTime * 0.07 - 0.7)
+        Math.sin(lightTime * 0.07 - 0.7)
       ) * 0.8;
     studioRedStrip.lookAt(0, -0.35, 0);
 
-    edgeKeyLeft.position.y = 3.6 + Math.sin(symbolTime * 0.19) * 1.5;
-    edgeKeyLeft.intensity = 46 + Math.sin(symbolTime * 0.33) * 5 + logoHoverAmount * 18;
+    edgeKeyLeft.position.y = 3.6 + Math.sin(lightTime * 0.19) * 1.5;
+    edgeKeyLeft.intensity = 46 + Math.sin(lightTime * 0.33) * 5;
 
-    edgeKeyRight.position.y = -1.8 + Math.cos(symbolTime * 0.21) * 1.7;
-    edgeKeyRight.intensity = 42 + Math.sin(symbolTime * 0.29 + 1.2) * 5 + logoHoverAmount * 16;
+    edgeKeyRight.position.y = -1.8 + Math.cos(lightTime * 0.21) * 1.7;
+    edgeKeyRight.intensity = 42 + Math.sin(lightTime * 0.29 + 1.2) * 5;
 
-    whiteEdgeRim.position.x = -5.5 + Math.sin(symbolTime * 0.16) * 2.2;
-    whiteEdgeRim.position.y = 4.2 + Math.cos(symbolTime * 0.18) * 1.2;
-    whiteEdgeRim.intensity = 2.2 + logoHoverAmount * 4.8;
+    whiteEdgeRim.position.x = -5.5 + Math.sin(lightTime * 0.16) * 2.2;
+    whiteEdgeRim.position.y = 4.2 + Math.cos(lightTime * 0.18) * 1.2;
+    whiteEdgeRim.intensity = 2.2;
 
-    redEdgeRim.position.x = 5.8 + Math.cos(symbolTime * 0.15) * 2.0;
-    redEdgeRim.position.y = -2.8 + Math.sin(symbolTime * 0.17) * 1.3;
-    redEdgeRim.intensity = 1.35 + logoHoverAmount * 3.6;
+    redEdgeRim.position.x = 5.8 + Math.cos(lightTime * 0.15) * 2.0;
+    redEdgeRim.position.y = -2.8 + Math.sin(lightTime * 0.17) * 1.3;
+    redEdgeRim.intensity = 1.35;
 
-    lowerRedRim.position.x = -1.8 + Math.sin(symbolTime * 0.22) * 2.4;
-    lowerRedRim.intensity = 18 + logoHoverAmount * 32;
+    lowerRedRim.position.x = -1.8 + Math.sin(lightTime * 0.22) * 2.4;
+    lowerRedRim.intensity = 18;
 
-    if(model){
-      const pointerTiltX = targetRotationX * 0.6;
-      const pointerTiltY = targetRotationY * 0.6;
-
-      model.rotation.x +=
-        (pointerTiltX + Math.sin(symbolTime * 0.38) * 0.05 - model.rotation.x) *
-        0.035;
-
-      model.rotation.y +=
-        (automaticRotation + pointerTiltY - model.rotation.y) *
-        0.045;
-
-      model.rotation.z = Math.sin(symbolTime * 0.24) * 0.025;
-
-      updateParts(symbolTime);
-    }
-
-    symbolRenderer.render(
-      symbolScene,
-      symbolCamera
-    );
   }
 
+  const symbolClock=new THREE.Clock();
+  let lastSymbolFrame=0;
+  function animateSymbol(now=performance.now()){
+    requestAnimationFrame(animateSymbol);
+    // Avoid rendering the expensive glass scene at 120/144/240 Hz.
+    if(lastSymbolFrame && now-lastSymbolFrame<1000/60-2)return;
+    lastSymbolFrame=now;
+    const symbolTime=symbolClock.getElapsedTime();
+    const dt=Math.min(Math.max(symbolTime-previousSymbolTime,0),.04);
+    previousSymbolTime=symbolTime;
+    if(document.hidden || !sceneVisible || heroWarming || (window.pwBoot && !window.pwBoot.released))return;
+    updateHover(performance.now());
+    if(!heroMotion.matches)automaticRotation+=dt*.096*(1-openAmount*.8);
+    updateSymbolLighting(dt);
+
+    if(model){
+      if(!heroMotion.matches){
+        model.rotation.x+=(targetRotationX*.6+Math.sin(symbolTime*.38)*.05-model.rotation.x)*(1-Math.exp(-dt*2.1));
+        model.rotation.y+=(automaticRotation+targetRotationY*.6-model.rotation.y)*(1-Math.exp(-dt*2.7));
+        model.rotation.z=Math.sin(symbolTime*.24)*.025;
+      }
+      updateParts(dt);
+    }
+    symbolRenderer.render(symbolScene,symbolCamera);
+  }
   animateSymbol();
 }
 
@@ -2563,8 +2616,12 @@ function resizeScenes(){
         1
       );
 
+    symbolRenderer.getSize(symbolRenderSize);
+    // Mobile toolbar events fire resize even when the stable canvas is unchanged.
+    if(symbolRenderSize.x===width && symbolRenderSize.y===height)return;
     symbolCamera.aspect =
       width / height;
+    symbolCamera.fov = symbolViewportFov(height);
 
     symbolCamera
       .updateProjectionMatrix();
@@ -2574,6 +2631,8 @@ function resizeScenes(){
       height,
       false
     );
+    // A real resize clears WebGL; repaint before the browser can show a blank frame.
+    repaintSymbol?.();
   }
 }
 
@@ -2588,6 +2647,12 @@ window.addEventListener(
 );
 
 resizeScenes();
+// Dynamic viewport height and layout changes can resize the full-screen stage
+// without a conventional window resize (for example mobile browser chrome).
+if(symbolContainer && typeof ResizeObserver!=='undefined'){
+  const symbolViewportObserver=new ResizeObserver(resizeScenes);
+  symbolViewportObserver.observe(symbolContainer);
+}
 
 /* Before/after filmstrip carousel */
     (function(){
@@ -2752,7 +2817,21 @@ resizeScenes();
   if (!canvas || !hero) return;
 
   const ctx = canvas.getContext("2d");
+  if(!ctx)return;
+  const lineMotion=window.matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)');
+  let lineVisible=true;
+  let previousLineTime=0;
+  let lineFrame=0;
+  const lineObserver=new IntersectionObserver(entries=>{
+    lineVisible=entries[0].isIntersecting;
+    syncLineFrame();
+  });
+  lineObserver.observe(hero);
   const state = {
+    pulses: [],
+    impulse: 0,
+    impulseTarget: 0,
+    lastMove: 0,
     width: 0,
     height: 0,
     dpr: 1,
@@ -2829,16 +2908,24 @@ const lines = [
   }
 ];
 
+  function canvasPoint(clientX,clientY){
+    const rect=canvas.getBoundingClientRect();
+    return {x:(clientX-rect.left)*state.width/Math.max(rect.width,1),
+      y:(clientY-rect.top)*state.height/Math.max(rect.height,1)};
+  }
   function resize(){
-    const rect = hero.getBoundingClientRect();
-    state.width = Math.max(1, rect.width);
-    state.height = Math.max(1, rect.height);
-    state.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const width=Math.max(1,canvas.clientWidth),height=Math.max(1,canvas.clientHeight);
+    const dpr=Math.min(window.devicePixelRatio || 1,mobile()?1.25:1.5);
+    if(width===state.width && height===state.height && dpr===state.dpr)return;
+    state.width=width;state.height=height;
+    state.dpr = dpr;
     canvas.width = Math.round(state.width * state.dpr);
     canvas.height = Math.round(state.height * state.dpr);
-    canvas.style.width = state.width + "px";
-    canvas.style.height = state.height + "px";
+    // CSS owns the canvas size; its backing buffer follows the actual layout.
     ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+    state.arcBursts=[];state.pulses=[];state.lightningLine=null;
+    state.lightningAnchor=null;state.lightningUntil=0;state.previousTouchedLineIndex=null;
+    syncLineFrame();
   }
 
   function pointOnCurve(line, progress, time){
@@ -2944,9 +3031,15 @@ const lines = [
       Math.sin(orbitAngle) *
       orbitRadius;
 
+    // A light traveling ripple follows pointer energy while endpoints stay anchored.
+    const ripple = Math.sin(t*15-time*1.65+line.phase) *
+      Math.sin(t*6+time*.55+line.orbitPhase) * endpointFade *
+      (mobile()?2.2:3.8) * (0.25+state.impulse*.75);
+    const inertia = state.impulse * Math.sin(t*Math.PI) *
+      Math.sin(time*.7+line.phase) * (mobile()?2:5);
     return {
-      x: curveX + orbitX,
-      y: curveY + crossover + orbitY,
+      x: curveX + orbitX + inertia*.35,
+      y: curveY + crossover + orbitY + ripple + inertia,
       depth: Math.cos(orbitAngle)
     };
   }
@@ -2959,7 +3052,7 @@ const lines = [
       else ctx.lineTo(p.x, p.y);
     }
     const midDepth = pointOnCurve(line, 0.5, time).depth || 0;
-    const depthBrightness = 0.17 + (midDepth + 1) * 0.055;
+    const depthBrightness = 0.16 + (midDepth + 1) * 0.075;
     const depthWidth = 0.90 + (midDepth + 1) * 0.10;
 
     ctx.strokeStyle = `rgba(222,238,249,${depthBrightness})`;
@@ -3026,7 +3119,11 @@ const lines = [
     state.lightningLine = line;
     state.lightningProgress = Math.max(0.06, Math.min(0.94, progress));
     state.lightningAnchor = pointOnCurve(line, state.lightningProgress, state.time);
-    state.lightningUntil = now + 650;
+    state.lightningUntil = now + 540;
+    if(!lineMotion.matches){
+      state.pulses.push({line,progress:state.lightningProgress,born:now,strength:.75});
+      state.pulses=state.pulses.slice(-9);
+    }
     state.nextArcAt = now;
   }
 
@@ -3038,13 +3135,15 @@ const lines = [
     const targets = lines.filter(line => line.index !== sourceIndex);
 
     targets.forEach((target, i) => {
-      /* The hovered-line connection stays perfectly fixed. Only the opposite endpoint moves. */
+      // Store curve locations, so both connections follow the actual lines.
       const targetJitter = (Math.random() - 0.5) * 0.003;
 
       state.arcBursts.push({
+        sourceLine:state.lightningLine,targetLine:target,
+        sourceProgress:progress,targetProgress:Math.max(0.03,Math.min(0.97,progress+targetJitter)),
         start: {
-          x: state.lightningAnchor.x,
-          y: state.lightningAnchor.y
+          x: pointOnCurve(state.lightningLine,progress,state.time).x,
+          y: pointOnCurve(state.lightningLine,progress,state.time).y
         },
         end: pointOnCurve(
           target,
@@ -3087,7 +3186,7 @@ function drawArc(arc, now){
   */
   if(!arc.rays){
 
-    const rayCount = 3;
+    const rayCount = 2;
 
     arc.rays = [];
 
@@ -3225,7 +3324,14 @@ function drawArc(arc, now){
       ray.strength *
       flicker;
 
-    const points = ray.points;
+    // Preserve the bolt shape while its endpoints track their moving curves.
+    const start=pointOnCurve(arc.sourceLine,arc.sourceProgress,state.time);
+    const end=pointOnCurve(arc.targetLine,arc.targetProgress,state.time);
+    const points=ray.points.map((point,index)=>{
+      const t=index/(ray.points.length-1);
+      return {x:point.x+(start.x-arc.start.x)*(1-t)+(end.x-arc.end.x)*t,
+        y:point.y+(start.y-arc.start.y)*(1-t)+(end.y-arc.end.y)*t};
+    });
 
     /*
       Wide blue glow.
@@ -3337,17 +3443,84 @@ function drawArc(arc, now){
 
   return true;
 }
+  function drawPulse(pulse,now){
+    const age=(now-pulse.born)/1000;
+    if(age>1.45)return false;
+    const fade=Math.pow(1-age/1.45,2)*pulse.strength;
+    ctx.save();
+    ctx.globalCompositeOperation='lighter';
+    for(const direction of [-1,1]){
+      const center=pulse.progress+direction*age*.3;
+      if(center<=0 || center>=1)continue;
+      for(let i=0;i<9;i++){
+        const t=center-direction*i*.004;
+        if(t<0 || t>1)continue;
+        const a=pointOnCurve(pulse.line,t,state.time);
+        const b=pointOnCurve(pulse.line,Math.min(1,t+.003),state.time);
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=`rgba(210,238,255,${fade*(1-i/9)*.75})`;
+        ctx.lineWidth=1.3;ctx.shadowBlur=9;ctx.shadowColor='#a4cfff';ctx.stroke();
+      }
+      const tip=pointOnCurve(pulse.line,center,state.time);
+      ctx.fillStyle=`rgba(255,255,255,${fade*.7})`;
+      ctx.beginPath();ctx.arc(tip.x,tip.y,1.15,0,Math.PI*2);ctx.fill();
+    }
+    ctx.restore();return true;
+  }
+  window.addEventListener('pw-logo-spark',event=>{
+    if(lineMotion.matches || !lineVisible)return;
+    const {x,y}=canvasPoint(event.detail.x,event.detail.y);
+    // Find the nearest point on each existing line; no new long paths are added.
+    const candidates=lines.map(line=>{
+      let best={distance:Infinity,progress:.5};
+      for(let i=0;i<=50;i++){
+        const point=pointOnCurve(line,i/50,state.time);
+        const distance=Math.hypot(point.x-x,point.y-y);
+        if(distance<best.distance)best={distance,progress:i/50};
+      }
+      return {line,...best};
+    }).sort((a,b)=>a.distance-b.distance);
+    const nearest=candidates[0];
+    if(nearest.distance<Math.min(state.width*.35,340)){
+      state.pulses.push({line:nearest.line,progress:nearest.progress,born:performance.now(),strength:event.detail.strength});
+      state.pulses=state.pulses.slice(-9);
+      state.impulseTarget=Math.max(state.impulseTarget,.65);
+    }
+  });
+  function syncLineFrame(){
+    if(lineFrame)cancelAnimationFrame(lineFrame);
+    lineFrame=0;previousLineTime=0;
+    if(lineVisible && !document.hidden)lineFrame=requestAnimationFrame(render);
+  }
+  document.addEventListener('visibilitychange',syncLineFrame);
+  lineMotion.addEventListener('change',()=>{
+    state.pulses=[];state.arcBursts=[];state.lightningUntil=0;
+    state.impulse=0;state.impulseTarget=0;state.currentNX=0;state.currentNY=0;
+    syncLineFrame();
+  });
   function render(now){
-    state.time = now * 0.001;
-    state.currentNX += (state.targetNX - state.currentNX) * 0.025;
-    state.currentNY += (state.targetNY - state.currentNY) * 0.025;
+    lineFrame=0;
+    if(!lineVisible || document.hidden)return;
+    if(previousLineTime && now-previousLineTime<1000/60-.5){
+      lineFrame=requestAnimationFrame(render);return;
+    }
+    const dt=previousLineTime?Math.min((now-previousLineTime)/1000,.05):1/60;
+    previousLineTime=now;
+    if(!lineMotion.matches){
+      state.time+=dt;
+      const smoothing=1-Math.exp(-dt*2.1);
+      state.currentNX+=(state.targetNX-state.currentNX)*smoothing;
+      state.currentNY+=(state.targetNY-state.currentNY)*smoothing;
+      state.impulse+=(state.impulseTarget-state.impulse)*(1-Math.exp(-dt*5));
+      state.impulseTarget*=Math.exp(-dt*3);
+    }
     ctx.clearRect(0, 0, state.width, state.height);
 
-    lines.forEach(line => {
-      drawLine(line, state.time);
-      drawShine(line, state.time);
+    // Rear curves are painted first to strengthen the existing intertwined depth.
+    [...lines].sort((a,b)=>pointOnCurve(a,.5,state.time).depth-pointOnCurve(b,.5,state.time).depth).forEach(line=>{
+      drawLine(line,state.time);drawShine(line,state.time);
     });
-
+    if(lineMotion.matches)return;
     updateTouchState();
 
     const currentTouchedLineIndex =
@@ -3378,7 +3551,8 @@ function drawArc(arc, now){
     }
 
     state.arcBursts = state.arcBursts.filter(arc => drawArc(arc, now));
-    requestAnimationFrame(render);
+    state.pulses=state.pulses.filter(pulse=>drawPulse(pulse,now));
+    lineFrame=requestAnimationFrame(render);
   }
 
   hero.addEventListener("pointerenter", event => {
@@ -3386,11 +3560,16 @@ function drawArc(arc, now){
   });
 
   hero.addEventListener("pointermove", event => {
-    const rect = hero.getBoundingClientRect();
-    state.pointerX = event.clientX - rect.left;
-    state.pointerY = event.clientY - rect.top;
-    state.targetNX = (state.pointerX / Math.max(rect.width, 1) - 0.5) * 2;
-    state.targetNY = (state.pointerY / Math.max(rect.height, 1) - 0.5) * 2;
+    const {x:nextX,y:nextY}=canvasPoint(event.clientX,event.clientY);
+    const now=performance.now();
+    if(state.lastMove && now-state.lastMove<140){
+      const speed=Math.hypot(nextX-state.pointerX,nextY-state.pointerY)/Math.max(now-state.lastMove,8);
+      state.impulseTarget=Math.min(1,speed*.25);
+    }
+    state.lastMove=now;
+    state.pointerX=nextX;state.pointerY=nextY;
+    state.targetNX = (state.pointerX / Math.max(state.width, 1) - 0.5) * 2;
+    state.targetNY = (state.pointerY / Math.max(state.height, 1) - 0.5) * 2;
     state.hovering = event.pointerType !== "touch";
   });
 
@@ -3402,8 +3581,10 @@ function drawArc(arc, now){
   });
 
   window.addEventListener("resize", resize, { passive: true });
+  canvas.style.width='100%';canvas.style.height='100%';
+  new ResizeObserver(resize).observe(canvas);
+  window.visualViewport?.addEventListener('resize',resize,{passive:true});
   resize();
-  requestAnimationFrame(render);
 })();
 
 /* Lenis smooth scroll init */
@@ -3411,7 +3592,9 @@ function drawArc(arc, now){
     const lenis = new Lenis({
       autoRaf: true,
       smoothWheel: true,
-      syncTouch: false,
+      syncTouch: true,
+      touchMultiplier: 0.8,
+      syncTouchLerp: 0.1,
       lerp: 0.1,
       anchors: {
         offset: 110
@@ -3432,7 +3615,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (panels.length < 2) return;
 
   const steps = panels.length - 1;
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce) and (max-width: 760px)").matches;
   const lerpAmount = reduceMotion ? 1 : 0.12;
 
   let targetProgress = 0;

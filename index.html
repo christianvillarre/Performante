@@ -1,26 +1,157 @@
 <!doctype html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/home.css">
+<script>
+/* Page transitions: run before the page is parsed. */
+/* Shared cross-document blinds. Never takes ownership of page scrolling. */
+(() => {
+  const key='pw-page-transition';
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+  let arrival=false,overlay,busy=false,failsafe;
+  try {
+    const saved=JSON.parse(sessionStorage.getItem(key)||'null');
+    sessionStorage.removeItem(key);
+    arrival=!!saved && Date.now()-saved.time<15000 && saved.url===location.href;
+  } catch {}
+  arrival=arrival || performance.getEntriesByType('navigation')[0]?.type==='back_forward';
+  if(arrival)document.documentElement.classList.add('pw-page-entering');
+  function reset(){
+    clearTimeout(failsafe);busy=false;
+    document.documentElement.classList.remove('pw-page-entering');
+    overlay?.getAnimations({subtree:true}).forEach(animation=>animation.cancel());
+    overlay?.classList.remove('is-active','is-covered');
+  }
+  async function animate(cover){
+    overlay.classList.add('is-active');
+    const jobs=[...overlay.children].map((strip,index)=>strip.animate(
+      [{transform:`scaleY(${cover?0:1})`},{transform:`scaleY(${cover?1:0})`}],
+      {duration:reduced.matches?1:600,delay:reduced.matches?0:(cover?7-index:index)*45,easing:'cubic-bezier(.76,0,.24,1)',fill:'forwards'}
+    ));
+    await Promise.all(jobs.map(job=>job.finished.catch(()=>{})));
+  }
+  document.addEventListener('DOMContentLoaded',()=>{
+    overlay=document.createElement('div');overlay.className='pw-page-blinds';overlay.setAttribute('aria-hidden','true');
+    for(let i=0;i<8;i++){const strip=document.createElement('span');strip.style.setProperty('--i',i);overlay.appendChild(strip);}
+    document.body.appendChild(overlay);
+    if(arrival){
+      overlay.classList.add('is-active','is-covered');
+      document.documentElement.classList.remove('pw-page-entering');
+      const ready=window.pwBoot?.ready || (document.readyState==='complete'?Promise.resolve():new Promise(resolve=>window.addEventListener('load',resolve,{once:true})));
+      const limit=window.pwBoot?5000:1200;
+      Promise.race([ready,new Promise(resolve=>setTimeout(resolve,limit))]).then(()=>animate(false)).finally(reset);
+    }
+    document.addEventListener('click',async event=>{
+      if(event.defaultPrevented || event.button!==0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)return;
+      const link=event.target.closest?.('a[href]');
+      if(!link || link.hasAttribute('download') || (link.target && link.target!=='_self') || link.hasAttribute('data-no-transition'))return;
+      const url=new URL(link.href,location.href);
+      if(url.origin!==location.origin || !/^https?:$/.test(url.protocol) || (!url.pathname.endsWith('/') && !/\.html$/i.test(url.pathname)))return;
+      if(url.pathname===location.pathname && url.search===location.search)return;
+      event.preventDefault();if(busy)return;busy=true;
+      // Release the cover if a cancelled navigation leaves this document alive.
+      failsafe=setTimeout(reset,6000);
+      await animate(true);
+      try{sessionStorage.setItem(key,JSON.stringify({url:url.href,time:Date.now()}));}catch{}
+      location.assign(url.href);
+    });
+  },{once:true});
+  window.addEventListener('pageshow',event=>{
+    if(!event.persisted)return;
+    reset();
+    const toggle=document.getElementById('pwMenuToggle');
+    if(toggle?.getAttribute('aria-expanded')==='true')toggle.click();
+    if(overlay){overlay.classList.add('is-covered');animate(false).finally(reset);}
+  });
+})();
+
+</script>
   <meta charset="UTF-8" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Performante Wraps</title>
+
+<style id="pw-loader-critical">
+.pw-loader{display:none}.pw-loading{overflow:hidden!important}
+.pw-loading .pw-loader{display:flex;position:fixed;inset:0;overflow:hidden;isolation:isolate;z-index:2147483646;align-items:center;justify-content:center;background:#050608;color:#fff;font-family:Arial,sans-serif;transition:opacity .5s ease}
+.pw-loader.is-done{opacity:0;pointer-events:none}
+.pw-loader__inner{position:relative;z-index:1;width:min(320px,calc(100% - 64px));text-align:center}
+.pw-loader__scene{position:absolute;inset:0;pointer-events:none;opacity:.9}
+.pw-loader__lines{display:block;width:100%;height:100%;overflow:visible}
+.pw-loader__line{fill:none;stroke:#516174;stroke-width:1;vector-effect:non-scaling-stroke;opacity:.32}
+.pw-loader__line--moving{stroke:#d7e7f6;stroke-width:1.5;stroke-linecap:round;opacity:.92;stroke-dasharray:155 845;filter:drop-shadow(0 0 7px #8eb6d9);animation:pw-loader-line 3.8s linear infinite}
+.pw-loader__line--two{animation-duration:4.6s;animation-delay:-1.7s;stroke:#9db9cf}
+.pw-loader__line--three{animation-duration:5.2s;animation-delay:-3.1s;stroke:#b8cee0}
+.pw-loader__logo{position:relative;width:clamp(150px,28vh,260px);aspect-ratio:1;margin:0 auto 32px}
+.pw-loader__logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:brightness(0) invert(1)}
+.pw-loader__logo-ghost{opacity:.12}
+.pw-loader__logo-part{position:absolute;inset:0;mask-size:100% 100%;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;-webkit-mask-repeat:no-repeat}
+.pw-loader__logo-part img{clip-path:inset(0 100% 0 0);transition:clip-path .6s ease}
+@media(prefers-reduced-motion:reduce) and (max-width:760px){.pw-loader__logo-part img{transition:none}}
+.pw-loader__track{height:2px;width:100%;background:#292d34;overflow:hidden;border-radius:2px}
+.pw-loader__bar{display:block;width:100%;height:100%;background:#e0e5ed;transform:scaleX(0);transform-origin:left;transition:transform .45s ease}
+.pw-loader button{color:#eee;background:#ffffff06;border:1px solid #ffffff30;border-radius:2px;padding:12px 22px;margin-top:25px;cursor:pointer;font:inherit;font-size:12px}
+.pw-loader button:hover{background:#ffffff12}.pw-loader button:focus-visible{outline:2px solid white;outline-offset:4px}
+@keyframes pw-loader-line{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+@media(prefers-reduced-motion:reduce) and (max-width:760px){.pw-loading .pw-loader,.pw-loader__bar{transition:none}.pw-loader__line--moving{animation:none;stroke-dasharray:none;opacity:.35}}
+</style>
+<script>
+/* Inline bootstrap makes the cover independent of external CSS/JS requests. */
+(()=>{
+  document.documentElement.classList.add('pw-loading');
+  let resolveReady;
+  const ready=new Promise(resolve=>resolveReady=resolve);
+  const boot=window.pwBoot={released:false,startedAt:performance.now(),ready,resources:new WeakMap(),hero:{done:false,error:null,fraction:0},
+    heroProgress(loaded,total){
+      if(this.hero.done)return;
+      if(total>0)this.hero.fraction=Math.min(.85,loaded/total*.85);
+      window.dispatchEvent(new Event('pw:load-progress'));
+    },
+    heroReady(error=null){
+      this.hero.done=true;this.hero.error=error;this.hero.fraction=1;
+      window.dispatchEvent(new Event('pw:load-progress'));
+    },
+    release(){
+      if(this.released)return;this.released=true;
+      const page=document.getElementById('pwPage');if(page)page.inert=false;
+      const cover=document.getElementById('pwLoader');cover?.classList.add('is-done');
+      if(cover?.contains(document.activeElement)){page?.setAttribute('tabindex','-1');page?.focus({preventScroll:true});}
+      clearTimeout(deadline);resolveReady();window.dispatchEvent(new Event('pw:ready'));
+      setTimeout(()=>{document.documentElement.classList.remove('pw-loading');cover?.remove();window.ScrollTrigger?.refresh();},500);
+    }
+  };
+  // Capture requests that complete before the deferred loader runs.
+  const rememberResource=event=>{
+    const node=event.target;
+    if(node && (node.tagName==='SCRIPT' || node.tagName==='LINK')){
+      boot.resources.set(node,{ok:event.type==='load'});
+      window.dispatchEvent(new Event('pw:load-progress'));
+    }
+  };
+  window.addEventListener('load',rememberResource,true);
+  window.addEventListener('error',rememberResource,true);
+  // Enter automatically even when a noncritical request is slow or unavailable.
+  const deadline=setTimeout(()=>boot.release(),4500);
+})();
+</script>
+<link rel="preload" as="image" href="/images/logo-icon.png" fetchpriority="high">
+
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&family=Zalando+Sans+SemiExpanded:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&family=Zalando+Sans+SemiExpanded:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 
 <!-- in <head> -->
-<link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
+<link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css" media="print" onload="this.media='all'">
 
 
 
-<link rel="stylesheet" href="/css/styles.css" />
-<link rel="stylesheet" href="css/navbar.css" />
 
 <script type="importmap">
 {
@@ -31,42 +162,57 @@
 }
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/lenis@1.3.18/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://unpkg.com/lenis@1.3.18/dist/lenis.min.js" defer></script>
+<!-- Keep this after GSAP: Selected Work and Process initialize inside home.js. -->
+<script src="./js/home.js" defer></script>
 
 
-
-<style id="pw5-critical-sections">
-/* BLACK5 visibility safeguard — ensures added homepage sections can never be clipped/hidden by legacy animation states */
-.pw5-why,.pw5-process,.pw5-proof,.pw6-final-cta{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:80!important;transform:none!important;}
-.pw5-closing-cta{display:flex!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:80!important;transform:none!important;}
-.pw5-why{background:#0a0a0a!important;color:#f2f2f2!important;min-height:720px!important;padding:120px 0!important;}
-.pw5-process{background:#0a0a0a!important;color:#f2f2f2!important;min-height:900px!important;padding:140px 0!important;}
-.pw5-proof{background:#0a0a0a!important;color:#f2f2f2!important;min-height:190px!important;}
-.pw5-closing-cta{min-height:760px!important;}
-.pw6-final-cta{background:#0a0a0a!important;}
-.pw5-shell{width:min(calc(100% - 80px),1600px)!important;margin:0 auto!important;}
-.pw5-section-head,.pw5-process-head,.pw5-why-grid,.pw5-process-grid,.pw5-proof-grid,.pw5-closing-cta__inner{visibility:visible!important;opacity:1!important;}
-.pw5-why-item,.pw5-process-step,.pw5-proof-item,.pw5-closing-cta__bottom{visibility:visible!important;opacity:1!important;}
-</style>
 
 </head>
 
-<body data-black7-build="mini-cta-footer-added">
+<body class="index2-menu" data-black7-build="mini-cta-footer-added">
+
+<div id="pwLoader" class="pw-loader" role="dialog" aria-modal="true" aria-label="Loading Performante" tabindex="-1">
+  <div class="pw-loader__scene" aria-hidden="true">
+    <svg class="pw-loader__lines" viewBox="0 0 1000 700" preserveAspectRatio="none" focusable="false">
+      <path class="pw-loader__line" pathLength="1000" d="M -80 430 C 160 220 270 520 480 350 S 800 170 1080 310"/>
+      <path class="pw-loader__line pw-loader__line--moving" pathLength="1000" d="M -80 430 C 160 220 270 520 480 350 S 800 170 1080 310"/>
+      <path class="pw-loader__line" pathLength="1000" d="M 200 -80 C 430 130 170 245 520 355 S 720 570 880 780"/>
+      <path class="pw-loader__line pw-loader__line--moving pw-loader__line--two" pathLength="1000" d="M 200 -80 C 430 130 170 245 520 355 S 720 570 880 780"/>
+      <path class="pw-loader__line" pathLength="1000" d="M -70 140 C 300 180 310 600 535 390 S 780 340 1080 610"/>
+      <path class="pw-loader__line pw-loader__line--moving pw-loader__line--three" pathLength="1000" d="M -70 140 C 300 180 310 600 535 390 S 780 340 1080 610"/>
+    </svg>
+  </div>
+  <div class="pw-loader__inner">
+    <div class="pw-loader__logo" aria-hidden="true">
+      <img class="pw-loader__logo-ghost" src="/images/logo-icon.png" width="280" height="280" fetchpriority="high" decoding="async" alt="" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='/images/logo.png'}else{this.hidden=true}">
+      <span class="pw-loader__logo-part" style="clip-path:inset(0.0000000% 0 83.3333333% 0)"><img src="/images/logo-icon.png" width="280" height="280" fetchpriority="high" decoding="async" alt="" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='/images/logo.png'}else{this.hidden=true}"></span>
+      <span class="pw-loader__logo-part" style="clip-path:inset(16.6666667% 0 66.6666667% 0)"><img src="/images/logo-icon.png" width="280" height="280" fetchpriority="high" decoding="async" alt="" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='/images/logo.png'}else{this.hidden=true}"></span>
+      <span class="pw-loader__logo-part" style="clip-path:inset(33.3333333% 0 50.0000000% 0)"><img src="/images/logo-icon.png" width="280" height="280" fetchpriority="high" decoding="async" alt="" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='/images/logo.png'}else{this.hidden=true}"></span>
+      <span class="pw-loader__logo-part" style="clip-path:inset(50.0000000% 0 33.3333333% 0)"><img src="/images/logo-icon.png" width="280" height="280" fetchpriority="high" decoding="async" alt="" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='/images/logo.png'}else{this.hidden=true}"></span>
+      <span class="pw-loader__logo-part" style="clip-path:inset(66.6666667% 0 16.6666667% 0)"><img src="/images/logo-icon.png" width="280" height="280" fetchpriority="high" decoding="async" alt="" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='/images/logo.png'}else{this.hidden=true}"></span>
+      <span class="pw-loader__logo-part" style="clip-path:inset(83.3333333% 0 0.0000000% 0)"><img src="/images/logo-icon.png" width="280" height="280" fetchpriority="high" decoding="async" alt="" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='/images/logo.png'}else{this.hidden=true}"></span>
+    </div>
+    <div class="pw-loader__track" id="pwLoadProgress" role="progressbar" aria-label="Website loading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="pw-loader__bar" id="pwLoadBar"></span></div>
+    <span id="pwLoadMessage" hidden></span>
+  </div>
+</div>
+<div id="pwPage">
+
 
 <header class="pw-nav" id="pwNav">
-  <a class="pw-nav__logo" href="/" aria-label="Performante Wraps home">
+  <a class="pw-nav__logo" href="/performante-3d/" aria-label="Performante Wraps home">
     <img src="/images/logo.png" alt="Performante Wraps">
   </a>
 
   <div class="pw-nav__actions">
-    <a class="pw-nav__chat" href="/contact.html"><span class="pw-nav__chat-label">Let’s Talk</span></a>
     <button class="pw-nav__toggle" id="pwMenuToggle" type="button" aria-label="Open menu" aria-expanded="false">
-      <span class="pw-nav__toggle-label">Menu</span>
       <span class="pw-nav__toggle-icon" aria-hidden="true">
         <span class="pw-nav__toggle-line pw-nav__toggle-line--one"></span>
         <span class="pw-nav__toggle-line pw-nav__toggle-line--two"></span>
+        <span class="pw-nav__toggle-line pw-nav__toggle-line--three"></span>
       </span>
     </button>
   </div>
@@ -80,13 +226,13 @@
   </div>
 
   <nav class="pw-menu__links" aria-label="Primary navigation">
-    <a href="/wraps/custom.html">Vehicle Wraps</a>
-    <a href="/wraps/commercial-fleet.html">Commercial Wraps</a>
-    <a href="/paint-protection-film.html">Paint Protection</a>
-    <a href="/window-tint.html">Window Tint</a>
-    <a href="/gallery.html">Gallery</a>
-    <a href="/about.html">About</a>
-    <a href="/contact.html">Contact</a>
+    <a href="vehicle-wraps.html">Vehicle Wraps</a>
+    <a href="commercial-wraps.html">Commercial Wraps</a>
+    <a href="architectural-wraps.html">Architectural Wraps</a>
+    <a href="paint-protection.html">Paint Protection</a>
+    <a href="projects.html">Projects &amp; Case Studies</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
   </nav>
 
   <div class="pw-menu__footer">
@@ -99,10 +245,10 @@
     <div class="pw-menu__socials">
       <p class="pw-menu__footer-label">Social</p>
       <div class="pw-menu__socials-grid">
-        <a href="#">Instagram</a>
-        <a href="#">Facebook</a>
-        <a href="#">Tiktok</a>
-        <a href="#">LinkedIn</a>
+        <a href="/performante-3d/#">Instagram</a>
+        <a href="/performante-3d/#">Facebook</a>
+        <a href="/performante-3d/#">Tiktok</a>
+        <a href="/performante-3d/#">LinkedIn</a>
       </div>
     </div>
   </div>
@@ -123,11 +269,11 @@
         <div class="hero-topbar">
         <!-- Center Logo 
         <div class="hero-topbar__center">
-          <img src="images/GriffinIcon.png" alt="Griffin Integrity">
+          <img src="/images/GriffinIcon.png" alt="Griffin Integrity">
         </div>-->
       </div>
 
-         <!--<img id="heroBottomIcon" src="images/GriffinText.png" alt="" aria-hidden="true">-->
+         <!--<img id="heroBottomIcon" src="/images/GriffinText.png" alt="" aria-hidden="true">-->
         <div class="stackflow-shell">
           <div class="stackflow-main">
 
@@ -149,27 +295,18 @@
           <div class="wrap-hero-copy">
             <!--<p class="wrap-scroll-copy__eyebrow">Performante Wraps</p>-->
             <h1>The Next Wave of Surface Design</h1>
-            <a class="wrap-project-button pw-btn" href="/contact.html">
-              <span class="pw-btn__label">Start a Project</span>
-              <span class="pw-btn__arrow" aria-hidden="true">
-                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
+            <a class="hero-project-link index2-text-link index2-motion-link" href="/performante-3d/contact.html">
+              <span class="hero-project-link__arrow-window hero-project-link__arrow-window--left" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="index2-text-link__label">Start a Project</span>
+              <span class="hero-project-link__arrow-window hero-project-link__arrow-window--right" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="hero-project-link__underline" aria-hidden="true"></span>
             </a>
           </div>
 
           <div class="wrap-hero-side">
             <div class="wrap-hero-stats">
               <div class="wrap-hero-stats__est">
-                <span class="wrap-hero-stats__icon" aria-hidden="true">
-                  <svg viewBox="0 0 40 40" fill="none">
-                    <circle cx="20" cy="20" r="14.5" stroke="currentColor" stroke-width="1.25"/>
-                    <ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="currentColor" stroke-width="1.25"/>
-                    <ellipse cx="20" cy="20" rx="14.5" ry="6.5" stroke="currentColor" stroke-width="1.25"/>
-                  </svg>
-                </span>
-                <span>EST. 2018</span>
+                <img class="wrap-hero-stats__3m" src="./images/3m-white.png" alt="3M" width="96" height="51">
               </div>
 
               <div class="wrap-hero-stats__years">
@@ -219,7 +356,7 @@
 
         <div class="wrap-about-panel__motto">
           <div class="wrap-about-panel__motto-media">
-            <img src="/images/DSC07534.jpeg" alt="Performante Wraps detail shot" loading="lazy">
+            <img src="/images/stock1.jpeg" alt="Performante Wraps detail shot" loading="lazy">
           </div>
         </div>
 
@@ -230,14 +367,10 @@
             of how design should function in the real world.
           </p>
 
-          <a class="wrap-project-button pw-btn" href="/contact.html">
-              <span class="pw-btn__label">More About Us</span>
-              <span class="pw-btn__arrow" aria-hidden="true">
-                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-            </a>
+          <a class="about-project-link index2-text-link" href="about.html">
+            <span class="index2-text-link__label">More About Us</span>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </div>
 
       </div>
@@ -249,22 +382,49 @@
 </article>
       </div>
 
+
+
+      <section class="pw-truck-roll" id="truckRoll" aria-label="Featured wrapped trucks">
+        <div class="pw-truck-roll__stage">
+          <img class="pw-truck-roll__truck" src="/images/truck4.png" alt="All Type branded pickup" data-title="Paint Protection Film" data-copy="Bold lettering turns this lifted pickup into a rolling brand statement." loading="lazy">
+          <img class="pw-truck-roll__truck" src="/images/truck1.png" alt="Rayce-Way Auto Glass service van" data-title="Custom Wrap Designs" data-copy="High-contrast fleet graphics make this service van easy to spot and remember." loading="lazy">
+          <img class="pw-truck-roll__truck" src="/images/truck2.png" alt="Blue sport compact car" data-title="Fleet & Commercial Wraps" data-copy="A vivid blue finish shows how color can transform a daily drive." loading="lazy">
+          <div class="pw-truck-roll__details">
+            <p class="pw-truck-roll__description" aria-live="polite">Bold lettering turns this lifted pickup into a rolling brand statement.</p>
+            <a class="pw-truck-roll__project" href="/performante-3d/contact.html">Start a Project <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+          <p class="pw-truck-roll__caption" aria-live="polite">Porsche - Custom Stripes</p>
+        </div>
+      </section>
+
       <div class="wrap-marquee-pin-group">
-<section class="wrap-marquee" aria-label="Performante services">
+<section class="wrap-marquee wrap-marquee--brands" aria-label="Vehicle brands">
           <div class="wrap-marquee__row">
             <div class="wrap-marquee__track">
-            <span>Vehicle Wraps</span><i>•</i>
-            <span>Commercial Fleets</span><i>•</i>
-            <span>PPF</span><i>•</i>
-            <span>Architectural Wraps</span><i>•</i>
-            <span>Window Tint</span><i>•</i>
-            <span>Ceramic Coating</span><i>•</i>
-            <span aria-hidden="true">Vehicle Wraps</span><i aria-hidden="true">•</i>
-            <span aria-hidden="true">Commercial Fleets</span><i aria-hidden="true">•</i>
-            <span aria-hidden="true">PPF</span><i aria-hidden="true">•</i>
-            <span aria-hidden="true">Architectural Wraps</span><i aria-hidden="true">•</i>
-            <span aria-hidden="true">Window Tint</span><i aria-hidden="true">•</i>
-            <span aria-hidden="true">Ceramic Coating</span><i aria-hidden="true">•</i>
+              <div class="wrap-marquee__brands">
+                <img src="./images/vehicle-brands/aston-martin-white.png" alt="Aston Martin">
+                <img src="./images/vehicle-brands/audi-rs-white.png" alt="Audi RS">
+                <img src="./images/vehicle-brands/bentley-white.png" alt="Bentley">
+                <img src="./images/vehicle-brands/bmw-m-white.png" alt="BMW M">
+                <img src="./images/vehicle-brands/ferrari-white.png" alt="Ferrari">
+                <img src="./images/vehicle-brands/lamborghini-white.png" alt="Lamborghini">
+                <img src="./images/vehicle-brands/mclaren-white.png" alt="McLaren">
+                <img src="./images/vehicle-brands/mercedes-benz-white.png" alt="Mercedes-Benz">
+                <img src="./images/vehicle-brands/porsche-white.png" alt="Porsche">
+                <img src="./images/vehicle-brands/rolls-royce-white.png" alt="Rolls-Royce">
+              </div>
+              <div class="wrap-marquee__brands" aria-hidden="true">
+                <img src="./images/vehicle-brands/aston-martin-white.png" alt="">
+                <img src="./images/vehicle-brands/audi-rs-white.png" alt="">
+                <img src="./images/vehicle-brands/bentley-white.png" alt="">
+                <img src="./images/vehicle-brands/bmw-m-white.png" alt="">
+                <img src="./images/vehicle-brands/ferrari-white.png" alt="">
+                <img src="./images/vehicle-brands/lamborghini-white.png" alt="">
+                <img src="./images/vehicle-brands/mclaren-white.png" alt="">
+                <img src="./images/vehicle-brands/mercedes-benz-white.png" alt="">
+                <img src="./images/vehicle-brands/porsche-white.png" alt="">
+                <img src="./images/vehicle-brands/rolls-royce-white.png" alt="">
+              </div>
             </div>
           </div>
         </section>
@@ -290,9 +450,9 @@
     </div>
 
     <div class="wrap-branding-grid">
-      <a class="wrap-branding-card" href="#">
+      <a class="wrap-branding-card" href="/performante-3d/#">
         <div class="wrap-branding-card__media">
-          <img src="/images/_DSC7177.jpg" alt="Architectural building wrap">
+          <img src="/images/_DSC7177.jpg" alt="Architectural building wrap" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="wrap-branding-card__overlay">
           <div class="wrap-branding-card__title-row">
@@ -309,9 +469,9 @@
         </div>
       </a>
 
-      <a class="wrap-branding-card" href="#">
+      <a class="wrap-branding-card" href="/performante-3d/#">
         <div class="wrap-branding-card__media">
-          <img src="/images/Untitled-2.jpg" alt="Branded signage graphics">
+          <img src="/images/Untitled-2.jpg" alt="Branded signage graphics" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="wrap-branding-card__overlay">
           <div class="wrap-branding-card__title-row">
@@ -328,9 +488,9 @@
         </div>
       </a>
 
-      <a class="wrap-branding-card" href="#">
+      <a class="wrap-branding-card" href="/performante-3d/#">
         <div class="wrap-branding-card__media">
-          <img src="/images/IMG_7646.jpg" alt="Luxury vehicle styling detail">
+          <img src="/images/IMG_7646.jpg" alt="Luxury vehicle styling detail" loading="lazy" decoding="async" fetchpriority="low">
         </div>
         <div class="wrap-branding-card__overlay">
           <div class="wrap-branding-card__title-row">
@@ -359,7 +519,7 @@
                 <h2>Selected Work<br>& Custom Designs</h2>
                 <!--<p>A selection of automotive and commercial projects built around finish, detail and presence.</p>-->
               </div>
-              <a class="selected-works-button pw-btn" href="/gallery.html">
+              <a class="selected-works-button pw-btn" href="projects.html">
                 <span class="pw-btn__label">View All Projects</span>
                 <span class="pw-btn__arrow" aria-hidden="true">
                   <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -373,14 +533,14 @@
           <article class="selected-works-panel selected-works-panel--project">
             <div class="selected-project-card">
               <div class="selected-project-card__media">
-                <img src="/images/Untitled-2-2.jpg" alt="Color change vehicle wrap">
+                <img src="/images/_DSC6479.jpg" alt="Color change vehicle wrap" loading="lazy" decoding="async" fetchpriority="low">
               </div>
               <div class="selected-project-card__meta">
                 <div class="selected-project-card__copy">
                   <h3>Tiger Gas</h3>
                   <p>Innovative full body wrap based off a custom design. Custom colors, patterns and finishes.</p>
                 </div>
-                <a href="/gallery.html" class="selected-project-card__link pw-btn">
+                <a href="project-tiger-gas.html" class="selected-project-card__link pw-btn">
                   <span class="pw-btn__label">View Project</span>
                   <span class="pw-btn__arrow" aria-hidden="true">
                     <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -395,14 +555,14 @@
           <article class="selected-works-panel selected-works-panel--project">
             <div class="selected-project-card">
               <div class="selected-project-card__media">
-                <img src="/images/Untitled-4.jpg" alt="Commercial fleet wrap">
+                <img src="/images/Untitled-4.jpg" alt="Commercial fleet wrap" loading="lazy" decoding="async" fetchpriority="low">
               </div>
               <div class="selected-project-card__meta">
                 <div class="selected-project-card__copy">
                   <h3>Bold Vision SEO</h3>
                   <p>Consistent, high-impact branding designed to move across an entire fleet.</p>
                 </div>
-                <a href="/gallery.html" class="selected-project-card__link pw-btn">
+                <a href="project-bold-vision-seo.html" class="selected-project-card__link pw-btn">
                   <span class="pw-btn__label">View Project</span>
                   <span class="pw-btn__arrow" aria-hidden="true">
                     <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -417,14 +577,14 @@
           <article class="selected-works-panel selected-works-panel--project">
             <div class="selected-project-card">
               <div class="selected-project-card__media">
-                <img src="/images/Untitled-5.jpg" alt="Custom vehicle graphics">
+                <img src="/images/Untitled-5.jpg" alt="Custom vehicle graphics" loading="lazy" decoding="async" fetchpriority="low">
               </div>
               <div class="selected-project-card__meta">
                 <div class="selected-project-card__copy">
-                  <h3>Corvette 2021 Stringray</h3>
+                  <h3>2021 Corvette Stingray</h3>
                   <p>Purpose-built graphics that turn the vehicle into a complete visual system.</p>
                 </div>
-                <a href="/gallery.html" class="selected-project-card__link pw-btn">
+                <a href="project-corvette-stingray.html" class="selected-project-card__link pw-btn">
                   <span class="pw-btn__label">View Project</span>
                   <span class="pw-btn__arrow" aria-hidden="true">
                     <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -442,7 +602,7 @@
                 <h3>Discover our complete portfolio for branding and design</h3>
                 <!--<p>See more vehicle wraps, fleet graphics, architectural work and surface design.</p>-->
               </div>
-              <a class="selected-works-button pw-btn" href="/gallery.html">
+              <a class="selected-works-button pw-btn" href="projects.html">
                 <span class="pw-btn__label">View All Projects</span>
                 <span class="pw-btn__arrow" aria-hidden="true">
                   <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -525,7 +685,7 @@
           <p>We define the vehicle, space, brand, finish and practical requirements before design begins.</p>
         </div>
         <div class="pw5-process-media">
-          <img src="/images/_DSC6718.jpg" alt="Performante Wraps discovery consultation detail shot" loading="lazy">
+          <img src="/images/_DSC6718.jpg" alt="Performante Wraps discovery consultation detail shot" loading="lazy" decoding="async" fetchpriority="low">
         </div>
       </article>
 
@@ -536,7 +696,7 @@
           <p>Concepts are developed around the actual surface so graphics, color and material feel intentional from every angle.</p>
         </div>
         <div class="pw5-process-media">
-          <img src="/images/C0017.00_00_18_01.Still001.jpg" alt="Performante Wraps design concept and branded signage graphics" loading="lazy">
+          <img src="/images/C0017.00_00_18_01.Still001.jpg" alt="Performante Wraps design concept and branded signage graphics" loading="lazy" decoding="async" fetchpriority="low">
         </div>
       </article>
 
@@ -547,7 +707,7 @@
           <p>Artwork, color, print and materials are prepared with installation tolerances and final finish already in mind.</p>
         </div>
         <div class="pw5-process-media">
-          <img src="/images/C0017.00_00_14_04.Still002.jpg" alt="Performante Wraps material and print production for a fleet wrap" loading="lazy">
+          <img src="/images/C0017.00_00_14_04.Still002.jpg" alt="Performante Wraps material and print production for a fleet wrap" loading="lazy" decoding="async" fetchpriority="low">
         </div>
       </article>
 
@@ -558,7 +718,7 @@
           <p>The final application is handled with the same attention to alignment, edges, transitions and presentation.</p>
         </div>
         <div class="pw5-process-media">
-          <img src="/images/C0017.00_01_07_00.Still004.jpg" alt="Performante Wraps final installation, paint protection film detail" loading="lazy">
+          <img src="/images/C0017.00_01_07_00.Still004.jpg" alt="Performante Wraps final installation, paint protection film detail" loading="lazy" decoding="async" fetchpriority="low">
         </div>
       </article>
     </div>
@@ -584,24 +744,24 @@
   </div>
 
   <div class="wrap-brand-logos__grid">
-    <div class="wrap-brand-logos__item"><img src="/images/nike.svg" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/3m.svg" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/7Brew-Menus-Logo2.png" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/New_Balance_logo.svg.webp" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/nike.svg" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/3m.svg" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/7Brew-Menus-Logo2.png" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/New_Balance_logo.svg.webp" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/nike.svg" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/3m.svg" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/7Brew-Menus-Logo2.png" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/New_Balance_logo.svg.webp" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/nike.svg" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/3m.svg" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/7Brew-Menus-Logo2.png" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/New_Balance_logo.svg.webp" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/nike.svg" alt="Placeholder logo"></div>
-    <div class="wrap-brand-logos__item"><img src="/images/3m.svg" alt="Placeholder logo"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/nike.svg" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/3m.svg" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/7Brew-Menus-Logo2.png" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/New_Balance_logo.svg.webp" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/nike.svg" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/3m.svg" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/7Brew-Menus-Logo2.png" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/New_Balance_logo.svg.webp" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/nike.svg" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/3m.svg" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/7Brew-Menus-Logo2.png" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/New_Balance_logo.svg.webp" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/nike.svg" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/3m.svg" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/7Brew-Menus-Logo2.png" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/New_Balance_logo.svg.webp" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/nike.svg" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
+    <div class="wrap-brand-logos__item"><img src="/images/3m.svg" alt="Placeholder logo" loading="lazy" decoding="async" fetchpriority="low"></div>
     
   </div>
 </section>
@@ -905,13 +1065,13 @@
 
   <div class="pw-infinite-gallery__viewport" id="pwInfiniteGalleryViewport">
     <div class="pw-infinite-gallery__track" id="pwInfiniteGalleryTrack">
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Full body gloss and matte vehicle wrap"><img src="/images/IMG_1800.jpg" alt="Full body gloss and matte vehicle wrap" loading="lazy"></figure>
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Branded commercial fleet wrap"><img src="/images/IMG_5067.jpg" alt="Branded commercial fleet wrap" loading="lazy"></figure>
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Architectural building wrap"><img src="/images/IMG_6870.jpg" alt="Architectural building wrap" loading="lazy"></figure>
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Paint protection film install"><img src="/images/IMG_7650.jpg" alt="Paint protection film install" loading="lazy"></figure>
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Branded commercial fleet wrap"><img src="/images/IMG_8517.jpg" alt="Branded commercial fleet wrap" loading="lazy"></figure>
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Architectural building wrap"><img src="/images/IMG_8910.jpg" alt="Architectural building wrap" loading="lazy"></figure>
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Paint protection film install"><img src="/images/IMG_9143.jpg" alt="Paint protection film install" loading="lazy"></figure>
+      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Full body gloss and matte vehicle wrap"><img src="/images/IMG_1800.jpg" alt="Full body gloss and matte vehicle wrap" loading="lazy" decoding="async" fetchpriority="low"></figure>
+      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Branded commercial fleet wrap"><img src="/images/IMG_5067.jpg" alt="Branded commercial fleet wrap" loading="lazy" decoding="async" fetchpriority="low"></figure>
+      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Architectural building wrap"><img src="/images/IMG_6870.jpg" alt="Architectural building wrap" loading="lazy" decoding="async" fetchpriority="low"></figure>
+      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Paint protection film install"><img src="/images/IMG_7650.jpg" alt="Paint protection film install" loading="lazy" decoding="async" fetchpriority="low"></figure>
+      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Branded commercial fleet wrap"><img src="/images/IMG_8517.jpg" alt="Branded commercial fleet wrap" loading="lazy" decoding="async" fetchpriority="low"></figure>
+      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Architectural building wrap"><img src="/images/IMG_8910.jpg" alt="Architectural building wrap" loading="lazy" decoding="async" fetchpriority="low"></figure>
+      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Paint protection film install"><img src="/images/IMG_9143.jpg" alt="Paint protection film install" loading="lazy" decoding="async" fetchpriority="low"></figure>
     </div>
   </div>
 </section>
@@ -927,7 +1087,7 @@
         <p class="pw6-final-cta__eyebrow">Let’s Transform Your Brand.</p>
         <h2 id="pw6FinalCtaTitle">Start Your Project</h2>
       </div>
-      <a class="pw6-final-cta__button pw-btn" href="/contact.html">
+      <a class="pw6-final-cta__button pw-btn" href="/performante-3d/contact.html">
         <span class="pw-btn__label">Contact Performante</span>
         <span class="pw-btn__arrow" aria-hidden="true">
           <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -946,7 +1106,7 @@
       class="pw6-final-cta__logo"
       src="/images/logo-icon.png"
       alt="Performante Wraps logo"
-    >
+     loading="lazy" decoding="async" fetchpriority="low">
 
     <div class="pw6-final-cta__bio">
       <h3 class="pw6-final-cta__bio-name">Enrico Molina</h3>
@@ -984,10 +1144,10 @@
       <p class="pw6-final-cta__info-label">Social</p>
 
       <div class="pw6-final-cta__social-grid">
-        <a href="#">Instagram</a>
-        <a href="#">Facebook</a>
-        <a href="#">Tiktok</a>
-        <a href="#">LinkedIn</a>
+        <a href="/performante-3d/#">Instagram</a>
+        <a href="/performante-3d/#">Facebook</a>
+        <a href="/performante-3d/#">Tiktok</a>
+        <a href="/performante-3d/#">LinkedIn</a>
       </div>
     </div>
 
@@ -1008,10 +1168,10 @@
      ============================================================================ -->
 <section class="pw5-closing-cta" aria-labelledby="pw5ClosingTitle">
   <div class="pw5-closing-cta__media" aria-hidden="true">
-    <img src="/images/stock15.jpeg" alt="" loading="lazy">
+    <img src="/images/stock15.jpeg" alt="" loading="lazy" decoding="async" fetchpriority="low">
   </div>
   <div class="pw5-closing-cta__veil" aria-hidden="true"></div>
-  <a class="pw5-closing-cta__wordmark" href="/contact.html" style="--pw5-wordmark-img:url('/images/stock15.jpeg')"><span id="pw5ClosingTitle">PERFORMANTE</span></a>
+  <a class="pw5-closing-cta__wordmark" href="/performante-3d/contact.html" style="--pw5-wordmark-img:url('/images/stock15.jpeg')"><span id="pw5ClosingTitle">PERFORMANTE</span></a>
 </section>
 <!-- ============================================================================
      END BLACK5 — CLOSING PROJECT CTA
@@ -1027,7 +1187,7 @@
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 4L7 12L15 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
   <div class="pw-lightbox__frame" id="pwGalleryLightboxFrame">
-    <img class="pw-lightbox__img" id="pwGalleryLightboxImg" src="" alt="">
+    <img class="pw-lightbox__img" id="pwGalleryLightboxImg" src="" alt="" loading="lazy" decoding="async" fetchpriority="low">
   </div>
   <button class="pw-lightbox__arrow pw-lightbox__arrow--next" id="pwGalleryLightboxNext" type="button" aria-label="Next image">
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 4L17 12L9 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1041,9 +1201,9 @@
 
 </div><!-- /#scroll-container (was unclosed in the uploaded file — closed by Claude) -->
 
-<script src="js/navbar-black.js" defer></script>
-<script type="module" src="js/animations.js"></script>
-<script src="/js/gsap.js" defer></script>
+</div><!-- /#pwPage -->
+
+<script type="module" src="./js/animations-index-copy.js?v=breakaway-trucks-01"></script>
 
 </body>
 </html>

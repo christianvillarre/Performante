@@ -1,0 +1,5 @@
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0}
+body{background:#000;overflow:hidden}
+main{position:fixed;inset:0;background:#000;overflow:hidden}
+#smokeWave{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}

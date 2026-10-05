@@ -1,0 +1,6 @@
+.index2-menu .wrap-marquee--brands .wrap-marquee__row{width:100%;overflow:hidden}
+.index2-menu .wrap-marquee--brands .wrap-marquee__track{gap:0;animation-duration:42s}
+.index2-menu .wrap-marquee--brands .wrap-marquee__brands{display:flex;align-items:center;gap:clamp(28px,4vw,72px);padding-right:clamp(28px,4vw,72px);flex:0 0 auto}
+.index2-menu .wrap-marquee--brands img{display:block;width:clamp(130px,13vw,210px);height:clamp(130px,13vw,210px);object-fit:contain;flex:0 0 auto}
+@media(max-width:760px){.index2-menu .wrap-marquee--brands .wrap-marquee__track{animation-duration:32s}.index2-menu .wrap-marquee--brands img{width:150px;height:150px}}
+@media(prefers-reduced-motion:reduce){.index2-menu .wrap-marquee--brands .wrap-marquee__track{animation:none}}

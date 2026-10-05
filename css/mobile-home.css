@@ -1,0 +1,67 @@
+/* Homepage phone layout: natural vertical reading and touch scrolling. */
+@media (max-width:760px){
+  /* hidden on either axis makes an ancestor a scroll container and traps
+     sticky positioning. Clip horizontal overflow without creating one. */
+  html,body{overflow-x:clip;overflow-y:visible}
+  #pwPage,#scroll-container,#site{overflow:visible}
+  .intro-wrap{overflow:clip;position:relative}
+
+  /* Large viewport stays stable while mobile browser controls collapse. */
+  .hero{position:sticky;top:0;height:100lvh;min-height:100lvh}
+  .wrap-scroll-copy{margin-top:-100lvh}
+  .wrap-scroll-copy__panel--hero{min-height:100svh;padding:96px 20px 28px;gap:24px}
+  .wrap-scroll-copy__panel--hero h1{font-size:clamp(30px,8.4vw,46px);max-width:14ch;line-height:1.02}
+  .wrap-hero-side{display:flex;flex-direction:column;align-self:flex-end;align-items:flex-end;width:100%;max-width:420px;margin-left:auto;gap:18px}
+  .wrap-hero-stats{width:min(250px,100%);margin:0 0 0 auto;grid-template-columns:90px minmax(0,1fr)}
+  .wrap-hero-stats__est,.wrap-hero-stats__years{min-height:64px;padding:8px 10px;gap:4px}
+  .wrap-hero-stats__icon{width:24px;height:24px}
+  .wrap-hero-stats__est{font-size:10px}
+  .wrap-hero-stats__years span{font-size:10px;line-height:1.5;letter-spacing:.1em;padding:0;max-width:20ch}
+  .wrap-hero-side .wrap-hero-note{width:100%;max-width:360px;margin:0;align-items:flex-end;text-align:right}
+  .wrap-hero-note p{font-size:14px;line-height:1.45}
+  .hero #energyField{inset:0;width:100%;height:100%;pointer-events:none}
+  .hero #cube3d{inset:0;width:100%;height:100%;pointer-events:none}
+  .wrap-about-panel{min-height:0;padding:64px 20px 72px;gap:20px}
+  .wrap-about-panel .wrap-about-panel__content h2{font-size:clamp(24px,6.3vw,32px);max-width:none;line-height:1.18;letter-spacing:-.035em;text-indent:0}
+  .wrap-about-panel__lower{margin-top:32px}
+  .wrap-about-panel__rule{margin-bottom:24px}
+  .wrap-about-panel__columns{grid-template-columns:1fr;gap:24px}
+  .wrap-about-panel__motto-media{width:min(72vw,280px);aspect-ratio:4/3}
+  .wrap-about-panel__snippet p{font-size:15px;line-height:1.55;max-width:38ch}
+  .wrap-about-panel__philosophy{padding-top:24px;font-size:14px;max-width:32ch}
+  .wrap-light-section--intro{min-height:0}
+  .wrap-light-section--intro .wrap-light-section__inner{width:calc(100% - 24px);padding:48px 0!important}
+  .wrap-branding-grid{grid-template-columns:1fr;width:100vw;max-width:none;margin-left:calc(50% - 50vw);margin-right:0;gap:18px;padding:0}
+  .wrap-branding-card{aspect-ratio:1/1;min-height:0;border-radius:0}
+  .wrap-branding-card__title{font-size:clamp(20px,5.5vw,28px);line-height:1.15;max-width:24ch}
+  .wrap-branding-card__desc{font-size:15px;line-height:1.4;max-width:30ch;-webkit-line-clamp:unset;line-clamp:unset}
+  .wrap-branding-card__overlay{padding:22px 20px}
+  .wrap-branding-card__bottom-row{padding-bottom:0}
+  .wrap-branding-card__media img{object-fit:cover}
+  .wrap-white-showcase > .selected-works-stage{margin-top:48px}
+  .selected-works-stage{width:100vw;height:auto;min-height:0;margin-left:calc(50% - 50vw);touch-action:pan-y;border-top:1px solid #6968684c}
+  .selected-works-sticky{position:static;height:auto;overflow:visible}
+  .selected-works-track{display:flex;flex-direction:column;width:100%;height:auto;transform:none!important;will-change:auto}
+  .selected-works-panel{flex:none;width:100%;height:auto;min-height:0;padding:28px 20px;border:1px solid #6968684c;border-top:0}
+  .selected-works-text-card{height:auto;min-height:40svh;padding:20px 0;text-align:left;gap:28px;justify-content:center}
+  .selected-works-text-card__center{width:100%;margin:0;align-items:flex-start;text-align:left}
+  .wrap-branding-intro h2,
+  .selected-works-text-card__center h2{font-size:clamp(32px,9vw,48px);line-height:1.04;letter-spacing:-.045em}
+  .selected-works-text-card .selected-works-button{margin:0;min-height:44px}
+  .selected-project-card{height:auto;gap:20px;transform:none!important;perspective:none!important}
+  .selected-project-card__media{height:auto;max-height:none;aspect-ratio:4/3;transform:none!important;will-change:auto}
+  .selected-project-card__meta{grid-template-columns:1fr;gap:18px}
+  .selected-project-card__copy h3{font-size:24px;line-height:1.1}
+  .selected-project-card__copy p{font-size:14px;line-height:1.5}
+  .selected-project-card__link{justify-self:start;min-height:44px}
+}
+
+/* Keep the three-card row on tablets, with a wider section than desktop. */
+@media (min-width:761px) and (max-width:1400px){
+  .wrap-light-section--intro .wrap-light-section__inner.wrap-white-showcase{width:85vw;max-width:85vw}
+  .wrap-white-showcase .wrap-branding-grid{width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.8vw,24px);padding:0}
+  .wrap-white-showcase .wrap-branding-card,
+  .wrap-white-showcase .wrap-branding-card:last-child{grid-column:auto;aspect-ratio:3 / 3.6}
+  .wrap-white-showcase .wrap-branding-card__title{font-size:clamp(14px,1.5vw,21px)}
+  .wrap-white-showcase .wrap-branding-card__desc{font-size:clamp(11px,1.1vw,15px);line-height:1.3}
+}

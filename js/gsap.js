@@ -1,13 +1,18 @@
-/* ==========================================================================
+/* ========================================================================== 
    Performante Wraps — GSAP / ScrollTrigger animations
    (excludes nav-bar animations, which live in nav.js)
    ========================================================================== */
 
+// iPad can report a fine primary pointer while a trackpad is attached.
+const isTabletTouchDevice = () => window.innerWidth > 760 && window.innerWidth <= 1400 &&
+  (navigator.maxTouchPoints > 0 || "ontouchstart" in window || window.matchMedia("(pointer: coarse)").matches);
+
 /* Hero intro entrance timeline */
-window.addEventListener("load", () => {
+const startHeroIntro=() => {
+  if(typeof gsap==='undefined')return;
   gsap.set("#cube3d", {
     opacity: 0,
-    scale: 0.82,
+    scale: 1,
     filter: "blur(18px)"
   });
 
@@ -41,7 +46,10 @@ window.addEventListener("load", () => {
       y: 0,
       duration: 1.1
     }, "-=1.2");
-});
+};
+if(window.pwBoot)window.pwBoot.ready.then(startHeroIntro);
+else if(document.readyState==='complete')startHeroIntro();
+else window.addEventListener('load',startHeroIntro,{once:true});
 
 /* NDT capability box row hover states */
 (() => {
@@ -554,7 +562,7 @@ window.addEventListener("load", () => {
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce) and (max-width: 760px)").matches;
   if (reduceMotion) return;
 
   const riseTargets = gsap.utils.toArray([
@@ -723,7 +731,7 @@ riseTargets3.forEach((el, i) => {
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce) and (max-width: 760px)").matches;
   if (reduceMotion) return;
 
   const heroTitle = document.getElementById("heroTitle");
@@ -1254,14 +1262,6 @@ const firstInner = document.querySelector(
   ".wrap-light-section--intro .wrap-light-section__inner"
 );
 
-/*
-  How far the entire section is pulled upward.
-
-  Increase the negative number to move it higher:
-  -300 = moderate
-  -500 = higher
-  -700 = much higher
-*/
 const firstSectionMoveAmount = -window.innerHeight * 1.3;
 
 if (
@@ -1283,12 +1283,6 @@ if (
     transformOrigin: "center bottom"
   });
 
-  /*
-    Start with no negative margin.
-
-    GSAP then changes the actual layout margin while
-    the blinds are opening.
-  */
   gsap.set(firstLightSection, {
     marginTop: 0
   });
@@ -1297,7 +1291,9 @@ if (
     scrollTrigger: {
       trigger: marqueePinGroup,
       start: "top 30%",
-      end: "+=1800",
+      end: () => "+=" + (window.innerWidth <= 760
+        ? Math.round(window.innerHeight * 1.2)
+        : isTabletTouchDevice() ? Math.round(window.innerHeight * 1.35) : 1800),
       pin: marqueePinGroup,
       pinSpacing: true,
       scrub: 0.7,
@@ -1333,14 +1329,8 @@ if (
       },
 
       onRefresh() {
-        /*
-          Keep the final layout position correct after
-          resize or ScrollTrigger refresh.
-        */
         if (this.progress === 0) {
-          gsap.set(firstLightSection, {
-            marginTop: 0
-          });
+          gsap.set(firstLightSection, { marginTop: 0 });
         }
       }
     }
@@ -1364,12 +1354,6 @@ if (
     0
   );
 
-  /*
-    ENTIRE SECTION ALSO STARTS AT 0.
-
-    marginTop changes the actual page layout rather
-    than only visually transforming the section.
-  */
   transitionTimeline.to(
     firstLightSection,
     {
@@ -1529,9 +1513,22 @@ window.addEventListener("load", () => {
 
   const stage = document.getElementById("performanteGalleryFlowStage");
   const track = document.getElementById("performanteGalleryFlowTrack");
-  if (!stage || !track) return;
+  if (!stage || !track || window.innerWidth <= 760) return;
+  const sticky = stage.querySelector(".selected-works-sticky");
+  const outro = track.querySelector(".selected-works-panel--outro");
+  // The sticky distance is the stage height minus one viewport. Shorten the
+  // full sideways passage on iPad without changing the desktop section.
+  if (isTabletTouchDevice()) {
+    stage.style.height = "275vh";
+    // Give the final panel enough width to travel the last little stretch
+    // while keeping artwork behind the viewport edge.
+    if (outro) {
+      outro.style.flexBasis = "58vw";
+      outro.style.width = "58vw";
+    }
+  }
 
-  const getTravel = () => Math.max(0, track.scrollWidth - window.innerWidth);
+  const getTravel = () => Math.max(0, track.scrollWidth - (sticky?.clientWidth || window.innerWidth));
 
   gsap.set(track, { x: 0, force3D: true });
 
@@ -1552,11 +1549,12 @@ window.addEventListener("load", () => {
     }
   });
 
-  // TRUE LOCK-IN HOLD:
-  // During the first 25% of this ScrollTrigger nothing moves horizontally.
-  // The section is already sticky at top:0, so it visibly locks in first.
+  // Keep the desktop lock-in hold; start the sideways movement much sooner
+  // on iPad, where the same 25% consumes too much finger scrolling.
+  const lockInHold = isTabletTouchDevice() ? 0.04 : 0.25;
+  const endHold = isTabletTouchDevice() ? 0.08 : 0;
   selectedWorksTimeline.to({}, {
-    duration: 0.25
+    duration: lockInHold
   });
 
   // After the hold, use the remaining scroll to move through the projects.
@@ -1564,36 +1562,39 @@ window.addEventListener("load", () => {
     x: () => -getTravel(),
     ease: "none",
     force3D: true,
-    duration: 0.75
+    duration: 1 - lockInHold - endHold
   });
+  if (endHold) selectedWorksTimeline.to({}, { duration: endHold });
 
-  /* Selected Works image lift: every project image after the first rises
-     slightly as its horizontal panel enters the viewport. */
-  const selectedProjectMedia = gsap.utils.toArray(
-    stage.querySelectorAll(".selected-works-panel--project .selected-project-card__media img")
-  );
-
-  selectedProjectMedia.slice(1).forEach((img) => {
-    const panel = img.closest(".selected-works-panel");
-    if (!panel) return;
-
-    gsap.fromTo(
-      img,
-      { y: 52 },
-      {
-        y: 0,
-        ease: "none",
-        scrollTrigger: {
-          trigger: panel,
-          containerAnimation: selectedWorksTimeline,
-          start: "left 102%",
-          end: "left 66%",
-          scrub: true,
-          invalidateOnRefresh: true
-        }
-      }
+  /* Selected Work: the untransformed horizontal panel determines image depth.
+     Paused timelines sample position directly: dragging/reverse scroll also work,
+     including the first project during the existing horizontal lock-in hold. */
+  const workMotion=window.matchMedia("(prefers-reduced-motion: reduce) and (max-width: 760px)");
+  const workDepth=gsap.utils.toArray(stage.querySelectorAll(".selected-works-panel--project")).map(panel=>{
+    const card=panel.querySelector(".selected-project-card");
+    if(!card)return null;
+    // Lift the complete project card, including its caption, as it passes.
+    // Keep depth/scale fixed and retain only a slight two-degree turn.
+    const timeline=gsap.timeline({paused:true});
+    timeline.fromTo(card,
+      {y:64,z:0,rotationY:-2,rotationX:0,scale:1,transformPerspective:1600,transformOrigin:"50% 50%"},
+      {y:-40,z:0,rotationY:0,rotationX:0,scale:1,duration:1,ease:"power2.out"}
     );
-  });
+    return {panel,card,timeline,last:-1};
+  }).filter(Boolean);
+  function updateWorkDepth(){
+    if(document.hidden || (window.pwBoot && !window.pwBoot.released))return;
+    const width=Math.max(1,window.innerWidth);
+    workDepth.forEach(item=>{
+      const rect=item.panel.getBoundingClientRect();
+      // Finish the full rise at screen center, including the last card; hold it up afterward.
+      const progress=workMotion.matches?1:gsap.utils.clamp(0,1,2*(width-rect.left)/(width+rect.width));
+      if(progress===item.last)return;
+      item.last=progress;item.timeline.progress(progress);
+    });
+  }
+  gsap.ticker.add(updateWorkDepth);
+  updateWorkDepth();
 
   window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
 
@@ -1985,7 +1986,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce) and (max-width: 760px)").matches;
 
   /* Split titles by WORD first, then by character.
      This keeps normal word wrapping intact and prevents letters from being
@@ -2054,12 +2055,21 @@ document.addEventListener("DOMContentLoaded", () => {
     aboutTitle.classList.remove("pw-scroll-fill-text");
     aboutTitle.classList.add("pw-line-fill-source");
 
+    let lineFillTimeline=null;
     const buildLineFill = () => {
+      if(lineFillTimeline){
+        lineFillTimeline.scrollTrigger?.kill();
+        lineFillTimeline.kill();lineFillTimeline=null;
+      }
       aboutTitle.querySelectorAll(":scope > .pw-line-fill-overlay").forEach(el => el.remove());
 
+      const originalText=aboutTitle.textContent;
       const range = document.createRange();
       range.selectNodeContents(aboutTitle);
       const titleRect = aboutTitle.getBoundingClientRect();
+      if(!titleRect.width || !titleRect.height)return;
+      const localWidth=aboutTitle.clientWidth,localHeight=aboutTitle.clientHeight;
+      const scaleY=localHeight/titleRect.height;
       const rawRects = Array.from(range.getClientRects()).filter(r => r.width > 2 && r.height > 2);
 
       /* Merge fragments that belong to the same rendered line. */
@@ -2077,20 +2087,21 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       lines.sort((a,b) => a.top - b.top);
 
-      const overlays = lines.map((line) => {
+      const overlays = lines.map((line,index) => {
         const clone = document.createElement("span");
         clone.className = "pw-line-fill-overlay";
         clone.setAttribute("aria-hidden", "true");
-        clone.textContent = aboutTitle.textContent;
+        clone.textContent = originalText;
         aboutTitle.appendChild(clone);
 
-        const left = Math.max(0, line.left - titleRect.left);
-        const right = Math.max(0, titleRect.right - line.right);
-        const top = Math.max(0, line.top - titleRect.top);
-        const bottom = Math.max(0, titleRect.bottom - line.bottom);
+        // Each line gets its own vertical band, but its final reveal spans
+        // the full heading width so glyph overhangs cannot be clipped short.
+        const left=0,right=0;
+        const top=index===0?0:Math.max(0,((lines[index-1].bottom+line.top)/2-titleRect.top)*scaleY);
+        const bottom=index===lines.length-1?0:Math.max(0,localHeight-((line.bottom+lines[index+1].top)/2-titleRect.top)*scaleY);
 
         gsap.set(clone, {
-          clipPath: `inset(${top}px ${titleRect.width - left}px ${bottom}px ${left}px)`
+          clipPath: `inset(${top}px ${localWidth}px ${bottom}px ${left}px)`
         });
 
         clone.dataset.pwClipTop = top;
@@ -2119,6 +2130,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
+      lineFillTimeline=tl;
       overlays.forEach((clone, i) => {
         tl.to(clone, {
           clipPath: `inset(${clone.dataset.pwClipTop}px ${clone.dataset.pwClipRight}px ${clone.dataset.pwClipBottom}px ${clone.dataset.pwClipLeft}px)`,
@@ -2128,8 +2140,15 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     };
 
-    requestAnimationFrame(buildLineFill);
-    window.addEventListener("load", buildLineFill, { once:true });
+    let rebuildFrame=0;
+    const queueLineFill=()=>{
+      cancelAnimationFrame(rebuildFrame);
+      rebuildFrame=requestAnimationFrame(buildLineFill);
+    };
+    queueLineFill();
+    window.addEventListener("load",queueLineFill,{once:true});
+    document.fonts?.ready.then(queueLineFill);
+    new ResizeObserver(queueLineFill).observe(aboutTitle);
   }
 
   /* 2) General title reveal.
@@ -2201,6 +2220,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedWorksPanel = title.closest(".selected-works-panel");
     const selectedWorksST = ScrollTrigger.getById("performanteGalleryFlow");
 
+    if (selectedWorksPanel?.classList.contains("selected-works-panel--intro")) {
+      // The opening title is already in the first panel; reveal it before sideways travel.
+      queueManualTitleReveal(title, chars, 1.5);
+      return;
+    }
+
     if (selectedWorksPanel && selectedWorksST?.animation) {
       gsap.fromTo(
         chars,
@@ -2251,55 +2276,39 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   });
 
-  /* 3) Wraps & Branding cards — use viewport intersection instead of a
-        descendant ScrollTrigger because the parent section's layout position is
-        changing during the marquee transition. Top stays anchored; bottom folds in. */
-  const brandingGrid = document.querySelector(".wrap-branding-grid");
-  const brandingCards = brandingGrid
-    ? gsap.utils.toArray(brandingGrid.querySelectorAll(".wrap-branding-card"))
-    : [];
-
-  if (brandingGrid && brandingCards.length) {
-    gsap.set(brandingGrid, { perspective: 1400 });
-
-    if (reduceMotion) {
-      gsap.set(brandingCards, { autoAlpha: 1, rotateX: 0 });
-    } else {
-      gsap.set(brandingCards, {
-        autoAlpha: 0,
-        rotateX: -72,
-        transformOrigin: "50% 0%",
-        transformPerspective: 1400
+  /* 3) Wraps & Branding: reversible scroll-controlled folds.
+     Measure the grid plus each card's untransformed layout offset because the
+     preceding marquee moves this section. Never measure the animated card. */
+  const brandingGrid=document.querySelector(".wrap-branding-grid");
+  const brandingCards=brandingGrid?gsap.utils.toArray(brandingGrid.querySelectorAll(".wrap-branding-card")):[];
+  if(brandingGrid && brandingCards.length){
+    const motion=window.matchMedia("(prefers-reduced-motion: reduce) and (max-width: 760px)");
+    gsap.set(brandingGrid,{perspective:1400});
+    const folds=brandingCards.map(card=>gsap.fromTo(card,
+      {autoAlpha:0,rotateX:-72,transformOrigin:"50% 0%",transformPerspective:1400},
+      {autoAlpha:1,rotateX:0,duration:1,ease:"none",paused:true}
+    ));
+    const previous=brandingCards.map(()=>-1);
+    let lastScroll=NaN,lastWidth=0,lastHeight=0,lastReduced=null;
+    ScrollTrigger.addEventListener("refresh",()=>{lastScroll=NaN;});
+    function updateBrandingScroll(){
+      if(document.hidden || (window.pwBoot && !window.pwBoot.released))return;
+      const height=Math.max(1,window.innerHeight);
+      const scroll=window.scrollY;
+      if(scroll===lastScroll && window.innerWidth===lastWidth && height===lastHeight && motion.matches===lastReduced)return;
+      lastScroll=scroll;lastWidth=window.innerWidth;lastHeight=height;lastReduced=motion.matches;
+      const top=brandingGrid.getBoundingClientRect().top;
+      const firstOffset=brandingCards[0].offsetTop;
+      brandingCards.forEach((card,index)=>{
+        const cardTop=top+card.offsetTop-firstOffset;
+        const fraction=(height*.98-cardTop)/(height*.60);
+        const progress=motion.matches?1:gsap.utils.clamp(0,1,(fraction-index*.055)/.89);
+        if(progress===previous[index])return;
+        previous[index]=progress;folds[index].progress(progress);
       });
-
-      const revealBrandingCards = () => {
-        gsap.to(brandingCards, {
-          autoAlpha: 1,
-          rotateX: 0,
-          duration: 1.05,
-          stagger: 0.14,
-          ease: "power3.out",
-          overwrite: true,
-          clearProps: "transform-origin"
-        });
-      };
-
-      let brandingCardsRevealed = false;
-      const checkBrandingCards = () => {
-        if (brandingCardsRevealed) return;
-        const rect = brandingGrid.getBoundingClientRect();
-
-        /* Begin about 18% before the grid actually reaches the viewport. */
-        if (rect.top <= window.innerHeight * 1.18 && rect.bottom >= -80) {
-          brandingCardsRevealed = true;
-          gsap.ticker.remove(checkBrandingCards);
-          revealBrandingCards();
-        }
-      };
-
-      gsap.ticker.add(checkBrandingCards);
-      checkBrandingCards();
     }
+    gsap.ticker.add(updateBrandingScroll);
+    updateBrandingScroll();
   }
 
   window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
@@ -2314,7 +2323,7 @@ document.addEventListener("DOMContentLoaded", () => {
 (() => {
   if (typeof gsap === "undefined") return;
 
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce) and (max-width: 760px)").matches;
   /* visibility-safe Black5: no pre-hide class */
   if (reduced) return;
 
@@ -2399,7 +2408,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const milestones = gsap.utils.toArray(".pw5-process-milestone");
   if (!timeline || !fill || !milestones.length) return;
 
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce) and (max-width: 760px)").matches) {
     gsap.set(fill, { scaleY: 1, transformOrigin: "top center" });
     milestones.forEach((m) => m.classList.add("is-active"));
     return;
@@ -2462,7 +2471,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const el = wrap ? wrap.querySelector("span") : null;
   if (!wrap || !el) return;
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce) and (max-width: 760px)").matches;
 
   function fitWordmark() {
     el.style.transform = "none";

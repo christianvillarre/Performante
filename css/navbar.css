@@ -17,9 +17,9 @@ body.pw-menu-open{ overflow:visible; }
 
 .pw-nav{
   position:fixed;
-  inset:clamp(12px,1.5vw,22px) 0 auto 0;
+  inset:clamp(4px,.7vw,10px) 0 auto 0;
   z-index:1200;
-  height:74px;
+  height:64px;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -35,19 +35,19 @@ body.pw-menu-open{ overflow:visible; }
   filter:brightness(1.08);
   transition:filter .46s cubic-bezier(.22,1,.36,1), opacity .3s ease;
 }
-.pw-nav__actions{ display:flex; align-items:center; gap:12px; }
+.pw-nav__actions{ display:flex; align-items:center; gap:8px; }
 .pw-nav__chat{
   position:relative;
-  min-height:38px;
-  height:38px;
-  padding:0 17px;
+  min-height:34px;
+  height:34px;
+  padding:0 10px;
   overflow:hidden;
   isolation:isolate;
   display:inline-flex;
   align-items:center;
   justify-content:center;
   border:1px solid rgba(255,255,255,.46);
-  border-radius:999px;
+  border-radius:12px;
   color:#fff;
   text-decoration:none;
   font-size:11px;
@@ -83,27 +83,27 @@ body.pw-menu-open{ overflow:visible; }
 
 .pw-nav__toggle{
   position:relative;
-  min-width:104px;
-  height:38px;
-  padding:0 15px;
+  min-width:86px;
+  height:34px;
+  padding:0 9px;
   overflow:hidden;
   isolation:isolate;
   border:1px solid rgba(255,255,255,.46);
-  border-radius:999px;
+  border-radius:12px;
   color:#fff;
   background:rgba(8,8,8,.16);
   backdrop-filter:blur(12px);
   display:inline-flex;
   align-items:center;
   justify-content:space-between;
-  gap:14px;
+  gap:8px;
   cursor:pointer;
   transition:background .3s ease,border-color .3s ease,color .3s ease,transform .3s ease;
 }
 .pw-nav__toggle:hover{ transform:none; }
 .pw-nav__toggle-label{
   font-size:11px;
-  font-weight:700;
+  font-weight:600;
   letter-spacing:.035em;
   line-height:1;
   text-transform:uppercase;
@@ -171,7 +171,7 @@ body.pw-menu-open{ overflow:visible; }
 .pw-menu__label{ font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:rgba(0,0,0,.48); }
 .pw-menu__close{ border:0; padding:0; background:none; color:#111; cursor:pointer; font:inherit; font-size:11px; letter-spacing:.14em; text-transform:uppercase; }
 .pw-menu__links{ display:flex; flex-direction:column; margin-top:64px; }
-.pw-menu__links a{ position:relative; display:flex; gap:2px; align-items:baseline; padding:5px 0; color:#111; text-decoration:none; font-size:clamp(25px,1.95vw,32px); font-weight:500; letter-spacing:-.045em; border-bottom:0; overflow:visible; will-change:transform,filter,letter-spacing; }
+.pw-menu__links a{ position:relative; display:flex; gap:2px; align-items:baseline; padding:5px 0; color:#111; text-decoration:none; font-size:clamp(25px,1.95vw,32px); font-weight:500; letter-spacing:-.045em; border-bottom:0; overflow:visible; will-change:auto; }
 .pw-menu__links a::after{ display:none; content:none; }
 
 .pw-menu__footer{
@@ -207,11 +207,11 @@ body.pw-menu-open{ overflow:visible; }
    RESPONSIVE (<=760px)
 ===================================================== */
 @media(max-width:760px){
-  .pw-nav{ height:70px; padding:0 16px; }
+  .pw-nav{ height:56px; padding:0 16px; }
   .pw-nav__logo img{ height:34px; }
-  .pw-nav{ inset:10px 0 auto 0; height:66px; }
-  .pw-nav__chat{ min-height:36px; height:36px; padding:0 13px; font-size:9px; }
-  .pw-nav__toggle{ min-width:88px; height:36px; padding:0 13px; }
+  .pw-nav{ inset:4px 0 auto 0; height:56px; }
+  .pw-nav__chat{ min-height:34px; height:34px; padding:0 10px; font-size:9px; }
+  .pw-nav__toggle{ min-width:76px; height:34px; padding:0 8px; }
   .pw-nav__toggle-label{ font-size:9px; }
   .pw-menu{ width:min(86vw,320px); padding:24px 22px; }
 }
@@ -237,7 +237,7 @@ body.pw-menu-open{ overflow:visible; }
   vertical-align:baseline !important;
   line-height:1.08 !important;
   transform-origin:center bottom;
-  will-change:transform,filter,opacity;
+  will-change:auto;
   white-space: pre !important;
 }
 .pw-nav__chat,
@@ -270,6 +270,7 @@ body.pw-menu-open{ overflow:visible; }
 .pw-nav__toggle-icon{
   position:relative;
   z-index:2;
+  font-weight:600;
 }
 
 /* Header theme over white page sections (requires .wrap-light-section elements + GSAP ScrollTrigger — no-ops otherwise, see navbar.js) */
@@ -296,9 +297,9 @@ body.pw-menu-open{ overflow:visible; }
 @media (min-width:761px) and (max-width:1400px){
 .pw-nav{
   position:fixed;
-  inset:clamp(12px,1.5vw,22px) 0 auto 0;
+  inset:clamp(4px,.7vw,10px) 0 auto 0;
   z-index:1200;
-  height:74px;
+  height:64px;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -314,4 +315,37 @@ body.pw-menu-open{ overflow:visible; }
   filter:brightness(1.08);
   transition:filter .46s cubic-bezier(.22,1,.36,1), opacity .3s ease;
 }
+}
+/* Crisp menu rollover; keyboard focus remains easy to see. */
+.pw-menu__links a:focus-visible{outline:1px solid currentColor;outline-offset:5px}
+
+/* A fixed right-edge arrow column, independent of label length. */
+.pw-menu__links a{width:100%;box-sizing:border-box;padding-right:34px}
+.pw-menu-link-arrow{position:absolute;right:1px;top:50%;margin-top:-10px;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;opacity:0;visibility:hidden}
+
+/* Wider mobile drawer retains its inset frame and rounded opening animation. */
+@media(max-width:760px){
+  .pw-nav__chat{display:none}
+  .pw-menu{top:12px;right:12px;bottom:12px;left:auto;width:calc(100% - 24px);max-width:520px;height:auto;box-sizing:border-box;border:1px solid rgba(0,0,0,.12);border-radius:24px;padding:80px 22px 24px;overflow-y:auto!important;overscroll-behavior:contain}
+  .pw-menu__top{display:none}
+  .pw-menu__links{margin-top:0;margin-bottom:32px;flex-shrink:0}
+  .pw-menu__footer{flex-shrink:0}
+  .pw-nav .pw-pill-fill{display:none}
+  .pw-nav:not(.pw-nav--menu-open) .pw-nav__logo img{filter:brightness(0) invert(1)}
+  .pw-nav:not(.pw-nav--menu-open) .pw-nav__toggle{color:#fff!important;border-color:rgba(255,255,255,.46);background:rgba(8,8,8,.16)}
+  .pw-nav.pw-nav--menu-open .pw-nav__logo img{filter:brightness(0)}
+  .pw-nav.pw-nav--menu-open .pw-nav__toggle{color:#111!important;border-color:rgba(0,0,0,.25);background:transparent}
+}
+
+@media(max-width:760px){
+  html,body,html[data-pw-mobile-menu-open="true"]{background-color:#000}
+  .pw-menu__footer{gap:28px;font-size:15px}
+  .pw-menu__footer-label{font-size:12px;line-height:1.4;margin-bottom:12px}
+  .pw-menu__footer-block a,.pw-menu__socials-grid a{font-size:17px;line-height:1.65;overflow-wrap:anywhere}
+  .pw-menu__socials-grid{row-gap:8px;column-gap:20px}
+}
+
+@media(max-width:760px){
+  .pw-nav{padding-left:24px;padding-right:24px}
+  .pw-nav__toggle{border-radius:12px}
 }

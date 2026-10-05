@@ -1,0 +1,43 @@
+.index2-menu .pw-nav__toggle,
+.index2-menu .pw-nav:not(.pw-nav--menu-open) .pw-nav__toggle,
+.index2-menu .pw-nav.pw-nav--menu-open .pw-nav__toggle,
+.index2-menu .pw-nav.pw-nav--light-bg .pw-nav__toggle{
+  width:48px;min-width:48px;height:44px;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  border:0!important;border-radius:0;background:transparent!important;
+  box-shadow:none!important;backdrop-filter:none;overflow:visible;
+}
+.index2-menu .pw-nav__toggle .pw-pill-fill{display:none!important}
+.index2-menu .pw-nav__toggle-icon{width:34px;height:20px;flex:0 0 34px}
+.index2-menu .pw-nav__toggle-line{width:34px;height:1px;left:0}
+.index2-menu .pw-nav__toggle-line--one{top:2px}
+.index2-menu .pw-nav__toggle-line--two{top:9px}
+.index2-menu .pw-nav__toggle-line--three{top:16px}
+.index2-menu .pw-nav.pw-nav--menu-open .pw-nav__toggle-line--one{top:9px;transform:rotate(45deg)}
+.index2-menu .pw-nav.pw-nav--menu-open .pw-nav__toggle-line--two{opacity:0}
+.index2-menu .pw-nav.pw-nav--menu-open .pw-nav__toggle-line--three{top:9px;transform:rotate(-45deg)}
+.index2-menu .pw-nav:not(.pw-nav--menu-open) .pw-nav__toggle{color:#fff!important}
+.index2-menu .pw-nav.pw-nav--menu-open .pw-nav__toggle{color:#fff!important}
+.index2-menu .pw-nav.pw-nav--light-bg:not(.pw-nav--menu-open) .pw-nav__toggle{color:#111!important}
+.index2-menu .pw-menu{
+  top:4px;bottom:4px;width:clamp(380px,38vw,600px);
+  color:#fff;
+  background:linear-gradient(135deg,rgba(255,255,255,.25),rgba(48,55,65,.24) 48%,rgba(255,255,255,.14));
+  border:0;
+  box-shadow:0 30px 90px rgba(0,0,0,.3),inset 0 0 30px rgba(255,255,255,.04);
+  backdrop-filter:blur(28px) saturate(1.4);
+  -webkit-backdrop-filter:blur(28px) saturate(1.4);
+}
+.index2-menu .pw-menu__links a,
+.index2-menu .pw-menu__links a .pw-menu-letter,
+.index2-menu .pw-menu__footer-block a,
+.index2-menu .pw-menu__socials-grid a,
+.index2-menu .pw-menu__close{color:#fff!important}
+.index2-menu .pw-menu__footer-label,
+.index2-menu .pw-menu__label,
+.index2-menu .pw-menu__footer-tag{color:rgba(255,255,255,.7)}
+.index2-menu .pw-menu__socials{border-top-color:rgba(255,255,255,.28)}
+@media(max-width:760px){
+  .index2-menu .pw-menu{top:2px;bottom:2px;width:calc(100% - 24px);max-width:560px}
+  .index2-menu .pw-nav.pw-nav--menu-open .pw-nav__logo img{filter:brightness(0) invert(1)!important}
+}

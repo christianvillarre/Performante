@@ -26,14 +26,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const topItems = gsap.utils.toArray(".pw-menu__top > *");
   const menuContent = [...topItems, ...links, ...footerItems];
   let menuOpen = false;
+  const simpleMenu = document.body.classList.contains("index2-menu");
+  const mobileMenuMedia=window.matchMedia('(max-width:760px)');
+  let browserTheme=document.querySelector('meta[name="theme-color"]');
+  if(!browserTheme){
+    browserTheme=document.createElement('meta');
+    browserTheme.name='theme-color';browserTheme.content='#000000';
+    document.head.appendChild(browserTheme);
+  }
+  const defaultBrowserTheme=browserTheme.content;
+  const syncMobileBrowserTheme=()=>{
+    const mobileOpen=mobileMenuMedia.matches && menuOpen;
+    document.documentElement.dataset.pwMobileMenuOpen=String(mobileOpen);
+    // Keep browser chrome stable: mobile browsers can defer dynamic tint updates.
+    browserTheme.content=mobileMenuMedia.matches?'#000000':defaultBrowserTheme;
+  };
+  mobileMenuMedia.addEventListener('change',syncMobileBrowserTheme);
+  syncMobileBrowserTheme();
 
   gsap.set(drawer, {
+    display: "none",
     scaleX: 0.96,
     scaleY: 1,
     y: -10,
     autoAlpha: 0,
     borderRadius: 42,
-    clipPath: "inset(0% 0% 92% 0% round 42px 42px 120px 120px)",
+    clipPath: simpleMenu ? "inset(0% 0% 100% 0% round 24px)" : "inset(0% 0% 92% 0% round 42px 42px 120px 120px)",
     visibility: "hidden",
     pointerEvents: "none"
   });
@@ -47,17 +65,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const openMenu = () => {
     if (menuOpen) return;
     menuOpen = true;
+    syncMobileBrowserTheme();
     drawer.setAttribute("aria-hidden", "false");
     backdrop.setAttribute("aria-hidden", "false");
     toggle.setAttribute("aria-expanded", "true");
     toggle.setAttribute("aria-label", "Close menu");
     nav?.classList.add("pw-nav--menu-open");
+    if(simpleMenu)gsap.set(toggle,{opacity:1,color:"#111"});
     requestAnimationFrame(() => syncHeaderPillColors());
     const toggleLabel = toggle.querySelector(".pw-nav__toggle-label");
     if (toggleLabel) toggleLabel.textContent = "Close";
 
     const tl = gsap.timeline();
-    tl.set([drawer, backdrop], { visibility: "visible", pointerEvents: "auto" })
+    tl.set(drawer, { display: "flex" })
+      .set([drawer, backdrop], { visibility: "visible", pointerEvents: "auto" })
       .to(backdrop, { autoAlpha: 1, duration: .2, ease: "power2.out" }, 0)
       .to(drawer, {
         scaleX: 1,
@@ -66,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         autoAlpha: 1,
         borderRadius: 24,
         clipPath: "inset(0% 0% 0% 0% round 24px)",
-        duration: .86,
+        duration: simpleMenu ? .68 : .86,
         ease: "power4.out"
       }, 0)
       .to(links, { y: 0, autoAlpha: 1, filter: "blur(0px)", duration: .62, stagger: .06, ease: "power3.out" }, .28)
@@ -76,31 +97,45 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeMenu = () => {
     if (!menuOpen) return;
     menuOpen = false;
+    syncMobileBrowserTheme();
     toggle.setAttribute("aria-expanded", "false");
     toggle.setAttribute("aria-label", "Open menu");
-    nav?.classList.remove("pw-nav--menu-open");
-    requestAnimationFrame(() => syncHeaderPillColors());
+    if(!simpleMenu){
+      nav?.classList.remove("pw-nav--menu-open");
+      requestAnimationFrame(() => syncHeaderPillColors());
+    }else{
+      gsap.set(toggle,{opacity:1,color:"#111"});
+    }
     const toggleLabel = toggle.querySelector(".pw-nav__toggle-label");
     if (toggleLabel) toggleLabel.textContent = "Menu";
 
     gsap.timeline({
       defaults: { overwrite: "auto" },
       onComplete: () => {
+        if(simpleMenu){
+          nav?.classList.remove("pw-nav--menu-open");
+          gsap.set(toggle,{opacity:1});
+          syncHeaderPillColors();
+        }
         drawer.setAttribute("aria-hidden", "true");
         backdrop.setAttribute("aria-hidden", "true");
         gsap.set([drawer, backdrop], {
           visibility: "hidden",
           pointerEvents: "none"
         });
+        // Remove the white fixed surface after its exit animation. Opacity alone
+        // leaves it in the composited page even though the menu looks closed.
         gsap.set(drawer, {
+          display: "none",
           overflow: "hidden",
           scaleX: 0.96,
           scaleY: 1,
           y: -10,
           autoAlpha: 0,
           borderRadius: 42,
-          clipPath: "inset(0% 0% 92% 0% round 42px 42px 120px 120px)"
+          clipPath: simpleMenu ? "inset(0% 0% 100% 0% round 24px)" : "inset(0% 0% 92% 0% round 42px 42px 120px 120px)"
         });
+        syncMobileBrowserTheme();
         gsap.set(topItems, {
           y: 0,
           autoAlpha: 1,
@@ -129,14 +164,15 @@ document.addEventListener("DOMContentLoaded", () => {
     /* Only fold the panel after the top-right Close control is gone. */
     .set(drawer, {
       overflow: "hidden",
-      clipPath: "none",
+      clipPath: simpleMenu ? "inset(0% 0% 0% 0% round 24px)" : "none",
       transformOrigin: "top center"
     }, .23)
     .to(drawer, {
       scaleX: 1,
-      scaleY: 0.08,
-      y: -4,
+      scaleY: simpleMenu ? 1 : 0.08,
+      y: simpleMenu ? 0 : -4,
       autoAlpha: 0,
+      clipPath: simpleMenu ? "inset(0% 0% 100% 0% round 24px)" : "none",
       borderRadius: 34,
       duration: .44,
       ease: "power2.inOut"
@@ -165,6 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const headerPills = gsap.utils.toArray(".pw-nav__chat, .pw-nav__toggle");
 
   headerPills.forEach((pill) => {
+    const simpleHamburger = document.body.classList.contains("index2-menu") && pill.id === "pwMenuToggle";
     let fill = pill.querySelector(".pw-pill-fill");
     if (!fill) {
       fill = document.createElement("span");
@@ -193,6 +230,10 @@ document.addEventListener("DOMContentLoaded", () => {
       (nav?.classList.contains("pw-nav--menu-open") || nav?.classList.contains("pw-nav--light-bg")) ? "#111" : "#fff";
 
     pill.addEventListener("pointerenter", (event) => {
+      if (simpleHamburger) {
+        gsap.to(pill, { color:restingPillColor(), opacity:.68, duration:.22, overwrite:true });
+        return;
+      }
       setFillGeometry(event);
       gsap.killTweensOf([fill, pill]);
       gsap.set(fill, { backgroundColor: fillColor() });
@@ -211,6 +252,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     pill.addEventListener("pointerleave", (event) => {
+      if (simpleHamburger) {
+        gsap.to(pill, { color:restingPillColor(), opacity:1, duration:.22, overwrite:true });
+        return;
+      }
       setFillGeometry(event);
       gsap.killTweensOf([fill, pill]);
       gsap.to(pill, {
@@ -237,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const hovered = pill.matches(":hover");
       gsap.killTweensOf(pill);
       gsap.set(pill, {
-        color: hovered
+        color: simpleHamburger ? (lightState ? "#111" : "#fff") : hovered
           ? (lightState ? "#fff" : "#111")
           : (lightState ? "#111" : "#fff")
       });
@@ -266,53 +311,61 @@ document.addEventListener("DOMContentLoaded", () => {
       link.dataset.splitReady = "true";
     }
 
+    // Absolute positioning puts every arrow on the same right-hand rail.
+    let arrow=link.querySelector('.pw-menu-link-arrow');
+    if(!arrow){
+      arrow=document.createElementNS('http://www.w3.org/2000/svg','svg');
+      arrow.classList.add('pw-menu-link-arrow');
+      arrow.setAttribute('viewBox','0 0 24 24');
+      arrow.setAttribute('aria-hidden','true');
+      arrow.setAttribute('focusable','false');
+      const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d','M4 12h15m-6-6 6 6-6 6');
+      arrow.appendChild(path);link.appendChild(arrow);
+    }
+    gsap.set(arrow,{x:-7,autoAlpha:0});
     const letters = gsap.utils.toArray(".pw-menu-letter", link);
-    gsap.set(letters, { x:0, y:0, rotation:0, autoAlpha:1, filter:"blur(0px)" });
-
-    link.addEventListener("pointerenter", () => {
-      /* Only clear tweens on the letters + the link's own hover-x tween —
-         never a blanket kill on `link`, which would also cancel the
-         drawer's still-running entrance/exit tween on that same element
-         (its y/autoAlpha/filter) and leave it frozen mid-blur. */
-      gsap.killTweensOf(letters);
-      gsap.killTweensOf(link, "x");
-      gsap.to(link, { x:5, duration:.38, ease:"power3.out", overwrite:"auto" });
-      gsap.fromTo(letters,
-        {
-          x:(i) => (i % 2 ? 1.5 : -1.5),
-          y:(i) => ((i % 3) - 1) * 1.4,
-          filter:"blur(2.5px)",
-          autoAlpha:.78
-        },
-        {
-          x:0,
-          y:0,
-          rotation:0,
-          filter:"blur(0px)",
-          autoAlpha:1,
-          duration:.52,
-          stagger:.014,
-          ease:"power4.out",
-          overwrite:"auto"
+    const motion=window.matchMedia('(prefers-reduced-motion: reduce)');
+    // Keep the complete link name available to assistive technology.
+    link.setAttribute('aria-label',letters.map(letter=>letter.textContent).join(''));
+    letters.forEach(letter=>letter.setAttribute('aria-hidden','true'));
+    gsap.set(letters,{x:0,y:0,rotation:0,scale:1,autoAlpha:1,clearProps:'filter'});
+    // One reversible animation: no blur, random offsets or jump on re-entry.
+    // Animate the letters only, leaving the drawer's link entrance untouched.
+    const rollover=gsap.timeline({paused:true});
+    if(simpleMenu){
+      rollover.to(letters,{x:3,duration:.18,stagger:{each:.012,from:'start'},ease:'power2.out'});
+    }else{
+      rollover.to(letters,{x:4,y:-1,duration:.32,stagger:{amount:.08,from:'start'},ease:'power3.out'});
+    }
+    rollover.to(arrow,{x:0,autoAlpha:1,duration:.26,ease:'power3.out'},.04);
+    let pointerInside=false;
+    function syncRollover(){
+      const active=pointerInside || document.activeElement===link;
+      if(motion.matches){rollover.pause(0);gsap.set(arrow,{x:0,autoAlpha:active?1:0});return;}
+      if(simpleMenu){
+        if(active){
+          gsap.killTweensOf(letters);
+          gsap.fromTo(letters,{x:0},{x:3,duration:.18,stagger:{each:.012,from:'start'},ease:'power2.out',overwrite:true});
+          gsap.to(arrow,{x:0,autoAlpha:1,duration:.18,overwrite:true});
+        }else{
+          gsap.killTweensOf(letters);
+          gsap.to(letters,{x:0,scale:1,filter:'blur(0px)',color:'#111',textShadow:'none',duration:.12,overwrite:true});
+          gsap.to(arrow,{x:-7,autoAlpha:0,duration:.12,overwrite:true});
         }
-      );
+        return;
+      }
+      rollover.timeScale(active?1:1.25);
+      if(active)rollover.play();else rollover.reverse();
+    }
+    link.addEventListener('pointerenter',event=>{
+      if(event.pointerType==='touch')return;
+      pointerInside=true;syncRollover();
     });
-
-    link.addEventListener("pointerleave", () => {
-      gsap.killTweensOf(letters);
-      gsap.killTweensOf(link, "x");
-      gsap.to(link, { x:0, duration:.3, ease:"power3.out", overwrite:"auto" });
-      gsap.to(letters, {
-        x:0,
-        y:0,
-        rotation:0,
-        autoAlpha:1,
-        filter:"blur(0px)",
-        duration:.24,
-        ease:"power2.out",
-        overwrite:"auto"
-      });
-    });
+    link.addEventListener('pointerleave',()=>{pointerInside=false;syncRollover();});
+    link.addEventListener('focus',syncRollover);
+    link.addEventListener('blur',syncRollover);
+    motion.addEventListener('change',syncRollover);
   });
 });
 

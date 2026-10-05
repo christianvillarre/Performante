@@ -1,0 +1,12 @@
+.pw-truck-roll{position:relative;z-index:23;height:320vh;background:transparent;color:#fff;pointer-events:auto}
+.pw-truck-roll__stage{position:sticky;top:0;height:100vh;overflow:hidden;background:transparent;perspective:1200px}
+.pw-truck-roll__truck{position:absolute;left:0;bottom:15%;width:min(72vw,1000px);height:auto;object-fit:contain;object-position:bottom;opacity:0;transform:translate3d(-120vw,0,0);transform-origin:center bottom;will-change:transform,opacity}
+.pw-truck-roll__details{position:absolute;z-index:2;left:clamp(24px,5vw,90px);bottom:clamp(24px,5vh,70px);max-width:min(310px,42vw);color:#fff;text-shadow:0 2px 15px rgba(0,0,0,.7)}
+.pw-truck-roll__description{margin:0 0 16px;font-size:clamp(13px,1.2vw,16px);line-height:1.45}
+.pw-truck-roll__project{display:inline-flex;align-items:center;gap:14px;padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,.8);color:#fff;text-decoration:none;text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.13em;transition:opacity .2s ease}
+.pw-truck-roll__project svg{width:17px;height:17px;transition:transform .2s ease}
+.pw-truck-roll__project:hover{opacity:.75}.pw-truck-roll__project:hover svg{transform:translateX(4px)}
+.pw-truck-roll__project:focus-visible{outline:2px solid #fff;outline-offset:5px}
+.pw-truck-roll__caption{position:absolute;z-index:2;right:clamp(24px,5vw,90px);bottom:clamp(24px,5vh,70px);margin:0;color:#fff;font-size:clamp(16px,2vw,26px);font-weight:500;letter-spacing:-.025em;text-align:right;text-shadow:0 2px 15px rgba(0,0,0,.65)}
+@media(max-width:760px){.pw-truck-roll{height:280vh}.pw-truck-roll__truck{width:98vw;max-width:none;bottom:28%}.pw-truck-roll__caption{top:13%;bottom:auto;font-size:18px}.pw-truck-roll__details{left:24px;bottom:5%;max-width:min(300px,80vw)}}
+@media(prefers-reduced-motion:reduce){.pw-truck-roll{height:auto;min-height:100vh}.pw-truck-roll__stage{position:relative;min-height:100vh}.pw-truck-roll__truck{display:none}.pw-truck-roll__truck:nth-of-type(1){display:block;opacity:1;transform:translateX(-10%);bottom:24%}}
