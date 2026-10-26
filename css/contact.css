@@ -108,3 +108,97 @@ body{margin:0;background:#0a0a0a;color:#f2f0ed;font-family:'Zalando Sans',sans-s
 /* Keep the inquiry clear of the fixed navigation when it leads the page. */
 .ct-page > .ct-inquiry:first-child{padding-top:clamp(145px,11vw,180px)}
 @media(max-width:600px){.ct-page > .ct-inquiry:first-child{padding-top:125px}}
+
+/* Inquiry refinements */
+.ct-form__head{color:#898681;border-top-color:#ffffff38}
+.ct-field label{font-size:15px;font-weight:650;color:#e5e1dc}
+.ct-contact-info svg,.ct-hero__scroll svg,.ct-outro__content>a svg,.ct-form__bottom button svg{display:block;width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+.ct-contact-info a:hover svg,.ct-hero__scroll:hover svg,.ct-outro__content>a:hover svg{transform:translateX(4px)}
+.ct-form__bottom button svg{width:19px;height:19px}
+.ct-form__bottom button:hover svg{transform:translateX(3px)}
+.ct-captcha{min-height:78px;margin:0 0 22px}
+.pw6-final-cta__button .pw-btn__arrow svg{fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round}
+
+/* Reviews below the inquiry form */
+.ct-reviews{box-sizing:border-box;padding:clamp(52px,6vw,88px) clamp(24px,4vw,64px) clamp(85px,10vw,145px);background:#0a0a0a;color:#f2f0ed;border-top:1px solid #ffffff16}
+.ct-reviews__head{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:48px}
+.ct-reviews .ct-eyebrow{color:#aaa6a0}
+.ct-reviews h2{margin:0;font-size:clamp(32px,4.2vw,64px);font-weight:500;letter-spacing:-.055em;line-height:1.05;white-space:nowrap}
+.ct-reviews h2 em{font-style:normal;color:#9a9792}
+.ct-reviews__head>a{display:inline-flex;align-items:center;gap:18px;padding-bottom:9px;border-bottom:1px solid #ffffff60;color:#e5e2dd;text-decoration:none;font-size:11px;letter-spacing:.13em;white-space:nowrap}
+.ct-reviews__head>a svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+.ct-reviews__head>a:hover svg{transform:translateX(4px)}
+.ct-reviews__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid #ffffff30}
+.ct-review{box-sizing:border-box;display:flex;flex-direction:column;min-height:310px;padding:30px clamp(20px,2.5vw,40px) 10px;background:transparent;border-right:1px solid #ffffff24}
+.ct-review:first-child{padding-left:0}
+.ct-review:last-child{border-right:0;padding-right:0}
+.ct-review__stars{color:#d3a29a;font-size:17px;letter-spacing:.13em}
+.ct-review blockquote{margin:30px 0 auto;font-size:clamp(18px,1.65vw,25px);line-height:1.4;letter-spacing:-.025em;font-weight:500}
+.ct-review p{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:32px 0 0;padding-top:17px;border-top:1px solid #ffffff24;font-size:13px;font-weight:600;color:#e5e2dd}
+.ct-review p span{color:#8f8d89;font-size:10px;font-weight:500;letter-spacing:.11em;white-space:nowrap}
+@media(max-width:900px){.ct-reviews__grid{grid-template-columns:1fr 1fr}.ct-review:nth-child(2){border-right:0;padding-right:0}.ct-review:last-child{grid-column:1/-1;min-height:220px;border-top:1px solid #ffffff24;padding-left:0}}
+@media(max-width:600px){.ct-reviews{padding:80px 20px}.ct-reviews__head{display:block}.ct-reviews__head>a{margin-top:30px}.ct-reviews__grid{grid-template-columns:1fr}.ct-review,.ct-review:nth-child(2),.ct-review:last-child{grid-column:auto;min-height:250px;padding:26px 0;border:0;border-bottom:1px solid #ffffff24}}
+@media(max-width:900px){.ct-reviews h2{white-space:normal}}
+@media(max-width:600px){.ct-reviews{padding-top:52px}}
+
+/* Inquiry contact details follow the menu footer layout. */
+.ct-contact-info{display:flex;flex-direction:column;gap:22px}
+.ct-contact-info>.ct-contact-info__group{display:flex;flex-direction:column;gap:0;padding:18px 0 0;border-top:1px solid #ffffff24}
+.ct-contact-info__group>span{margin-bottom:12px;color:rgba(255,255,255,.7);font-size:clamp(10px,.8vw,14px);letter-spacing:.01em;line-height:1.4}
+.ct-contact-info .ct-contact-info__group a,.ct-contact-info .ct-contact-info__group p{display:block;font-size:clamp(15px,1.1vw,18px);font-weight:400;letter-spacing:-.035em;line-height:1.65;color:#f2f0ed}
+.ct-contact-info__group a span{color:rgba(255,255,255,.7);font-size:inherit;letter-spacing:inherit;margin-right:6px}
+.ct-contact-info__social-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px;row-gap:3px}
+.ct-contact-info .ct-contact-info__social-grid a{width:fit-content}
+.ct-contact-info .ct-contact-info__social-grid a:hover{color:#e2a69c}
+.ct-contact-info{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(125px,.6fr);column-gap:24px;row-gap:22px}
+.ct-contact-info__social-grid{grid-template-columns:1fr}
+.ct-contact-info__location{grid-column:1/-1}
+.ct-contact-info .ct-contact-info__group a{overflow-wrap:anywhere}
+@media(max-width:600px){.ct-contact-info{grid-template-columns:1fr}.ct-contact-info__location{grid-column:1}.ct-contact-info__social-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ct-reviews__link{display:inline-flex;align-items:center;gap:22px;min-height:44px;margin-top:32px;padding:0 0 9px;border-bottom:1px solid rgba(255,255,255,.8);color:#f2f0ed;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.14em;line-height:1.3}
+.ct-reviews__link svg{display:block;width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+.ct-reviews__link:hover svg{transform:translateX(5px)}
+.ct-reviews__link:focus-visible{outline:2px solid #f2f0ed;outline-offset:5px}
+@media(max-width:900px){
+ .ct-page .ct-inquiry{gap:0}
+ .ct-page .ct-inquiry__intro{display:contents;opacity:1!important;transform:none!important}
+ .ct-page .ct-inquiry h1{order:1;margin:0 0 14px}
+ .ct-page .ct-inquiry__intro>p{order:2;max-width:48ch}
+ .ct-page .ct-form{order:3;width:100%;margin-top:34px}
+ .ct-page .ct-contact-info{order:4;width:100%;margin-top:65px}
+}
+
+/* Split contact story: left content moves past a persistent inquiry form. */
+@media(min-width:901px){
+ .ct-page{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto auto;background:linear-gradient(90deg,#0a0a0a 50%,#101010 50%)}
+ .ct-page .ct-inquiry{display:contents!important}
+ .ct-page .ct-inquiry__intro{grid-column:1;grid-row:1;box-sizing:border-box;width:100%;max-width:none;min-height:100svh;padding:clamp(145px,11vw,180px) clamp(28px,4vw,64px) 90px;background:#101010}
+ .ct-page .ct-inquiry h1{max-width:none;width:100%}
+ .ct-page .ct-form{grid-column:2;grid-row:1 / 4;align-self:start;position:sticky;top:110px;z-index:2;box-sizing:border-box;width:100%;max-height:calc(100svh - 125px);overflow-y:auto;padding:25px clamp(28px,4vw,64px) 30px;background:#101010;border-left:1px solid #ffffff16;scrollbar-width:thin;scrollbar-color:#ffffff35 transparent}
+ .ct-page .ct-reviews{grid-column:1;grid-row:2;border-top:1px solid #ffffff16;padding:70px clamp(28px,4vw,64px) 100px}
+ .ct-page .ct-outro{grid-column:1;grid-row:3;min-height:520px}
+ .ct-page .ct-reviews__head{display:block;margin-bottom:30px}
+ .ct-page .ct-reviews h2{white-space:normal;font-size:clamp(32px,3.2vw,52px)}
+ .ct-page .ct-reviews__head>a{margin-top:28px}
+ .ct-page .ct-reviews__grid{grid-template-columns:1fr;gap:0;border-top:0}
+ .ct-page .ct-review,.ct-page .ct-review:first-child,.ct-page .ct-review:last-child{grid-column:1;min-height:0;padding:28px 30px;border:1px solid #ffffff30;background:#ffffff06}
+ .ct-page .ct-review+.ct-review{border-top:0}
+ .ct-page .ct-review blockquote{margin:20px 0 0}
+ .ct-page .ct-review p{margin-top:24px;padding-top:17px;border-top:1px solid #ffffff24}
+}
+@media(max-width:900px){
+ .ct-page .ct-inquiry{display:flex!important;flex-direction:column;padding:125px clamp(20px,4vw,64px) 75px;gap:65px}
+ .ct-page .ct-inquiry__intro{max-width:none}
+ .ct-page .ct-inquiry h1{max-width:none;width:100%}
+ .ct-page .ct-form{position:static;padding:0}
+ .ct-page .ct-reviews__grid{grid-template-columns:1fr;gap:0;border-top:0}
+ .ct-page .ct-review,.ct-page .ct-review:nth-child(2),.ct-page .ct-review:last-child{grid-column:1;min-height:0;padding:26px;border:1px solid #ffffff30;background:#ffffff06}
+ .ct-page .ct-review+.ct-review{border-top:0}
+ .ct-page .ct-review p{padding-top:17px;border-top:1px solid #ffffff24}
+ .ct-page .ct-outro{min-height:480px}
+}
+@media(max-width:900px){
+ .ct-page .ct-inquiry{gap:0}
+ .ct-page .ct-inquiry h1{margin-bottom:8px}
+ .ct-page .ct-form{margin-top:18px}
+}

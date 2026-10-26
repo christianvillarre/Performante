@@ -5863,6 +5863,19 @@ a.wrap-testimonials__role:focus-visible{
 @media(max-width:760px){.pw-truck-roll{height:280vh}.pw-truck-roll__truck{width:98vw;max-width:none;bottom:28%}.pw-truck-roll__caption{top:13%;bottom:auto;font-size:18px}.pw-truck-roll__details{left:24px;bottom:5%;max-width:min(300px,80vw)}}
 @media(prefers-reduced-motion:reduce) and (max-width:760px){.pw-truck-roll{height:auto;min-height:100vh}.pw-truck-roll__stage{position:relative;min-height:100vh}.pw-truck-roll__truck{display:none}.pw-truck-roll__truck:nth-of-type(1){display:block;opacity:1;transform:translateX(-10%);bottom:24%}}
 
+/* Match the Contact page's restrained review layout. */
+.wrap-light-section--testimonials{background:#0a0a0a;color:#f2f0ed}
+.wrap-testimonials__marquee{padding:0;border-top-color:#ffffff30;border-bottom-color:#ffffff24}
+.wrap-testimonials__track{gap:0;padding:0}
+.wrap-testimonials__card{box-sizing:border-box;min-height:330px;gap:20px;padding:30px clamp(24px,2.4vw,38px);border:0;border-right:1px solid #ffffff24;border-radius:0;background:transparent}
+.wrap-testimonials__date{color:#8f8d89;font-weight:500;letter-spacing:.12em}
+.wrap-testimonials__stars svg{color:#d3a29a}
+.wrap-testimonials__text{font-size:clamp(16px,1.3vw,19px);line-height:1.5;letter-spacing:-.02em;color:#f2f0ed}
+.wrap-testimonials__meta{border-top-color:#ffffff24}
+.wrap-testimonials__name{font-weight:600;color:#e5e2dd}
+.wrap-testimonials__role{color:#8f8d89}
+
+
 
 /* ========================================================================== */
 /* css\index2-hero.css */
