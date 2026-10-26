@@ -1,4 +1,18 @@
 (() => {
+  const form = document.getElementById('contactForm');
+  const captchaError = document.getElementById('ctCaptchaError');
+  if (form && captchaError) {
+    form.addEventListener('submit', event => {
+      const token = form.querySelector('[name="g-recaptcha-response"]')?.value.trim()
+        || window.grecaptcha?.getResponse?.()?.trim();
+      if (token) {
+        captchaError.hidden = true;
+        return;
+      }
+      event.preventDefault();
+      captchaError.hidden = false;
+    });
+  }
   const year = document.getElementById('pwFooterYear');
   if (year) year.textContent = new Date().getFullYear();
 

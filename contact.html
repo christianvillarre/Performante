@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/subpage.css">
   <link rel="stylesheet" href="/css/navbar.css?v=menu-unified-1">
-  <link rel="stylesheet" href="/css/contact.css?v=captcha-row-1">
+  <link rel="stylesheet" href="/css/contact.css?v=captcha-validation-1">
   <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
@@ -42,7 +42,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "z3w1ve4qii");
 </script>
-<link rel="stylesheet" href="/css/footer-mobile.css?v=3">
+<link rel="stylesheet" href="/css/footer-mobile.css?v=4">
 </head>
 <body class="index2-menu" data-black7-build="contact-v1">
 <!-- Shared menu: edit partials/menu.html, then run npm run build:menu -->
@@ -140,6 +140,7 @@
       <div class="ct-field ct-field--message"><label for="ctDetails">Tell us about your project <span>*</span></label><textarea id="ctDetails" name="details" rows="5" placeholder="What are you looking to create? Include your vehicle, space, timing, or any ideas you already have." required></textarea></div>
       <p class="ct-form__note">We’ll review your inquiry and get back to you soon.</p>
       <div class="ct-form__bottom"><div class="ct-captcha" data-netlify-recaptcha="true"></div><button type="submit"><span>SEND MY INQUIRY</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></button></div>
+      <p class="ct-captcha-error" id="ctCaptchaError" role="alert" aria-live="assertive" hidden>Please click on captcha before submitting</p>
     </form>
   </section>
 
@@ -249,6 +250,6 @@
 </div>
 <script src="/js/navbar-black.js?v=menu-unified-1" defer></script>
 <script src="/js/commercial-footer.js?v=3" defer></script>
-<script src="/js/contact.js?v=review-link-motion-1" defer></script>
+<script src="/js/contact.js?v=captcha-validation-1" defer></script>
 </body>
 </html>
