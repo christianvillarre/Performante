@@ -6,7 +6,7 @@
   if (!canvas || !opening || !hero) return;
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
-  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  const motion = matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)');
   const mobile = () => innerWidth <= 760;
   const state = {width: 0, height: 0, impulse: 0, time: 0};
   let width = 0, height = 0, heroHeight = 0, dpr = 1, frame = 0, previous = 0, visible = true;

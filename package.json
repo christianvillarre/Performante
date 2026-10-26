@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "scripts": {
+    "build:menu": "node scripts/build-menu.mjs",
+    "check:menu": "node scripts/build-menu.mjs --check"
+  }
+}

@@ -5873,21 +5873,32 @@ html{
 }
 
 .vw-hero__cta{
+  position:relative;
   flex:0 0 auto;
-  min-height:48px;
+  min-height:0;
   width:fit-content;
   display:inline-flex;
   align-items:center;
-  justify-content:space-between;
-  gap:36px;
-  padding:0 18px;
+  gap:22px;
+  padding:0 0 9px;
+  color:#fff;
+  border:0;
+  background:transparent;
   text-decoration:none;
-  font-size:10px;
+  font-size:11px;
   font-weight:700;
-  letter-spacing:.13em;
+  letter-spacing:.14em;
   text-transform:uppercase;
   white-space:nowrap;
 }
+
+.vw-hero__cta .index2-text-link__label{display:inline-flex;flex:0 0 auto;white-space:pre}
+.vw-hero__cta .index2-text-link__letter{display:inline-block;white-space:pre}
+.vw-hero__cta .hero-project-link__arrow-window{display:block;width:21px;height:21px;overflow:hidden;flex:0 0 21px}
+.vw-hero__cta .hero-project-link__arrow-window svg{display:block;width:21px;height:21px}
+.vw-hero__cta .hero-project-link__arrow-window--left{position:absolute;left:0;top:0;opacity:0}
+.vw-hero__cta .hero-project-link__underline{position:absolute;left:0;right:0;bottom:0;height:1px;background:#fff;transform-origin:right center;pointer-events:none}
+.vw-hero__cta:focus-visible{outline:2px solid #fff;outline-offset:5px}
 
 /* --- Rotating white stripe of service names, bottom-aligned in the
        copy column only — a decorative ticker, not a nav element. --- */
@@ -6507,51 +6518,32 @@ html{
 }
 
 .vws-links{
-  margin:1.7rem 0 0;
-  padding:0;
-  list-style:none;
-  display:grid;
-  gap:.5rem;
-  
-  
-}
-
-.vws-links a{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 12px;
-  align-items:start;
-  column-gap:.5rem;
+  margin:0;
+  padding-left:1.15rem;
+  list-style:disc;
   color:rgba(255,255,255,.72);
-  text-decoration:none;
-  transition:color .25s ease;
+  font-size:.92rem;
+  line-height:1.6;
 }
 
-.vws-links a span{
-  display:block;
-  font-size:.85rem;
-  line-height:1.45;
+.vws-links li{
+  padding-left:.15rem;
 }
 
-.vws-links svg{
-  width:16px;
-  height:16px;
-  stroke:rgba(255,255,255,.55);
-  stroke-width:1.6;
-  fill:none;
-  margin-top:.28rem;
-  justify-self:end;
-  transition:transform .25s ease, stroke .25s ease;
+.vws-links li+li{
+  margin-top:.35rem;
 }
 
-.vws-links a:hover{ color:#fff; }
-.vws-links a:hover svg{ transform:translate(2px,-2px); stroke:#fff; }
+.vws-links li::marker{
+  color:#fff;
+}
 
 .vws-content{
   display:grid;
   grid-template-columns:1fr 9rem;
   gap:1.4rem;
   align-items:flex-start;
-  padding:2.4rem clamp(24px,3vw,48px);
+  padding:calc(3.8rem + clamp(1.365rem,1.89vw,1.89rem)) clamp(24px,3vw,48px) 2.4rem;
 }
 
 .vws-text-wrap,
@@ -6576,7 +6568,7 @@ html{
 }
 
 .vws-cta{
-  display:inline-flex;
+  display:none;
   align-items:center;
   gap:.35rem;
   background:#fff;

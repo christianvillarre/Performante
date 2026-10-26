@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+<link rel="icon" href="/images/favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="css/page-transitions.css">
 <script src="js/page-transitions.js"></script>
   <meta charset="UTF-8" />
@@ -18,9 +19,9 @@
 
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
 
-<link rel="stylesheet" href="/css/subpage.css" />
-<link rel="stylesheet" href="css/navbar.css" />
-<link rel="stylesheet" href="css/vehicle-slider.css" />
+<link rel="stylesheet" href="/css/subpage.css?v=hero-cta-1" />
+<link rel="stylesheet" href="css/navbar.css?v=menu-unified-1" />
+<link rel="stylesheet" href="css/vehicle-slider.css?v=desktop-motion-2" />
 <link rel="stylesheet" href="css/vehicle-collection.css" />
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
@@ -55,20 +56,19 @@
 
 </head>
 
-<body data-black7-build="mini-cta-footer-added-benefits-faq-v1-swap-lenis-layout-hero-marquee-video-fixed">
+<body class="index2-menu" data-black7-build="mini-cta-footer-added-benefits-faq-v1-swap-lenis-layout-hero-marquee-video-fixed">
 
+<!-- Shared menu: edit partials/menu.html, then run npm run build:menu -->
 <header class="pw-nav" id="pwNav">
-  <a class="pw-nav__logo" href="/" aria-label="Performante Wraps home">
-    <img src="/images/logo.png" alt="Performante Wraps">
+  <a class="pw-nav__logo" href="index.html" aria-label="Performante Wraps home">
+    <img src="images/logo.png" alt="Performante Wraps">
   </a>
-
   <div class="pw-nav__actions">
-    <a class="pw-nav__chat" href="contact.html"><span class="pw-nav__chat-label">Let’s Talk</span></a>
     <button class="pw-nav__toggle" id="pwMenuToggle" type="button" aria-label="Open menu" aria-expanded="false">
-      <span class="pw-nav__toggle-label">Menu</span>
       <span class="pw-nav__toggle-icon" aria-hidden="true">
         <span class="pw-nav__toggle-line pw-nav__toggle-line--one"></span>
         <span class="pw-nav__toggle-line pw-nav__toggle-line--two"></span>
+        <span class="pw-nav__toggle-line pw-nav__toggle-line--three"></span>
       </span>
     </button>
   </div>
@@ -80,35 +80,32 @@
     <span class="pw-menu__label"></span>
     <button class="pw-menu__close" id="pwMenuClose" type="button" aria-label="Close menu"></button>
   </div>
-
   <nav class="pw-menu__links" aria-label="Primary navigation">
-    <a href="vehicle-wraps.html" aria-current="page">Vehicle Wraps</a>
-    <a href="commercial-wraps.html">Commercial Wraps</a>
+    <a href="vehicle-wraps.html">Vehicle Wraps</a>
+    <a href="commercial-wraps.html">Commercial &amp; Fleet Wraps</a>
     <a href="architectural-wraps.html">Architectural Wraps</a>
-    <a href="paint-protection.html">Paint Protection</a>
     <a href="projects.html">Projects &amp; Case Studies</a>
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
   </nav>
-
   <div class="pw-menu__footer">
     <div class="pw-menu__footer-block">
       <p class="pw-menu__footer-label">Business Inquiry</p>
       <a href="mailto:enrico@performantewraps.com"><span class="pw-menu__footer-tag">E:</span> enrico@performantewraps.com</a>
       <a href="tel:8328014675"><span class="pw-menu__footer-tag">P:</span> (832) 801-4675</a>
     </div>
-
     <div class="pw-menu__socials">
       <p class="pw-menu__footer-label">Social</p>
       <div class="pw-menu__socials-grid">
-        <a href="#">Instagram</a>
-        <a href="#">Facebook</a>
-        <a href="#">Tiktok</a>
-        <a href="#">LinkedIn</a>
+        <a href="https://www.instagram.com/performantewraps/">Instagram</a>
+        <a href="https://www.facebook.com/performantewraps/">Facebook</a>
+        <a href="https://www.tiktok.com/@performantewraps">TikTok</a>
+        <a href="https://www.threads.com/@performantewraps">Threads</a>
       </div>
     </div>
   </div>
 </aside>
+<!-- End shared menu -->
 
 
  <div id="scroll-container">
@@ -134,13 +131,11 @@
         standard that holds up mile after mile.
       </p>
 
-      <a class="vw-hero__cta pw-btn" href="/contact.html">
-        <span class="pw-btn__label">Start a Project</span>
-        <span class="pw-btn__arrow" aria-hidden="true">
-          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </span>
+      <a class="vw-hero__cta index2-motion-link" href="/contact.html">
+        <span class="hero-project-link__arrow-window hero-project-link__arrow-window--left" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="index2-text-link__label">Start a Project</span>
+        <span class="hero-project-link__arrow-window hero-project-link__arrow-window--right" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="hero-project-link__underline" aria-hidden="true"></span>
       </a>
     </div>
 
@@ -250,10 +245,10 @@
           <div class="vws-content">
             <div class="vws-links-wrap">
               <ul class="vws-links">
-                <li><a href="#"><span>Gloss, Satin &amp; Matte Finishes</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Full &amp; Partial Color Changes</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Custom Accent Packages</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Paint-Safe Vehicle Transformation</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li>Gloss, Satin &amp; Matte Finishes</li>
+                <li>Full &amp; Partial Color Changes</li>
+                <li>Custom Accent Packages</li>
+                <li>Paint-Safe Vehicle Transformation</li>
               </ul>
             </div>
             <div class="vws-card-image small">
@@ -287,10 +282,10 @@
           <div class="vws-content">
             <div class="vws-links-wrap">
               <ul class="vws-links">
-                <li><a href="/paint-protection-film.html"><span>Full Front PPF</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="/paint-protection-film.html"><span>Track Package Protection</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="/paint-protection-film.html"><span>High-Impact Area Coverage</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="/paint-protection-film.html"><span>Clear Paint Protection</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li>Full Front PPF</li>
+                <li>Track Package Protection</li>
+                <li>High-Impact Area Coverage</li>
+                <li>Clear Paint Protection</li>
               </ul>
             </div>
             <div class="vws-card-image small">
@@ -324,10 +319,10 @@
           <div class="vws-content">
             <div class="vws-links-wrap">
               <ul class="vws-links">
-                <li><a href="#"><span>Racing Stripes</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Accent Panels &amp; Trim</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Two-Tone Designs</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Custom Striping Packages</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li>Racing Stripes</li>
+                <li>Accent Panels &amp; Trim</li>
+                <li>Two-Tone Designs</li>
+                <li>Custom Striping Packages</li>
               </ul>
             </div>
             <div class="vws-card-image small">
@@ -360,10 +355,10 @@
           <div class="vws-content">
             <div class="vws-links-wrap">
               <ul class="vws-links">
-                <li><a href="#"><span>Fully Custom Artwork</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Brand &amp; Logo Integration</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>One-Of-One Finishes</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Design Consultation</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li>Fully Custom Artwork</li>
+                <li>Brand &amp; Logo Integration</li>
+                <li>One-Of-One Finishes</li>
+                <li>Design Consultation</li>
               </ul>
             </div>
             <div class="vws-card-image small">
@@ -644,10 +639,10 @@
           <p class="pw6-final-cta__info-label">Social</p>
 
           <div class="pw6-final-cta__social-grid">
-            <a href="#">Instagram</a>
-            <a href="#">Facebook</a>
-            <a href="#">Tiktok</a>
-            <a href="#">LinkedIn</a>
+            <a href="https://www.instagram.com/performantewraps/">Instagram</a>
+            <a href="https://www.facebook.com/performantewraps/">Facebook</a>
+            <a href="https://www.tiktok.com/@performantewraps">TikTok</a>
+            <a href="https://www.threads.com/@performantewraps">Threads</a>
           </div>
         </div>
 
@@ -675,11 +670,12 @@
 
 </div><!-- /#scroll-container -->
 
-<script src="js/navbar-black.js" defer></script>
+<script src="js/navbar-black.js?v=menu-unified-1" defer></script>
 
 <script src="/js/vehicle-wraps-2.js" defer></script>
-<script src="js/vehicle-slider.js" defer></script>
-<script src="js/commercial-footer.js?v=2" defer></script>
+<script src="js/vehicle-slider.js?v=desktop-motion-2" defer></script>
+<script src="js/service-hero-cta.js?v=1" defer></script>
+<script src="js/commercial-footer.js?v=3" defer></script>
 
 
 <!-- FAQ accordion — self-contained, no dependency on gsap.js -->

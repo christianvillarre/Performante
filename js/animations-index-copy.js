@@ -3605,12 +3605,13 @@ function drawArc(arc, now){
 
 /* Lenis smooth scroll init */
   (() => {
+    // Native touch scrolling avoids competing with the mobile pinned sections.
+    // Continue initializing the rest of the page if the optional CDN fails.
+    if (window.matchMedia('(max-width: 760px)').matches || typeof Lenis === 'undefined') return;
     const lenis = new Lenis({
       autoRaf: true,
       smoothWheel: true,
-      syncTouch: true,
-      touchMultiplier: 0.8,
-      syncTouchLerp: 0.1,
+      syncTouch: false,
       lerp: 0.1,
       anchors: {
         offset: 110

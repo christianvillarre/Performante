@@ -11,12 +11,12 @@
   const pause=section.querySelector('[data-vehicle-pause]');
   const status=section.querySelector('[data-vehicle-status]');
   if(!cards.length)return;
-  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const reduced=matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)');
   const copy=card=>{const clone=card.cloneNode(true);clone.setAttribute('aria-hidden','true');clone.dataset.copy='true';return clone;};
   const before=cards.map(copy),after=cards.map(copy);
   track.prepend(...before);track.append(...after);
   section.classList.add('is-looping');
-  let period=0,step=0,frame=0,last=0,visible=false,hovered=false,focused=false,paused=false,drag=null,touching=false,manualUntil=0;
+  let period=0,step=0,frame=0,last=0,visible=false,hovered=false,focused=false,paused=false,drag=null,manualUntil=0;
   function normalize(){
    if(!period)return;
    if(track.scrollLeft<period || track.scrollLeft>=period*2){
@@ -30,7 +30,7 @@
    track.scrollLeft=period+position*period;normalize();
   }
   function autoEnabled(){return !reduced.matches&&!paused&&(freeFlow||(!hovered&&!focused));}
-  function canRun(){return visible&&!document.hidden&&!drag&&!touching&&(autoEnabled()||Math.abs(nudgeVelocity)>.5);}
+  function canRun(){return visible&&!document.hidden&&!drag&&(autoEnabled()||Math.abs(nudgeVelocity)>.5);}
   function tick(now){
    frame=0;
    if(!canRun()){last=0;return;}
@@ -66,20 +66,35 @@
   section.addEventListener('pointerleave',()=>{hovered=false;sync();});
   section.addEventListener('focusin',()=>{if(!freeFlow){focused=true;sync();}});
   section.addEventListener('focusout',event=>{focused=section.contains(event.relatedTarget);sync();});
+  // Remote desktop apps can send an iPad gesture as a touch pointer to a
+  // desktop browser. Handle all pointer types here, leaving vertical swipes
+  // to the page and claiming only a horizontal drag.
   track.addEventListener('pointerdown',event=>{
+   if(event.pointerType==='mouse'&&event.button!==0)return;
    nudgeVelocity=0;
-   if(event.pointerType==='touch'){touching=true;sync();return;}
-   if(event.button!==0)return;
-   event.preventDefault();drag={id:event.pointerId,x:event.clientX};
-   track.setPointerCapture(event.pointerId);track.classList.add('is-dragging');sync();
+   drag={id:event.pointerId,x:event.clientX,y:event.clientY,startX:event.clientX,startY:event.clientY,active:false};
+   sync();
   });
   track.addEventListener('pointermove',event=>{
    if(!drag||event.pointerId!==drag.id)return;
+   if(!drag.active){
+    const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;
+    if(Math.abs(dx)<6&&Math.abs(dy)<6)return;
+    if(Math.abs(dy)>=Math.abs(dx)){drag=null;sync();return;}
+    drag.active=true;
+    track.setPointerCapture(event.pointerId);
+    track.classList.add('is-dragging');
+   }
+   event.preventDefault();
    track.scrollLeft-=event.clientX-drag.x;drag.x=event.clientX;normalize();
-  });
+  },{passive:false});
   function release(event){
-   touching=false;manualUntil=performance.now()+(freeFlow?0:1200);
-   if(drag&&drag.id===event.pointerId){drag=null;track.classList.remove('is-dragging');if(track.hasPointerCapture(event.pointerId))track.releasePointerCapture(event.pointerId);}
+   if(!drag||drag.id!==event.pointerId)return;
+   const active=drag.active;
+   drag=null;
+   if(active)manualUntil=performance.now()+(freeFlow?0:1200);
+   track.classList.remove('is-dragging');
+   if(track.hasPointerCapture(event.pointerId))track.releasePointerCapture(event.pointerId);
    sync();
   }
   track.addEventListener('pointerup',release);track.addEventListener('pointercancel',release);track.addEventListener('lostpointercapture',release);
@@ -90,7 +105,7 @@
   });
   new ResizeObserver(measure).observe(track);
   new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;sync();}).observe(section);
-  document.addEventListener('visibilitychange',()=>{if(document.hidden){drag=null;touching=false;track.classList.remove('is-dragging');}sync();});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){drag=null;track.classList.remove('is-dragging');}sync();});
   reduced.addEventListener('change',sync);measure();
  });
 })();

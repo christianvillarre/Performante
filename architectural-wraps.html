@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+<link rel="icon" href="/images/favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="css/page-transitions.css">
 <script src="js/page-transitions.js"></script>
   <meta charset="UTF-8" />
@@ -22,8 +23,8 @@
      Commercial Wraps pages (vw-hero, vws-* stacking cards, vw-benefits-*,
      vw-faq-*, marquee, pw6-final-cta / pw5-closing-cta) — nothing
      architectural-specific needed a new stylesheet. -->
-<link rel="stylesheet" href="/css/subpage.css" />
-<link rel="stylesheet" href="css/navbar.css" />
+<link rel="stylesheet" href="/css/subpage.css?v=hero-cta-1" />
+<link rel="stylesheet" href="css/navbar.css?v=menu-unified-1" />
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
@@ -72,20 +73,19 @@
 
 </head>
 
-<body data-black7-build="architectural-wraps-v1">
+<body class="index2-menu" data-black7-build="architectural-wraps-v1">
 
+<!-- Shared menu: edit partials/menu.html, then run npm run build:menu -->
 <header class="pw-nav" id="pwNav">
-  <a class="pw-nav__logo" href="/" aria-label="Performante Wraps home">
-    <img src="/images/logo.png" alt="Performante Wraps">
+  <a class="pw-nav__logo" href="index.html" aria-label="Performante Wraps home">
+    <img src="images/logo.png" alt="Performante Wraps">
   </a>
-
   <div class="pw-nav__actions">
-    <a class="pw-nav__chat" href="contact.html"><span class="pw-nav__chat-label">Let’s Talk</span></a>
     <button class="pw-nav__toggle" id="pwMenuToggle" type="button" aria-label="Open menu" aria-expanded="false">
-      <span class="pw-nav__toggle-label">Menu</span>
       <span class="pw-nav__toggle-icon" aria-hidden="true">
         <span class="pw-nav__toggle-line pw-nav__toggle-line--one"></span>
         <span class="pw-nav__toggle-line pw-nav__toggle-line--two"></span>
+        <span class="pw-nav__toggle-line pw-nav__toggle-line--three"></span>
       </span>
     </button>
   </div>
@@ -97,35 +97,32 @@
     <span class="pw-menu__label"></span>
     <button class="pw-menu__close" id="pwMenuClose" type="button" aria-label="Close menu"></button>
   </div>
-
   <nav class="pw-menu__links" aria-label="Primary navigation">
     <a href="vehicle-wraps.html">Vehicle Wraps</a>
-    <a href="commercial-wraps.html">Commercial Wraps</a>
-    <a href="architectural-wraps.html" aria-current="page">Architectural Wraps</a>
-    <a href="paint-protection.html">Paint Protection</a>
+    <a href="commercial-wraps.html">Commercial &amp; Fleet Wraps</a>
+    <a href="architectural-wraps.html">Architectural Wraps</a>
     <a href="projects.html">Projects &amp; Case Studies</a>
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
   </nav>
-
   <div class="pw-menu__footer">
     <div class="pw-menu__footer-block">
       <p class="pw-menu__footer-label">Business Inquiry</p>
       <a href="mailto:enrico@performantewraps.com"><span class="pw-menu__footer-tag">E:</span> enrico@performantewraps.com</a>
       <a href="tel:8328014675"><span class="pw-menu__footer-tag">P:</span> (832) 801-4675</a>
     </div>
-
     <div class="pw-menu__socials">
       <p class="pw-menu__footer-label">Social</p>
       <div class="pw-menu__socials-grid">
-        <a href="#">Instagram</a>
-        <a href="#">Facebook</a>
-        <a href="#">Tiktok</a>
-        <a href="#">LinkedIn</a>
+        <a href="https://www.instagram.com/performantewraps/">Instagram</a>
+        <a href="https://www.facebook.com/performantewraps/">Facebook</a>
+        <a href="https://www.tiktok.com/@performantewraps">TikTok</a>
+        <a href="https://www.threads.com/@performantewraps">Threads</a>
       </div>
     </div>
   </div>
 </aside>
+<!-- End shared menu -->
 
 
  <div id="scroll-container">
@@ -134,9 +131,8 @@
 <!-- ============================================================================
      ARCHITECTURAL WRAPS — HERO
      Same split-hero pattern as the other wrap pages: left half copy +
-     rotating white marquee stripe, right half image/video carousel with
-     dots. Rotation is off for now (see architectural-wraps.js), dots
-     switch manually.
+     rotating white marquee stripe, right half image carousel with
+     manually selectable dots.
      ============================================================================ -->
 <section class="vw-hero" id="home">
 
@@ -150,13 +146,11 @@
         and commercial buildings across Houston.
       </p>
 
-      <a class="vw-hero__cta pw-btn" href="/contact.html">
-        <span class="pw-btn__label">Get a Project Quote</span>
-        <span class="pw-btn__arrow" aria-hidden="true">
-          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </span>
+      <a class="vw-hero__cta index2-motion-link" href="/contact.html">
+        <span class="hero-project-link__arrow-window hero-project-link__arrow-window--left" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="index2-text-link__label">Get a Project Quote</span>
+        <span class="hero-project-link__arrow-window hero-project-link__arrow-window--right" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="hero-project-link__underline" aria-hidden="true"></span>
       </a>
     </div>
 
@@ -190,21 +184,24 @@
 
   <div class="vw-hero__col vw-hero__col--media">
     <div class="vw-hero__media" id="awHeroMedia">
-      <img class="vw-hero__slide is-active" data-slide="0" src="/images/arch-window-film.jpg" alt="Decorative window film on an office building">
-      <img class="vw-hero__slide" data-slide="1" src="/images/arch-building-wrap.jpg" alt="Full building exterior wrap">
-      <img class="vw-hero__slide" data-slide="2" src="/images/arch-interior-branding.jpg" alt="Interior office branding wall graphic">
+      <img class="vw-hero__slide is-active" data-slide="0" src="/images/Untitled-2.jpg" alt="7 Brew exterior branding and wrapped panel">
+      <img class="vw-hero__slide" data-slide="1" src="/images/aw_window_film.jpeg" alt="Window film on a commercial building">
+      <img class="vw-hero__slide" data-slide="2" src="/images/aw_building_wrap.jpeg" alt="Large-format architectural wrap being printed">
+      <img class="vw-hero__slide" data-slide="3" src="/images/aw_interior.png" alt="Houston mural on an interior wall">
     </div>
 
     <p class="vw-hero__media-caption">
-      <span class="vw-hero__media-text is-active" data-slide="0">Decorative &amp; privacy window film for offices and storefronts.</span>
-      <span class="vw-hero__media-text" data-slide="1">Full building wraps — exterior graphics at scale.</span>
-      <span class="vw-hero__media-text" data-slide="2">Interior branding — walls, lobbies and conference rooms.</span>
+      <span class="vw-hero__media-text is-active" data-slide="0">Exterior branding that turns a building into a landmark.</span>
+      <span class="vw-hero__media-text" data-slide="1">Window film for commercial spaces.</span>
+      <span class="vw-hero__media-text" data-slide="2">Large-format graphics, printed for architectural installations.</span>
+      <span class="vw-hero__media-text" data-slide="3">Interior graphics that give a space its own identity.</span>
     </p>
 
     <div class="vw-hero__dots" id="awHeroDots" role="tablist" aria-label="Switch hero image">
-      <button class="vw-hero__dot is-active" type="button" data-slide="0" role="tab" aria-selected="true" aria-label="Show window film image"></button>
-      <button class="vw-hero__dot" type="button" data-slide="1" role="tab" aria-selected="false" aria-label="Show building wrap image"></button>
-      <button class="vw-hero__dot" type="button" data-slide="2" role="tab" aria-selected="false" aria-label="Show interior branding image"></button>
+      <button class="vw-hero__dot is-active" type="button" data-slide="0" role="tab" aria-selected="true" aria-label="Show exterior branding image"></button>
+      <button class="vw-hero__dot" type="button" data-slide="1" role="tab" aria-selected="false" aria-label="Show window film image"></button>
+      <button class="vw-hero__dot" type="button" data-slide="2" role="tab" aria-selected="false" aria-label="Show large-format printing image"></button>
+      <button class="vw-hero__dot" type="button" data-slide="3" role="tab" aria-selected="false" aria-label="Show interior branding image"></button>
     </div>
   </div>
 
@@ -241,7 +238,7 @@
       <article class="vws-card">
         <div class="vws-card-inner">
           <div class="vws-card-image main">
-            <img src="/images/arch-window-film.jpg" alt="Decorative window film install">
+            <img src="/images/aw_window_film.jpeg" alt="Window film on a commercial building">
           </div>
 
           <div class="vws-title-wrap">
@@ -262,14 +259,14 @@
           <div class="vws-content">
             <div class="vws-links-wrap">
               <ul class="vws-links">
-                <li><a href="#"><span>Frosted &amp; Privacy Film</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Custom-Printed Storefront Graphics</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Solar &amp; UV-Blocking Film</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Conference Room Privacy Panels</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li>Frosted &amp; Privacy Film</li>
+                <li>Custom-Printed Storefront Graphics</li>
+                <li>Solar &amp; UV-Blocking Film</li>
+                <li>Conference Room Privacy Panels</li>
               </ul>
             </div>
             <div class="vws-card-image small">
-              <img src="/images/arch-window-film-detail.jpg" alt="Window film detail">
+              <img src="/images/aw_window_film.jpeg" alt="Commercial window film detail">
             </div>
           </div>
         </div>
@@ -278,7 +275,7 @@
       <article class="vws-card">
         <div class="vws-card-inner">
           <div class="vws-card-image main">
-            <img src="/images/arch-building-wrap.jpg" alt="Full building exterior wrap">
+            <img src="/images/Untitled-2.jpg" alt="7 Brew exterior branding and wrapped panel">
           </div>
 
           <div class="vws-title-wrap">
@@ -299,14 +296,14 @@
           <div class="vws-content">
             <div class="vws-links-wrap">
               <ul class="vws-links">
-                <li><a href="#"><span>Full Building Facade Wraps</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Construction Barrier Graphics</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Event &amp; Temporary Installations</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Weatherproof Large-Format Print</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li>Full Building Facade Wraps</li>
+                <li>Construction Barrier Graphics</li>
+                <li>Event &amp; Temporary Installations</li>
+                <li>Weatherproof Large-Format Print</li>
               </ul>
             </div>
             <div class="vws-card-image small">
-              <img src="/images/arch-building-wrap-detail.jpg" alt="Building wrap detail">
+              <img src="/images/aw_building_wrap.jpeg" alt="Large-format architectural graphics being printed">
             </div>
           </div>
         </div>
@@ -315,7 +312,7 @@
       <article class="vws-card">
         <div class="vws-card-inner">
           <div class="vws-card-image main">
-            <img src="/images/arch-interior-branding.jpg" alt="Interior office branding wall graphic">
+            <img src="/images/aw_interior.png" alt="Houston mural on an interior wall">
           </div>
 
           <div class="vws-title-wrap">
@@ -336,14 +333,14 @@
           <div class="vws-content">
             <div class="vws-links-wrap">
               <ul class="vws-links">
-                <li><a href="#"><span>Lobby &amp; Reception Wall Graphics</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Conference Room Branding</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Full Room &amp; Hallway Murals</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Removable Wall Vinyl</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li>Lobby &amp; Reception Wall Graphics</li>
+                <li>Conference Room Branding</li>
+                <li>Full Room &amp; Hallway Murals</li>
+                <li>Removable Wall Vinyl</li>
               </ul>
             </div>
             <div class="vws-card-image small">
-              <img src="/images/arch-interior-branding-detail.jpg" alt="Interior branding detail">
+              <img src="/images/aw_interior.png" alt="Detail of a Houston interior mural">
             </div>
           </div>
         </div>
@@ -352,7 +349,7 @@
       <article class="vws-card">
         <div class="vws-card-inner">
           <div class="vws-card-image main">
-            <img src="/images/arch-wayfinding.jpg" alt="Wayfinding signage graphics">
+            <img src="/images/aw_wayfinding.png" alt="Branded interior wall graphics">
           </div>
 
           <div class="vws-title-wrap">
@@ -373,14 +370,14 @@
           <div class="vws-content">
             <div class="vws-links-wrap">
               <ul class="vws-links">
-                <li><a href="#"><span>Directional &amp; Room Signage</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Floor &amp; Wall Wayfinding Graphics</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>ADA-Compliant Signage</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-                <li><a href="#"><span>Brand-Matched Sign Systems</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+                <li>Directional &amp; Room Signage</li>
+                <li>Floor &amp; Wall Wayfinding Graphics</li>
+                <li>ADA-Compliant Signage</li>
+                <li>Brand-Matched Sign Systems</li>
               </ul>
             </div>
             <div class="vws-card-image small">
-              <img src="/images/arch-wayfinding-detail.jpg" alt="Wayfinding detail">
+              <img src="/images/aw_wayfinding2.png" alt="Exterior signage and branded panel">
             </div>
           </div>
         </div>
@@ -613,10 +610,10 @@
           <p class="pw6-final-cta__info-label">Social</p>
 
           <div class="pw6-final-cta__social-grid">
-            <a href="#">Instagram</a>
-            <a href="#">Facebook</a>
-            <a href="#">Tiktok</a>
-            <a href="#">LinkedIn</a>
+            <a href="https://www.instagram.com/performantewraps/">Instagram</a>
+            <a href="https://www.facebook.com/performantewraps/">Facebook</a>
+            <a href="https://www.tiktok.com/@performantewraps">TikTok</a>
+            <a href="https://www.threads.com/@performantewraps">Threads</a>
           </div>
         </div>
 
@@ -633,19 +630,20 @@
      ============================================================================ -->
 <section class="pw5-closing-cta" aria-labelledby="pw5ClosingTitle">
   <div class="pw5-closing-cta__media" aria-hidden="true">
-    <img src="/images/arch-closing.jpg" alt="" loading="lazy">
+    <img src="/images/stock15.jpeg" alt="" loading="lazy" decoding="async">
   </div>
   <div class="pw5-closing-cta__veil" aria-hidden="true"></div>
-  <a class="pw5-closing-cta__wordmark" href="/contact.html" style="--pw5-wordmark-img:url('/images/arch-closing.jpg')"><span id="pw5ClosingTitle">PERFORMANTE</span></a>
+  <a class="pw5-closing-cta__wordmark" href="/contact.html" style="--pw5-wordmark-img:url('/images/stock15.jpeg')"><span id="pw5ClosingTitle">PERFORMANTE</span></a>
 </section>
 
 </main>
 
 </div><!-- /#scroll-container -->
 
-<script src="js/navbar-black.js" defer></script>
+<script src="js/navbar-black.js?v=menu-unified-1" defer></script>
 
-<script src="/js/architectural-wraps.js" defer></script>
+<script src="js/service-hero-cta.js?v=1" defer></script>
+<script src="js/commercial-footer.js?v=3" defer></script>
 
 
 <!-- FAQ accordion — self-contained, no dependency on gsap.js -->
@@ -679,6 +677,25 @@
       btn.setAttribute('aria-expanded','true');
       answer.style.maxHeight = answer.scrollHeight + 'px';
     }
+  });
+})();
+</script>
+
+<script>
+(() => {
+  const dots = [...document.querySelectorAll('#awHeroDots .vw-hero__dot')];
+  const slides = [...document.querySelectorAll('#awHeroMedia .vw-hero__slide')];
+  const captions = [...document.querySelectorAll('.vw-hero__media-caption .vw-hero__media-text')];
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      dots.forEach((item, i) => {
+        const active = i === index;
+        item.classList.toggle('is-active', active);
+        item.setAttribute('aria-selected', String(active));
+      });
+      slides.forEach((item, i) => item.classList.toggle('is-active', i === index));
+      captions.forEach((item, i) => item.classList.toggle('is-active', i === index));
+    });
   });
 })();
 </script>

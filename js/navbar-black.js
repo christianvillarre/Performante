@@ -1,3 +1,6 @@
+/* ========================================================================== */
+/* js\navbar-black.js */
+/* ========================================================================== */
 /* =====================================================
    PERFORMANTE WRAPS — NAVBAR JS
    Extracted 1:1 from performante-wraps__9_.html
@@ -325,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     gsap.set(arrow,{x:-7,autoAlpha:0});
     const letters = gsap.utils.toArray(".pw-menu-letter", link);
-    const motion=window.matchMedia('(prefers-reduced-motion: reduce)');
+    const motion=window.matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)');
     // Keep the complete link name available to assistive technology.
     link.setAttribute('aria-label',letters.map(letter=>letter.textContent).join(''));
     letters.forEach(letter=>letter.setAttribute('aria-hidden','true'));
@@ -358,63 +361,17 @@ document.addEventListener("DOMContentLoaded", () => {
       rollover.timeScale(active?1:1.25);
       if(active)rollover.play();else rollover.reverse();
     }
-    link.addEventListener('pointerenter',event=>{
-      if(event.pointerType==='touch')return;
-      pointerInside=true;syncRollover();
-    });
+    link.addEventListener('pointerenter',()=>{pointerInside=true;syncRollover();});
     link.addEventListener('pointerleave',()=>{pointerInside=false;syncRollover();});
+    link.addEventListener('pointerup',event=>{if(event.pointerType==='touch'){pointerInside=false;syncRollover();}});
+    link.addEventListener('pointercancel',()=>{pointerInside=false;syncRollover();});
     link.addEventListener('focus',syncRollover);
     link.addEventListener('blur',syncRollover);
     motion.addEventListener('change',syncRollover);
   });
 });
 
-/* =====================================================
-   OPTIONAL: header theme over white/light page sections.
-   Requires GSAP ScrollTrigger + elements with class "wrap-light-section".
-   Cleanly no-ops if either is absent, so it's safe to include everywhere.
-===================================================== */
-document.addEventListener("DOMContentLoaded", () => {
-  const nav = document.getElementById("pwNav");
-  if (!nav) return;
-  if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+/* Light-section header switching is disabled; do not register its old
+   ScrollTrigger callbacks while the applyHeaderTheme function is absent. */
 
-  const whiteSections = gsap.utils.toArray(".wrap-light-section");
-  if (!whiteSections.length) return;
-
-  let activeWhiteSections = 0;
-/*
-  const applyHeaderTheme = () => {
-    nav.classList.toggle("pw-nav--light-bg", activeWhiteSections > 0);
-
-    if (typeof window.syncPerformanteHeaderTheme === "function") {
-      window.syncPerformanteHeaderTheme();
-    } else {
-      const lightState =
-        nav.classList.contains("pw-nav--light-bg") ||
-        nav.classList.contains("pw-nav--menu-open");
-
-      nav.querySelectorAll(".pw-nav__chat, .pw-nav__toggle").forEach((pill) => {
-        if (!pill.matches(":hover")) {
-          gsap.set(pill, { color: lightState ? "#111" : "#fff" });
-        }
-        const fill = pill.querySelector(".pw-pill-fill");
-        if (fill) gsap.set(fill, { backgroundColor: lightState ? "#111" : "#fff" });
-      });
-    }
-  };*/
-
-  whiteSections.forEach((section) => {
-    ScrollTrigger.create({
-      trigger: section,
-      start: "top bottom",
-      end: "bottom top",
-      onEnter: () => { activeWhiteSections += 1; applyHeaderTheme(); },
-      onEnterBack: () => { activeWhiteSections += 1; applyHeaderTheme(); },
-      onLeave: () => { activeWhiteSections = Math.max(0, activeWhiteSections - 1); applyHeaderTheme(); },
-      onLeaveBack: () => { activeWhiteSections = Math.max(0, activeWhiteSections - 1); applyHeaderTheme(); }
-    });
-  });
-
-  ScrollTrigger.refresh();
-});
+;

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded',()=>{
   const section=document.querySelector('.pw-truck-roll');
-  if(!section||!window.gsap||!window.ScrollTrigger||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(!section||!window.gsap||!window.ScrollTrigger||window.matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)').matches)return;
   gsap.registerPlugin(ScrollTrigger);
   const trucks=gsap.utils.toArray('.pw-truck-roll__truck');
   const caption=section.querySelector('.pw-truck-roll__caption');

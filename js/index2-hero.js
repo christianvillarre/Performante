@@ -8,7 +8,7 @@ document.querySelectorAll('.about-project-link, .pw-truck-roll__project, .select
 });
 
 document.addEventListener('DOMContentLoaded',()=>{
-  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)').matches;
   document.querySelectorAll('.index2-text-link').forEach(link=>{
     const label=link.querySelector('.index2-text-link__label');
     const arrow=link.querySelector('svg');
@@ -42,8 +42,10 @@ document.addEventListener('DOMContentLoaded',()=>{
         .to(letters,{x:34,duration:.23,stagger:{each:.025,from:'end'}},.04)
         .to(leftWindow,{opacity:1,duration:.01},.19)
         .to(leftArrow,{x:0,duration:.24},.2);
-      link.addEventListener('pointerenter',event=>{if(event.pointerType!=='touch'){motion.play();sweep.restart();}});
+      link.addEventListener('pointerenter',()=>{motion.play();sweep.restart();});
       link.addEventListener('pointerleave',()=>motion.reverse());
+      link.addEventListener('pointerup',event=>{if(event.pointerType==='touch')motion.reverse();});
+      link.addEventListener('pointercancel',()=>motion.reverse());
       link.addEventListener('focus',()=>{motion.play();sweep.restart();});
       link.addEventListener('blur',()=>motion.reverse());
       return;
@@ -58,8 +60,10 @@ document.addEventListener('DOMContentLoaded',()=>{
       gsap.to(letters,{x:0,duration:.12,overwrite:true});
       gsap.to(arrow,{x:-5,opacity:.65,duration:.12,overwrite:true});
     };
-    link.addEventListener('pointerenter',event=>{if(event.pointerType!=='touch')enter();});
+    link.addEventListener('pointerenter',enter);
     link.addEventListener('pointerleave',leave);
+    link.addEventListener('pointerup',event=>{if(event.pointerType==='touch')leave();});
+    link.addEventListener('pointercancel',leave);
     link.addEventListener('focus',enter);
     link.addEventListener('blur',leave);
   });
@@ -68,7 +72,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     gsap.registerPlugin(ScrollTrigger);
     gsap.fromTo(image,{clipPath:'inset(0 100% 0 0)'},{
       clipPath:'inset(0 0% 0 0)',ease:'none',
-      scrollTrigger:{trigger:image,start:'top 90%',end:'bottom 45%',scrub:true,invalidateOnRefresh:true}
+      scrollTrigger:{trigger:image,start:'top 110%',end:'top 55%',scrub:true,invalidateOnRefresh:true}
     });
   }
 });

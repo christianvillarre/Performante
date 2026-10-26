@@ -3,8 +3,9 @@
   if (!window.gsap || !window.ScrollTrigger) return;
   gsap.registerPlugin(ScrollTrigger);
   const media = gsap.matchMedia();
+  // Remote desktop sessions can report reduced motion even when the visitor
+  // expects the page animations. Keep the About story active on all devices.
   media.add({motion: '(prefers-reduced-motion: no-preference)', desktop: '(min-width:761px) and (min-height:650px)', wide: '(min-width:761px)'}, context => {
-    if (!context.conditions.motion) return;
     const desktop = context.conditions.desktop;
     const horizontal = context.conditions.wide;
     const restore = [];
@@ -44,10 +45,18 @@
           scrollTrigger: {trigger: heading, start: 'top 87%', toggleActions: 'play none none reverse'}});
       }
     });
-    gsap.from('.at-intro .at-kicker, .at-intro__description, .at-scroll', {opacity: 0, y: 15, stagger: .12, duration: 1, delay: .45});
+    gsap.from('.at-intro__description, .at-scroll', {opacity: 0, y: 15, stagger: .12, duration: 1, delay: .45});
     gsap.to('.at-intro__inner', {y: -55, opacity: .2, ease: 'none', scrollTrigger: {trigger: '.at-intro', start: 'top top', end: 'bottom 20%', scrub: .5}});
+    gsap.utils.toArray('.at-intro__photo img').forEach((photo, index) => {
+      gsap.fromTo(photo, {yPercent: 0}, {
+        yPercent: index === 0 ? -10 : -16,
+        ease: 'none',
+        scrollTrigger: {trigger: '.at-intro', start: 'top top', end: 'bottom top', scrub: .6}
+      });
+    });
     gsap.utils.toArray('.at-service').forEach((row, i) => {
-      gsap.from(row.querySelectorAll('h3, p, .at-index, .at-service__arrow'), {
+      // Keep all arrows fixed on the same right edge while the row copy enters.
+      gsap.from(row.querySelectorAll('h3, p, .at-index'), {
         x: i % 2 ? 20 : -20, opacity: 0, stagger: .05, ease: 'none',
         scrollTrigger: {trigger: row, start: 'top 90%', end: 'top 62%', scrub: .4}
       });
