@@ -2,11 +2,16 @@
 (() => {
   const key='pw-page-transition';
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+  const route=url=>{
+    const parsed=new URL(url,location.href);
+    const path=parsed.pathname.replace(/\/index(?:\.html)?\/?$/i,'/').replace(/\.html\/?$/i,'').replace(/\/$/,'');
+    return parsed.origin+path+parsed.search;
+  };
   let arrival=false,overlay,busy=false,failsafe;
   try {
     const saved=JSON.parse(sessionStorage.getItem(key)||'null');
     sessionStorage.removeItem(key);
-    arrival=!!saved && Date.now()-saved.time<15000 && saved.url===location.href;
+    arrival=!!saved && Date.now()-saved.time<15000 && route(saved.url)===route(location.href);
   } catch {}
   arrival=arrival || performance.getEntriesByType('navigation')[0]?.type==='back_forward';
   if(arrival)document.documentElement.classList.add('pw-page-entering');
@@ -40,8 +45,8 @@
       const link=event.target.closest?.('a[href]');
       if(!link || link.hasAttribute('download') || (link.target && link.target!=='_self') || link.hasAttribute('data-no-transition'))return;
       const url=new URL(link.href,location.href);
-      if(url.origin!==location.origin || !/^https?:$/.test(url.protocol) || (!url.pathname.endsWith('/') && !/\.html$/i.test(url.pathname)))return;
-      if(url.pathname===location.pathname && url.search===location.search)return;
+      if(url.origin!==location.origin || !/^https?:$/.test(url.protocol) || (/\.[^/]+$/.test(url.pathname) && !/\.html$/i.test(url.pathname)))return;
+      if(route(url.href)===route(location.href))return;
       event.preventDefault();if(busy)return;busy=true;
       // Release the cover if a cancelled navigation leaves this document alive.
       failsafe=setTimeout(reset,6000);

@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/subpage.css">
   <link rel="stylesheet" href="/css/navbar.css?v=menu-unified-1">
-  <link rel="stylesheet" href="/css/contact.css?v=split-contact-9">
+  <link rel="stylesheet" href="/css/contact.css?v=captcha-row-1">
   <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
@@ -138,8 +138,8 @@
         <div class="ct-field"><label for="ctProject">Project type <span>*</span></label><select id="ctProject" name="project" required><option value="" disabled selected>Select a service</option><option>Vehicle Wraps</option><option>Commercial &amp; Fleet Wraps</option><option>Architectural Wraps</option><option>Paint Protection Film</option><option>Something Else</option></select></div>
       </div>
       <div class="ct-field ct-field--message"><label for="ctDetails">Tell us about your project <span>*</span></label><textarea id="ctDetails" name="details" rows="5" placeholder="What are you looking to create? Include your vehicle, space, timing, or any ideas you already have." required></textarea></div>
-      <div class="ct-captcha" data-netlify-recaptcha="true"></div>
-      <div class="ct-form__bottom"><p>We’ll review your inquiry and get back to you soon.</p><button type="submit"><span>SEND MY INQUIRY</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></button></div>
+      <p class="ct-form__note">We’ll review your inquiry and get back to you soon.</p>
+      <div class="ct-form__bottom"><div class="ct-captcha" data-netlify-recaptcha="true"></div><button type="submit"><span>SEND MY INQUIRY</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></button></div>
     </form>
   </section>
 
@@ -152,7 +152,7 @@
       <article class="ct-review"><div class="ct-review__stars" aria-label="5 out of 5 stars">★★★★★</div><blockquote>“Enrico has great attention to detail.”</blockquote><p>marcus white <span>GOOGLE REVIEW</span></p></article>
       <article class="ct-review"><div class="ct-review__stars" aria-label="5 out of 5 stars">★★★★★</div><blockquote>“Absolutely an amazing job on my 2025 Gsxr1000, exceeded my expectations!! 10/10 fast and amazing quality!”</blockquote><p>Joey Muñiz <span>GOOGLE REVIEW</span></p></article>
     </div>
-    <a class="ct-reviews__link" href="https://www.google.com/maps/search/?api=1&amp;query=Performante%20Wraps%20Porter%20TX" target="_blank" rel="noopener noreferrer"><span>VIEW GOOGLE REVIEWS</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
+    <a class="ct-reviews__link" href="https://www.google.com/maps/search/?api=1&amp;query=Performante%20Wraps%20Porter%20TX" target="_blank" rel="noopener noreferrer" aria-label="View Google reviews"><span class="ct-reviews__arrow-window ct-reviews__arrow-window--left" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></span><span class="ct-reviews__link-label">VIEW GOOGLE REVIEWS</span><span class="ct-reviews__arrow-window ct-reviews__arrow-window--right" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></span><span class="ct-reviews__underline" aria-hidden="true"></span></a>
   </section>
 
   <section class="ct-outro" aria-label="Start a project"><div class="ct-outro__image" aria-hidden="true"></div><div class="ct-outro__marquee" aria-hidden="true"><span>MAKE IT UNMISTAKABLE&nbsp; / &nbsp;MAKE IT UNMISTAKABLE&nbsp; / &nbsp;</span><span>MAKE IT UNMISTAKABLE&nbsp; / &nbsp;MAKE IT UNMISTAKABLE&nbsp; / &nbsp;</span></div><div class="ct-outro__content"><span class="ct-eyebrow">FROM IDEA TO IMPACT</span><p>Bring us the brief.<br><em>We’ll make it unmistakable.</em></p><a href="#inquiry">TELL US WHAT YOU HAVE IN MIND <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></div></section>
@@ -249,6 +249,6 @@
 </div>
 <script src="/js/navbar-black.js?v=menu-unified-1" defer></script>
 <script src="/js/commercial-footer.js?v=3" defer></script>
-<script src="/js/contact.js" defer></script>
+<script src="/js/contact.js?v=review-link-motion-1" defer></script>
 </body>
 </html>
