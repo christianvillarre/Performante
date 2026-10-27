@@ -120,7 +120,7 @@ body{margin:0;background:#0a0a0a;color:#f2f0ed;font-family:'Zalando Sans',sans-s
 .pw6-final-cta__button .pw-btn__arrow svg{fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round}
 
 /* Reviews below the inquiry form */
-.ct-reviews{box-sizing:border-box;padding:clamp(52px,6vw,88px) clamp(24px,4vw,64px) clamp(85px,10vw,145px);background:#0a0a0a;color:#f2f0ed;border-top:1px solid #ffffff16}
+.ct-reviews{box-sizing:border-box;padding:clamp(52px,6vw,88px) clamp(24px,4vw,64px) clamp(85px,10vw,145px);background:#101010;color:#f2f0ed}
 .ct-reviews__head{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:48px}
 .ct-reviews .ct-eyebrow{color:#aaa6a0}
 .ct-reviews h2{margin:0;font-size:clamp(32px,4.2vw,64px);font-weight:500;letter-spacing:-.055em;line-height:1.05;white-space:nowrap}
@@ -170,12 +170,12 @@ body{margin:0;background:#0a0a0a;color:#f2f0ed;font-family:'Zalando Sans',sans-s
 
 /* Split contact story: left content moves past a persistent inquiry form. */
 @media(min-width:901px){
- .ct-page{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto auto;background:linear-gradient(90deg,#0a0a0a 50%,#101010 50%)}
+ .ct-page{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto auto;background:#101010}
  .ct-page .ct-inquiry{display:contents!important}
  .ct-page .ct-inquiry__intro{grid-column:1;grid-row:1;box-sizing:border-box;width:100%;max-width:none;min-height:100svh;padding:clamp(145px,11vw,180px) clamp(28px,4vw,64px) 90px;background:#101010}
  .ct-page .ct-inquiry h1{max-width:none;width:100%}
  .ct-page .ct-form{grid-column:2;grid-row:1 / 4;align-self:start;position:sticky;top:110px;z-index:2;box-sizing:border-box;width:100%;max-height:calc(100svh - 125px);overflow-y:auto;padding:25px clamp(28px,4vw,64px) 30px;background:#101010;border-left:1px solid #ffffff16;scrollbar-width:thin;scrollbar-color:#ffffff35 transparent}
- .ct-page .ct-reviews{grid-column:1;grid-row:2;border-top:1px solid #ffffff16;padding:70px clamp(28px,4vw,64px) 100px}
+ .ct-page .ct-reviews{grid-column:1;grid-row:2;padding:70px clamp(28px,4vw,64px) 100px}
  .ct-page .ct-outro{grid-column:1;grid-row:3;min-height:520px}
  .ct-page .ct-reviews__head{display:block;margin-bottom:30px}
  .ct-page .ct-reviews h2{white-space:normal;font-size:clamp(32px,3.2vw,52px)}
