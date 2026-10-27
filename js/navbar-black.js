@@ -283,6 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     headerPills.forEach((pill) => {
       const hovered = pill.matches(":hover");
+      const simpleHamburger = simpleMenu && pill.id === "pwMenuToggle";
       gsap.killTweensOf(pill);
       gsap.set(pill, {
         color: simpleHamburger ? (lightState ? "#111" : "#fff") : hovered

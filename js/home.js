@@ -366,7 +366,8 @@ const startHeroIntro=() => {
 
   gsap.set("#energyField", { opacity: 0 });
 
-  gsap.set(".hero-bottom-title", {
+  const heroBottomTitle = document.querySelector(".hero-bottom-title");
+  if (heroBottomTitle) gsap.set(heroBottomTitle, {
     opacity: 0,
     y: 30
   });
@@ -388,8 +389,8 @@ const startHeroIntro=() => {
     .to("#energyField", {
       opacity: 0.9,
       duration: 2.2
-    }, "-=0.9")
-    .to(".hero-bottom-title", {
+    }, "-=0.9");
+  if (heroBottomTitle) heroIntro.to(heroBottomTitle, {
       opacity: 1,
       y: 0,
       duration: 1.1
