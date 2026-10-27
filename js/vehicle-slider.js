@@ -12,6 +12,7 @@
   const status=section.querySelector('[data-vehicle-status]');
   if(!cards.length)return;
   const reduced=matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)');
+  const mobile=matchMedia('(max-width: 600px)');
   const copy=card=>{const clone=card.cloneNode(true);clone.setAttribute('aria-hidden','true');clone.dataset.copy='true';return clone;};
   const before=cards.map(copy),after=cards.map(copy);
   track.prepend(...before);track.append(...after);
@@ -36,12 +37,12 @@
    if(!canRun()){last=0;return;}
    const dt=last?Math.min((now-last)/1000,.05):0;last=now;
    if(freeFlow){
-    const drift=autoEnabled()&&now>=manualUntil?30:0;
+    const drift=autoEnabled()&&now>=manualUntil?(mobile.matches?46:30):0;
     track.scrollLeft+=dt*(drift+nudgeVelocity);
     nudgeVelocity*=Math.exp(-5*dt);
     if(Math.abs(nudgeVelocity)<.5)nudgeVelocity=0;
     normalize();
-   }else if(now>=manualUntil){track.scrollLeft+=dt*30;normalize();}
+   }else if(now>=manualUntil){track.scrollLeft+=dt*(mobile.matches?46:30);normalize();}
    frame=requestAnimationFrame(tick);
   }
   function sync(){if(frame)cancelAnimationFrame(frame);frame=0;last=0;if(canRun())frame=requestAnimationFrame(tick);}

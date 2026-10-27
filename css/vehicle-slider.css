@@ -8,3 +8,14 @@
 .pw-vehicles__card img{filter:grayscale(1);transition:filter .3s ease}
 .pw-vehicles__card:hover img,.pw-vehicles__card:focus-within img{filter:grayscale(0)}
 @media(prefers-reduced-motion:reduce){.pw-vehicles__card img{transition:none}}
+
+/* Touching outline cards with only the vehicle name below the image. */
+.pw-vehicles__track{gap:0;padding-bottom:16px}
+.pw-vehicles__card{border:1px solid #ffffff99;border-right:0;border-radius:0;background:transparent}
+.pw-vehicles__copy{padding:8px 24px 26px}
+.pw-vehicles__copy h3{margin:0}
+@media(max-width:600px){
+ .pw-vehicles__track{gap:0}
+ .pw-vehicles__card{flex-basis:86vw}
+ .pw-vehicles__copy{padding:8px 20px 24px}
+}

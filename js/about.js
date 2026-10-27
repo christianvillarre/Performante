@@ -1,5 +1,16 @@
 /* Typography-led About. Animation is enhancement; static content stays complete. */
 (() => {
+  const story = document.getElementById('story');
+  if (story) {
+    const closing = document.querySelector('.at-process__closing');
+    const updateChapterTheme = () => {
+      document.body.classList.toggle('at-light-chapter', story.getBoundingClientRect().top <= window.innerHeight * .65);
+      document.body.classList.toggle('at-dark-finale', !!closing && closing.getBoundingClientRect().top <= window.innerHeight * .65);
+    };
+    window.addEventListener('scroll', updateChapterTheme, {passive: true});
+    window.addEventListener('resize', updateChapterTheme, {passive: true});
+    updateChapterTheme();
+  }
   if (!window.gsap || !window.ScrollTrigger) return;
   gsap.registerPlugin(ScrollTrigger);
   const media = gsap.matchMedia();

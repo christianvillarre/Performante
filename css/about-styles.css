@@ -172,3 +172,75 @@
  .at-step{grid-template-columns:1fr}
  .at-step__media{grid-column:1}
 }
+
+/* Section headings: eyebrow first, with each title aligned to its section. */
+.at-services .at-section-head,
+.ab-values .at-section-head{display:flex;flex-direction:column;gap:18px}
+.at-services .at-section-head{text-align:left;align-items:flex-start}
+.ab-values .at-section-head{text-align:left;align-items:flex-start}
+.at-services .at-section-head .at-kicker,
+.ab-values .at-section-head .at-kicker{padding-top:0}
+.ab-values__heading{width:100%}
+#values .ab-values__stage{position:relative;top:-28px}
+@media(max-width:760px){#values .ab-values__stage{top:-16px}}
+
+/* Keep the eyebrow above a single full-width title and paragraph column. */
+#site > #story.at-ambition{display:block!important;padding-top:clamp(115px,11vw,175px)}
+#story > .at-kicker{position:absolute;top:clamp(42px,4vw,64px);left:clamp(24px,4vw,64px);padding:0}
+#story .at-manifesto{display:block;width:100%;max-width:none;text-align:left}
+#story .at-ambition__foot{display:flex;width:100%;max-width:none;justify-content:space-between;gap:clamp(30px,6vw,100px);margin-top:clamp(34px,4vw,64px);padding-top:30px;border-top:1px solid #ffffff24}
+#story .at-ambition__foot .at-small{flex:0 0 30%}
+#story .at-ambition__foot .at-copy{flex:1;display:block;width:auto;max-width:55ch;text-align:left}
+@media(max-width:760px){
+ #story .at-ambition__foot{flex-direction:column;gap:22px}
+ #story .at-ambition__foot .at-small{flex:0 0 auto}
+ #story .at-ambition__foot .at-copy{width:100%;max-width:none}
+}
+
+/* The services and story chapters switch together at the story trigger. */
+#site > .at-opening > #what-we-do{transition:background-color .65s ease,color .65s ease}
+#site :is(#story,#excellence,#values,#process,#founder){transition:background-color .65s ease,color .65s ease}
+#site > #story{background:#0a0a0a}
+body.at-light-chapter #site > .at-opening > #what-we-do{
+ --at-ink:#111;
+ --at-muted:#555;
+ background:#fff;
+ color:#111;
+}
+body.at-light-chapter #what-we-do .at-kicker{color:#555}
+body.at-light-chapter #what-we-do .at-service{border-color:#00000024}
+body.at-light-chapter #what-we-do .at-service:hover h3{color:#444}
+body.at-light-chapter #site :is(#story,#excellence,#values,#process,#founder){
+ --at-ink:#111;
+ --at-muted:#555;
+ background:#fff;
+ color:#111;
+}
+body.at-light-chapter #site :is(#story,#excellence,#values,#process,#founder) :is(.at-kicker,.at-small,.at-photo-break__caption,.at-founder__role){color:#555}
+body.at-light-chapter #site :is(#story,#values,#process,#founder) :is(.at-copy,.ab-values__point p,.at-step p,.at-founder__bio p){color:#333}
+body.at-light-chapter #site #story .at-manifesto .at-word{color:#111!important}
+body.at-light-chapter #site #story .at-ambition__foot,
+body.at-light-chapter #site #founder,
+body.at-light-chapter #site #process .at-step{border-color:#00000024}
+body.at-light-chapter #site #values .ab-values__line-track{background:#00000024}
+body.at-light-chapter #site #values .ab-values__line{background:#111}
+body.at-light-chapter #site #values .ab-values__dot{background:#111}
+body.at-light-chapter #site #process .at-process__closing{color:#555}
+body.at-light-chapter #site #process .at-process__closing span{color:#111}
+
+/* ScrollTrigger wraps the pinned values section in a spacer. */
+body.at-light-chapter #site .pin-spacer:has(#values){background:#fff}
+
+/* Return to the dark palette as the closing statement arrives. */
+body.at-dark-finale #site :is(#process,#founder){
+ --at-ink:#f2f0ed;
+ --at-muted:#969593;
+ background:#0a0a0a;
+ color:#f2f0ed;
+}
+body.at-dark-finale #site :is(#process,#founder) :is(.at-kicker,.at-founder__role){color:#969593}
+body.at-dark-finale #site :is(#process,#founder) :is(.at-step p,.at-founder__bio p){color:#aaa8a5}
+body.at-dark-finale #site #process .at-step,
+body.at-dark-finale #site #founder{border-color:#ffffff24}
+body.at-dark-finale #site #process .at-process__closing{color:#f2f0ed}
+body.at-dark-finale #site #process .at-process__closing span{color:#eeece7}
