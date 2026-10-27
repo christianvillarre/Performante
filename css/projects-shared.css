@@ -64,7 +64,7 @@
 .pw5-closing-cta{
   position:relative;
  
-  min-height:0;
+  min-height:760px;
 
   display:flex;
   align-items:flex-end;
@@ -76,11 +76,18 @@
   background:#0a0a0a;
   padding:0;
 }
+@media (min-width:901px){
+  .pw5-closing-cta{
+    height:480px;
+    min-height:480px;
+    max-height:480px;
+  }
+}
 .pw5-closing-cta__wordmark{
   position:relative;
   display:block;
-  width:calc(100% + 30px);
-  margin:0 0 0 -4px;
+  width:100%;
+  margin:0;
   padding:0;
 
   overflow:hidden;
@@ -143,6 +150,7 @@
 
 .pw6-final-cta{
   position:relative;
+  overflow-x:clip;
   background:#0a0a0a;
   color:#fff;
 
