@@ -248,6 +248,11 @@ body.at-dark-finale #site #founder{border-color:#ffffff24}
 body.at-dark-finale #site #process .at-process__closing{color:#f2f0ed}
 body.at-dark-finale #site #process .at-process__closing span{color:#eeece7}
 
+@media(max-width:760px){
+ #excellence .at-photo-break__frame{height:clamp(300px,72vw,440px);min-height:0}
+ #excellence .at-photo-break__frame img{object-position:72% 45%}
+}
+
 /* Closing statement and scroll-revealed project imagery. */
 #process .at-process__closing{max-width:24ch;margin:0;padding-top:clamp(90px,10vw,150px);text-align:left;font-size:clamp(2.4rem,4.2vw,4.2rem);font-weight:500;line-height:1.08;letter-spacing:-.04em}
 #process .at-process__closing span{color:inherit}
@@ -289,3 +294,34 @@ body.at-light-chapter #values::before{opacity:.38}
 
 #process .at-section-head{display:block;text-align:center}
 #process .at-section-head .at-heading{width:100%;max-width:none}
+
+/* Dark navigation controls and menu over the light About chapters. */
+body.at-light-chapter:not(.at-dark-finale) #pwNav{background:transparent;box-shadow:none}
+body.at-light-chapter:not(.at-dark-finale) #pwNav .pw-nav__logo img{filter:brightness(0)!important}
+body.at-light-chapter:not(.at-dark-finale) #pwNav .pw-nav__toggle{color:#111!important}
+body.at-light-chapter:not(.at-dark-finale) .pw-menu{
+ color:#111;
+ background:rgba(248,248,247,.94);
+}
+body.at-light-chapter:not(.at-dark-finale) .pw-menu :is(.pw-menu__links a,.pw-menu-letter,.pw-menu__footer-block a,.pw-menu__socials-grid a,.pw-menu__close){color:#111!important}
+body.at-light-chapter:not(.at-dark-finale) .pw-menu :is(.pw-menu__footer-label,.pw-menu__label,.pw-menu__footer-tag){color:#555!important}
+body.at-light-chapter:not(.at-dark-finale) .pw-menu__socials{border-top-color:rgba(0,0,0,.2)}
+
+/* Restore the original light controls when the page turns dark again. */
+body.at-dark-finale #pwNav .pw-nav__logo img{filter:brightness(0) invert(1)!important}
+body.at-dark-finale #pwNav .pw-nav__toggle{color:#fff!important}
+
+/* Give the opening statement a little more room on every viewport. */
+#hero .at-title{font-size:clamp(2.5rem,3.7vw,4.25rem)}
+@media(max-width:760px){#hero .at-title{font-size:clamp(30px,7.2vw,44px)}}
+#hero .at-intro__description{font-size:clamp(13px,.9vw,15px)}
+@media(max-width:760px){#hero .at-intro__description{font-size:13px}}
+@media(max-width:760px){
+ #hero .at-intro__description br{display:none}
+ #hero .at-intro__media{grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);height:clamp(240px,35svh,320px)}
+ #hero .at-intro__photo--wide img{height:114%;object-position:53% 55%}
+ #values .ab-values__line,#values .ab-values__point{will-change:transform,opacity}
+ #values{padding-bottom:130px}
+ #values .ab-values__sequence{margin-top:140px}
+ #values .ab-values__points{gap:72px}
+}

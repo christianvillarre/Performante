@@ -3901,7 +3901,7 @@ html{
    white pill (--pw-btn defaults above) instead of inverting to black. */
 
 /* ==========================================================
-   Brand logos — full-width grid, fades out toward last row
+   Brand logos — full-width grid
    ========================================================== */
 
 .wrap-brand-logos{
@@ -3968,20 +3968,7 @@ html{
   height:min(78%,190px);
   object-fit:contain;
 }
-/* Row 1 — full strength */
-.wrap-brand-logos__item:nth-child(-n+6){
-  opacity:1;
-}
-
-/* Row 2 — starts to fade */
-.wrap-brand-logos__item:nth-child(n+7):nth-child(-n+12){
-  opacity:.55;
-}
-
-/* Row 3 — fades out further */
-.wrap-brand-logos__item:nth-child(n+13):nth-child(-n+18){
-  opacity:.22;
-}
+.wrap-brand-logos__item{opacity:1}
 
 @media(max-width:760px){
 

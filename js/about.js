@@ -73,16 +73,18 @@
       });
     });
     const photo = document.querySelector('.at-photo-break__frame');
-    gsap.fromTo(photo, {clipPath: 'inset(14% 16% 14% 16%)'}, {
-      clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', scrollTrigger: {
-        trigger: '.at-photo-break', start: 'top 92%', end: 'top 18%', scrub: .65
-      }
-    });
-    gsap.fromTo(photo.querySelector('img'), {scale: 1.12, yPercent: -4}, {
-      scale: 1, yPercent: 4, ease: 'none', scrollTrigger: {
-        trigger: '.at-photo-break', start: 'top bottom', end: 'bottom top', scrub: .8
-      }
-    });
+    if (photo?.getClientRects().length) {
+      gsap.fromTo(photo, {clipPath: 'inset(14% 16% 14% 16%)'}, {
+        clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', scrollTrigger: {
+          trigger: '.at-photo-break', start: 'top 92%', end: 'top 18%', scrub: .65
+        }
+      });
+      gsap.fromTo(photo.querySelector('img'), {scale: 1.12, yPercent: -4}, {
+        scale: 1, yPercent: 4, ease: 'none', scrollTrigger: {
+          trigger: '.at-photo-break', start: 'top bottom', end: 'bottom top', scrub: .8
+        }
+      });
+    }
     gsap.from('.at-ambition__foot', {y: 35, opacity: 0, ease: 'none', scrollTrigger: {
       trigger: '.at-ambition__foot', start: 'top 92%', end: 'top 62%', scrub: .4
     }});
@@ -103,8 +105,8 @@
     gsap.set('.ab-values__line', {[axis]: 0});
     gsap.set(dots, {opacity: 0, scale: .5});
     gsap.set(points, {opacity: 0, y: 24});
-    const values = gsap.timeline({scrollTrigger: {trigger: '.ab-values', start: desktop ? 'top top' : 'top 25%',
-      end: desktop ? '+=1000' : 'bottom 65%', pin: desktop, scrub: .35, invalidateOnRefresh: true}});
+    const values = gsap.timeline({scrollTrigger: {trigger: '.ab-values', start: desktop ? 'top top' : 'top bottom',
+      end: desktop ? '+=1000' : 'bottom 35%', pin: desktop, scrub: desktop ? .35 : .8, invalidateOnRefresh: true}});
     values.to({}, {duration: .25});
     points.forEach((point, i) => {
       values.to('.ab-values__line', {[axis]: () => fractions[i], duration: i ? 1 : .15, ease: 'none'})
