@@ -1,3 +1,11 @@
+/* Show a readable fallback until the image-through-text fill is loaded. */
+.pw5-closing-cta__wordmark:not(.pw5-wordmark-ready) span {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  background-image: none !important;
+  filter: none !important;
+}
+
 /* Keep the shared closing footer consistent on small screens. */
 @media (max-width: 700px) {
   .pw6-final-cta__top h2 {
