@@ -122,6 +122,14 @@
         .fromTo(step.querySelector('img'), {scale: 1.16}, {scale: 1, duration: 1.1, ease: 'none'}, .15);
     });
     gsap.from('.at-process__closing', {y: 30, opacity: 0, duration: 1, scrollTrigger: {trigger: '.at-process__closing', start: 'top 88%', toggleActions: 'play none none reverse'}});
+    const galleryImages = gsap.utils.toArray('.at-process__gallery figure');
+    if (horizontal) {
+      gsap.from(galleryImages, {y: 70, opacity: 0, clipPath: 'inset(0% 0% 100% 0%)', duration: 1, stagger: .32, ease: 'power2.out',
+        scrollTrigger: {trigger: '.at-process__gallery', start: 'top 82%', toggleActions: 'play none none reverse'}});
+    } else {
+      galleryImages.forEach(image => gsap.from(image, {y: 45, opacity: 0, clipPath: 'inset(0% 0% 100% 0%)', duration: .9, ease: 'power2.out',
+        scrollTrigger: {trigger: image, start: 'top 86%', toggleActions: 'play none none reverse'}}));
+    }
     gsap.from('.at-founder__role, .at-founder__bio p', {y: 22, opacity: 0, stagger: .14, duration: .9, ease: 'power2.out',
       scrollTrigger: {trigger: '.at-founder__content', start: 'top 82%', toggleActions: 'play none none reverse'}});
     let lenis;
