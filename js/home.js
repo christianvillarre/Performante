@@ -1614,6 +1614,7 @@ const firstInner = document.querySelector(
 const mobileLightTransition = window.matchMedia("(max-width: 760px)").matches;
 const transitionViewportHeight = window.innerHeight;
 const firstSectionMoveAmount = -transitionViewportHeight * 1.3;
+const mobileWrapsLead = mobileLightTransition ? transitionViewportHeight * 0.55 : 0;
 
 if (
   transition &&
@@ -1635,10 +1636,10 @@ if (
   });
 
   gsap.set(firstLightSection, {
-    marginTop: 0,
-    // Reserve the final overlap once; changing margin on every touch-scroll
-    // frame forces the whole Selected Work section to relayout.
-    marginBottom: mobileLightTransition ? firstSectionMoveAmount : 0
+    marginTop: -mobileWrapsLead,
+    // Pull the section into the longer mobile pin while preserving the
+    // combined spacing before the following section.
+    marginBottom: mobileLightTransition ? firstSectionMoveAmount + mobileWrapsLead : 0
   });
 
   const transitionTimeline = gsap.timeline({
@@ -1646,11 +1647,11 @@ if (
       trigger: marqueePinGroup,
       start: "top 30%",
       end: () => "+=" + (window.innerWidth <= 760
-        ? Math.round(transitionViewportHeight * 1.2)
+        ? Math.round(transitionViewportHeight * 2.5)
         : isTabletTouchDevice() ? Math.round(window.innerHeight * 1.35) : 1800),
       pin: marqueePinGroup,
       pinSpacing: true,
-      scrub: 0.7,
+      scrub: mobileLightTransition ? 1 : 0.7,
       anticipatePin: 1,
       invalidateOnRefresh: true,
 
@@ -1697,11 +1698,11 @@ if (
     blinds,
     {
       scaleY: 1.02,
-      duration: 1,
+      duration: mobileLightTransition ? 2 : 1,
       ease: "power2.inOut",
       force3D: false,
       stagger: {
-        each: 0.12,
+        each: mobileLightTransition ? 0.22 : 0.12,
         from: "end"
       }
     },
@@ -1712,8 +1713,8 @@ if (
     firstLightSection,
     {
       [mobileLightTransition ? "y" : "marginTop"]: firstSectionMoveAmount,
-      duration: 1,
-      ease: "power2.inOut"
+      duration: mobileLightTransition ? 0.58 : 1,
+      ease: mobileLightTransition ? "power2.out" : "power2.inOut"
     },
     0
   );
@@ -2456,7 +2457,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const bottom=index===lines.length-1?0:Math.max(0,localHeight-((line.bottom+lines[index+1].top)/2-titleRect.top)*scaleY);
 
         gsap.set(clone, {
-          clipPath: `inset(${top}px ${localWidth}px ${bottom}px ${left}px)`
+          clipPath: `inset(${top}px 0px ${bottom}px ${left}px)`,
+          "--pw-fill": "0px"
         });
 
         clone.dataset.pwClipTop = top;
@@ -2469,7 +2471,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (reduceMotion) {
         overlays.forEach(clone => {
           gsap.set(clone, {
-            clipPath: `inset(${clone.dataset.pwClipTop}px ${clone.dataset.pwClipRight}px ${clone.dataset.pwClipBottom}px ${clone.dataset.pwClipLeft}px)`
+            "--pw-fill": `${localWidth + 32}px`
           });
         });
         return;
@@ -2479,8 +2481,8 @@ document.addEventListener("DOMContentLoaded", () => {
         scrollTrigger: {
           trigger: ".wrap-about-panel",
           start: "top 78%",
-          end: "+=640",
-          scrub: 0.30,
+          end: mobileMotion ? "+=800" : "+=820",
+          scrub: mobileMotion ? 1 : 0.75,
           invalidateOnRefresh: true
         }
       });
@@ -2488,7 +2490,7 @@ document.addEventListener("DOMContentLoaded", () => {
       lineFillTimeline=tl;
       overlays.forEach((clone, i) => {
         tl.to(clone, {
-          clipPath: `inset(${clone.dataset.pwClipTop}px ${clone.dataset.pwClipRight}px ${clone.dataset.pwClipBottom}px ${clone.dataset.pwClipLeft}px)`,
+          "--pw-fill": `${localWidth + 32}px`,
           ease: "none",
           duration: 1
         }, i);
@@ -2951,6 +2953,7 @@ document.querySelectorAll('.about-project-link, .pw-truck-roll__project, .select
 
 document.addEventListener('DOMContentLoaded',()=>{
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)').matches;
+  const mobile=window.matchMedia('(max-width: 760px)').matches;
   document.querySelectorAll('.index2-text-link').forEach(link=>{
     const label=link.querySelector('.index2-text-link__label');
     const arrow=link.querySelector('svg');
@@ -3012,9 +3015,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   const image=document.querySelector('.wrap-about-panel__motto-media');
   if(image&&!reduced&&window.gsap&&window.ScrollTrigger){
     gsap.registerPlugin(ScrollTrigger);
-    gsap.fromTo(image,{clipPath:'inset(0 100% 0 0)'},{
-      clipPath:'inset(0 0% 0 0)',ease:'none',
-      scrollTrigger:{trigger:image,start:'top 110%',end:'top 55%',scrub:true,invalidateOnRefresh:true}
+    image.classList.add('is-feather-reveal');
+    gsap.fromTo(image,{'--pw-image-reveal':'0px'},{
+      '--pw-image-reveal':()=>`${image.getBoundingClientRect().width+40}px`,ease:'none',
+      scrollTrigger:{
+        trigger:image,
+        start:mobile?'top 118%':'top 110%',
+        end:mobile?'bottom 42%':'top 48%',
+        scrub:mobile?0.9:0.65,
+        invalidateOnRefresh:true
+      }
     });
   }
 });

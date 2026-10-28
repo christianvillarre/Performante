@@ -4879,6 +4879,15 @@ a.wrap-testimonials__role:focus-visible{
   pointer-events:none;
   overflow:visible;
   -webkit-text-fill-color:currentColor;
+  --pw-fill:0px;
+  -webkit-mask-image:linear-gradient(to right,#000 0,#000 calc(var(--pw-fill) - 32px),transparent var(--pw-fill));
+  mask-image:linear-gradient(to right,#000 0,#000 calc(var(--pw-fill) - 32px),transparent var(--pw-fill));
+}
+
+.wrap-about-panel__motto-media.is-feather-reveal{
+  --pw-image-reveal:0px;
+  -webkit-mask-image:linear-gradient(to right,#000 0,#000 calc(var(--pw-image-reveal) - 40px),transparent var(--pw-image-reveal));
+  mask-image:linear-gradient(to right,#000 0,#000 calc(var(--pw-image-reveal) - 40px),transparent var(--pw-image-reveal));
 }
 
 /* Disable the legacy observer reveal for this block; GSAP owns it now. */

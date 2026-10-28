@@ -1,112 +1,280 @@
-/* Continuous card slider: native scroll, seamless buffers, hover pause and drag. */
+/* Three card groups keep the vehicle collection continuous in both directions. */
 (() => {
- document.querySelectorAll('.pw-vehicles').forEach(section=>{
-  const track=section.querySelector('.pw-vehicles__track');
-  const freeFlow=section.hasAttribute('data-vehicle-free-flow');
-  let nudgeVelocity=0;
-  // Let the page's smooth-scroll handler receive vertical wheel gestures.
-  // Horizontal native scrolling and mouse dragging remain local to the row.
-  track.removeAttribute('data-lenis-prevent');
-  const cards=[...track.querySelectorAll('.pw-vehicles__card')];
-  const pause=section.querySelector('[data-vehicle-pause]');
-  const status=section.querySelector('[data-vehicle-status]');
-  if(!cards.length)return;
-  const reduced=matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)');
-  const mobile=matchMedia('(max-width: 600px)');
-  const copy=card=>{const clone=card.cloneNode(true);clone.setAttribute('aria-hidden','true');clone.dataset.copy='true';return clone;};
-  const before=cards.map(copy),after=cards.map(copy);
-  track.prepend(...before);track.append(...after);
-  section.classList.add('is-looping');
-  let period=0,step=0,frame=0,last=0,visible=false,hovered=false,focused=false,paused=false,drag=null,manualUntil=0;
-  function normalize(){
-   if(!period)return;
-   if(track.scrollLeft<period || track.scrollLeft>=period*2){
-    track.scrollLeft=period+((track.scrollLeft-period)%period+period)%period;
-   }
-  }
-  function measure(){
-   const position=period?((track.scrollLeft-period)/period):0;
-   period=cards[0].offsetLeft-before[0].offsetLeft;
-   step=cards.length>1?cards[1].offsetLeft-cards[0].offsetLeft:period;
-   track.scrollLeft=period+position*period;normalize();
-  }
-  function autoEnabled(){return !reduced.matches&&!paused&&(freeFlow||(!hovered&&!focused));}
-  function canRun(){return visible&&!document.hidden&&!drag&&(autoEnabled()||Math.abs(nudgeVelocity)>.5);}
-  function tick(now){
-   frame=0;
-   if(!canRun()){last=0;return;}
-   const dt=last?Math.min((now-last)/1000,.05):0;last=now;
-   if(freeFlow){
-    const drift=autoEnabled()&&now>=manualUntil?(mobile.matches?46:30):0;
-    track.scrollLeft+=dt*(drift+nudgeVelocity);
-    nudgeVelocity*=Math.exp(-5*dt);
-    if(Math.abs(nudgeVelocity)<.5)nudgeVelocity=0;
-    normalize();
-   }else if(now>=manualUntil){track.scrollLeft+=dt*(mobile.matches?46:30);normalize();}
-   frame=requestAnimationFrame(tick);
-  }
-  function sync(){if(frame)cancelAnimationFrame(frame);frame=0;last=0;if(canRun())frame=requestAnimationFrame(tick);}
-  function move(direction){
-   if(freeFlow){
-    if(reduced.matches){track.scrollLeft+=direction*140;normalize();}
-    else nudgeVelocity=Math.max(-1200,Math.min(1200,nudgeVelocity+direction*700));
-    if(status)status.textContent=direction>0?'Moving vehicles right':'Moving vehicles left';
-    sync();return;
-   }
-   track.scrollLeft+=direction*step;normalize();manualUntil=performance.now()+1800;
-   const index=Math.round((track.scrollLeft-period)/step)%cards.length;
-   status.textContent=cards[index].dataset.brand;sync();
-  }
-  section.querySelector('[data-vehicle-prev]').addEventListener('click',()=>move(-1));
-  section.querySelector('[data-vehicle-next]').addEventListener('click',()=>move(1));
-  pause.addEventListener('click',()=>{
-   paused=!paused;pause.textContent=paused?'Play':'Pause';
-   pause.setAttribute('aria-pressed',String(paused));pause.setAttribute('aria-label',paused?'Play automatic vehicle scrolling':'Pause automatic vehicle scrolling');sync();
+  document.querySelectorAll('.pw-vehicles').forEach(section => {
+    const track = section.querySelector('.pw-vehicles__track');
+    const cards = [...track.querySelectorAll('.pw-vehicles__card')];
+    if (!track || !cards.length) return;
+
+    cards.forEach(card => card.querySelectorAll('img').forEach(image => { image.loading = 'eager'; }));
+    const firstGroup = document.createElement('div');
+    firstGroup.className = 'pw-vehicles__group';
+    cards.forEach(card => firstGroup.appendChild(card));
+    track.appendChild(firstGroup);
+    const secondGroup = firstGroup.cloneNode(true);
+    secondGroup.setAttribute('aria-hidden', 'true');
+    secondGroup.querySelectorAll('.pw-vehicles__card').forEach(card => { card.dataset.copy = 'true'; });
+    track.appendChild(secondGroup);
+    const thirdGroup = secondGroup.cloneNode(true);
+    track.appendChild(thirdGroup);
+    const groups = [firstGroup, secondGroup, thirdGroup];
+
+    if (matchMedia('(max-width: 600px)').matches) {
+      // Keep two complete sets ready on either side of the visible set.
+      for (let index = 0; index < 2; index++) {
+        const extraGroup = secondGroup.cloneNode(true);
+        track.appendChild(extraGroup);
+        groups.push(extraGroup);
+      }
+      const pause = section.querySelector('[data-vehicle-pause]');
+      const status = section.querySelector('[data-vehicle-status]');
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+      let groupWidth = 0;
+      let paused = false;
+      let touching = false;
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let dragged = false;
+      let oppositeDrag = false;
+      let userScrolling = false;
+      let manualUntil = 0;
+      let lastFrame = 0;
+      let settleTimer = 0;
+      let lastVisibilityCheck = 0;
+      let nearScreen = false;
+
+      const setScroll = value => {
+        track.scrollLeft = value;
+      };
+      const measureMobile = () => {
+        const nextWidth = cards.reduce((sum, card) => sum + card.getBoundingClientRect().width, 0);
+        if (!nextWidth) return;
+        const progress = groupWidth ? (track.scrollLeft - groupWidth * 2) / groupWidth : 0;
+        groups.forEach(group => {
+          group.style.width = `${nextWidth}px`;
+          group.style.flexBasis = `${nextWidth}px`;
+        });
+        track.style.height = `${firstGroup.offsetHeight}px`;
+        groupWidth = nextWidth;
+        setScroll(groupWidth * (2 + progress));
+      };
+      const recenterMobile = force => {
+        if (!groupWidth) return;
+        const position = track.scrollLeft;
+        if (position >= groupWidth * 1.5 && position <= groupWidth * 3.5) return;
+        if (touching && !force) return;
+        const offset = ((position % groupWidth) + groupWidth) % groupWidth;
+        setScroll(groupWidth * 2 + offset);
+      };
+      const scheduleRecenter = () => {
+        clearTimeout(settleTimer);
+        settleTimer = setTimeout(() => {
+          userScrolling = false;
+          recenterMobile(false);
+        }, 180);
+      };
+
+      section.classList.add('is-mobile-loop');
+      measureMobile();
+      new ResizeObserver(measureMobile).observe(firstGroup);
+      track.addEventListener('scroll', () => {
+        if (userScrolling) scheduleRecenter();
+      }, { passive: true });
+      track.addEventListener('touchstart', event => {
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+        dragged = false;
+        oppositeDrag = false;
+      }, { passive: true });
+      track.addEventListener('touchmove', event => {
+        const dx = event.touches[0].clientX - touchStartX;
+        const dy = event.touches[0].clientY - touchStartY;
+        if (Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy)) {
+          touching = true;
+          dragged = true;
+          userScrolling = true;
+          if (dx > 0) oppositeDrag = true;
+        }
+      }, { passive: true });
+      const finishTouch = () => {
+        touching = false;
+        if (dragged) manualUntil = performance.now() + (oppositeDrag ? 2000 : 250);
+        scheduleRecenter();
+      };
+      track.addEventListener('touchend', finishTouch, { passive: true });
+      track.addEventListener('touchcancel', finishTouch, { passive: true });
+      const frameMobile = now => {
+        const dt = lastFrame ? Math.min((now - lastFrame) / 1000, .05) : 0;
+        lastFrame = now;
+        if (now - lastVisibilityCheck > 250) {
+          const bounds = section.getBoundingClientRect();
+          nearScreen = bounds.bottom > -200 && bounds.top < window.innerHeight + 200;
+          lastVisibilityCheck = now;
+        }
+        if (nearScreen && groupWidth && !paused && !touching && !userScrolling && !reduced.matches && !document.hidden && now >= manualUntil) {
+          setScroll(track.scrollLeft + dt * Math.max(36, groupWidth / 110));
+          recenterMobile(false);
+        } else if (groupWidth && (track.scrollLeft < groupWidth * .25 || track.scrollLeft > groupWidth * 4.5)) {
+          recenterMobile(true);
+        }
+        requestAnimationFrame(frameMobile);
+      };
+      requestAnimationFrame(frameMobile);
+      const moveMobile = direction => {
+        const step = cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : cards[0].offsetWidth;
+        setScroll(track.scrollLeft + direction * step);
+        scheduleRecenter();
+        if (status) status.textContent = direction > 0 ? 'Moving vehicles right' : 'Moving vehicles left';
+      };
+      section.querySelector('[data-vehicle-prev]')?.addEventListener('click', () => moveMobile(-1));
+      section.querySelector('[data-vehicle-next]')?.addEventListener('click', () => moveMobile(1));
+      track.addEventListener('keydown', event => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+        event.preventDefault();
+        moveMobile(event.key === 'ArrowRight' ? 1 : -1);
+      });
+      pause?.addEventListener('click', () => {
+        paused = !paused;
+        pause.textContent = paused ? 'Play' : 'Pause';
+        pause.setAttribute('aria-pressed', String(paused));
+        pause.setAttribute('aria-label', paused ? 'Play automatic vehicle scrolling' : 'Pause automatic vehicle scrolling');
+      });
+      return;
+    }
+
+    const pause = section.querySelector('[data-vehicle-pause]');
+    const status = section.querySelector('[data-vehicle-status]');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const mobile = matchMedia('(max-width: 600px)');
+    let width = 0;
+    let positions = [];
+    let ready = false;
+    let visible = false;
+    let paused = false;
+    let pointerId = null;
+    let startX = 0;
+    let startY = 0;
+    let lastX = 0;
+    let dragged = false;
+    let manualUntil = 0;
+    let lastFrame = 0;
+
+    const render = () => {
+      if (!width) return;
+      groups.forEach((group, index) => {
+        if (mobile.matches) {
+          group.style.transform = 'none';
+          group.style.left = `${positions[index]}px`;
+        } else {
+          group.style.left = '0px';
+          group.style.transform = `translate3d(${positions[index]}px,0,0)`;
+        }
+      });
+    };
+    const measure = () => {
+      const oldWidth = width;
+      width = firstGroup.offsetWidth;
+      track.style.height = `${firstGroup.offsetHeight}px`;
+      if (!positions.length || (oldWidth && width !== oldWidth)) positions = [-width, 0, width];
+      render();
+    };
+    const shift = distance => {
+      if (!width || !distance) return;
+      positions = positions.map(position => position + distance);
+      if (distance > 0) {
+        while (Math.min(...positions) > -width / 2) {
+          const smallest = Math.min(...positions);
+          positions[positions.indexOf(Math.max(...positions))] = smallest - width;
+        }
+      } else {
+        while (Math.max(...positions) < track.clientWidth + width / 2) {
+          const largest = Math.max(...positions);
+          positions[positions.indexOf(Math.min(...positions))] = largest + width;
+        }
+      }
+      render();
+    };
+    const stepWidth = () => cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : cards[0].offsetWidth;
+    const speed = () => width / (mobile.matches ? 110 : 300);
+
+    measure();
+    new ResizeObserver(measure).observe(firstGroup);
+    Promise.allSettled([...track.querySelectorAll('img')].map(image => image.decode())).then(() => {
+      ready = true;
+      measure();
+      section.classList.add('is-looping');
+    });
+    new IntersectionObserver(entries => { visible = entries[0].isIntersecting; }).observe(section);
+
+    const frame = now => {
+      const dt = lastFrame ? Math.min((now - lastFrame) / 1000, .05) : 0;
+      lastFrame = now;
+      if (ready && visible && !paused && !reduced.matches && !document.hidden && pointerId === null && now >= manualUntil) {
+        shift(-dt * speed());
+      }
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+
+    track.addEventListener('pointerdown', event => {
+      if (event.button !== 0 || pointerId !== null) return;
+      pointerId = event.pointerId;
+      startX = lastX = event.clientX;
+      startY = event.clientY;
+      dragged = false;
+      track.setPointerCapture(pointerId);
+    });
+    track.addEventListener('pointermove', event => {
+      if (event.pointerId !== pointerId) return;
+      const dx = event.clientX - startX;
+      const dy = event.clientY - startY;
+      if (!dragged) {
+        if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+        if (Math.abs(dy) > Math.abs(dx)) {
+          if (track.hasPointerCapture(pointerId)) track.releasePointerCapture(pointerId);
+          pointerId = null;
+          return;
+        }
+        dragged = true;
+        track.classList.add('is-dragging');
+      }
+      event.preventDefault();
+      shift(event.clientX - lastX);
+      lastX = event.clientX;
+    }, { passive: false });
+    const finish = event => {
+      if (event.pointerId !== pointerId) return;
+      if (dragged && event.clientX - startX > 6) manualUntil = performance.now() + 2000;
+      track.classList.remove('is-dragging');
+      if (track.hasPointerCapture(pointerId)) track.releasePointerCapture(pointerId);
+      pointerId = null;
+    };
+    track.addEventListener('pointerup', finish);
+    track.addEventListener('pointercancel', finish);
+
+    track.addEventListener('wheel', event => {
+      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || !event.deltaX) return;
+      event.preventDefault();
+      shift(-event.deltaX);
+      if (event.deltaX < 0) manualUntil = performance.now() + 2000;
+    }, { passive: false });
+
+    const move = direction => {
+      shift(direction * stepWidth());
+      if (direction > 0) manualUntil = performance.now() + 2000;
+      if (status) status.textContent = direction > 0 ? 'Moving vehicles right' : 'Moving vehicles left';
+    };
+    section.querySelector('[data-vehicle-prev]')?.addEventListener('click', () => move(-1));
+    section.querySelector('[data-vehicle-next]')?.addEventListener('click', () => move(1));
+    track.addEventListener('keydown', event => {
+      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+      event.preventDefault();
+      move(event.key === 'ArrowRight' ? 1 : -1);
+    });
+    pause?.addEventListener('click', () => {
+      paused = !paused;
+      pause.textContent = paused ? 'Play' : 'Pause';
+      pause.setAttribute('aria-pressed', String(paused));
+      pause.setAttribute('aria-label', paused ? 'Play automatic vehicle scrolling' : 'Pause automatic vehicle scrolling');
+    });
   });
-  section.addEventListener('pointerenter',event=>{if(!freeFlow&&event.pointerType==='mouse'){hovered=true;sync();}});
-  section.addEventListener('pointerleave',()=>{hovered=false;sync();});
-  section.addEventListener('focusin',()=>{if(!freeFlow){focused=true;sync();}});
-  section.addEventListener('focusout',event=>{focused=section.contains(event.relatedTarget);sync();});
-  // Remote desktop apps can send an iPad gesture as a touch pointer to a
-  // desktop browser. Handle all pointer types here, leaving vertical swipes
-  // to the page and claiming only a horizontal drag.
-  track.addEventListener('pointerdown',event=>{
-   if(event.pointerType==='mouse'&&event.button!==0)return;
-   nudgeVelocity=0;
-   drag={id:event.pointerId,x:event.clientX,y:event.clientY,startX:event.clientX,startY:event.clientY,active:false};
-   sync();
-  });
-  track.addEventListener('pointermove',event=>{
-   if(!drag||event.pointerId!==drag.id)return;
-   if(!drag.active){
-    const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;
-    if(Math.abs(dx)<6&&Math.abs(dy)<6)return;
-    if(Math.abs(dy)>=Math.abs(dx)){drag=null;sync();return;}
-    drag.active=true;
-    track.setPointerCapture(event.pointerId);
-    track.classList.add('is-dragging');
-   }
-   event.preventDefault();
-   track.scrollLeft-=event.clientX-drag.x;drag.x=event.clientX;normalize();
-  },{passive:false});
-  function release(event){
-   if(!drag||drag.id!==event.pointerId)return;
-   const active=drag.active;
-   drag=null;
-   if(active)manualUntil=performance.now()+(freeFlow?0:1200);
-   track.classList.remove('is-dragging');
-   if(track.hasPointerCapture(event.pointerId))track.releasePointerCapture(event.pointerId);
-   sync();
-  }
-  track.addEventListener('pointerup',release);track.addEventListener('pointercancel',release);track.addEventListener('lostpointercapture',release);
-  track.addEventListener('wheel',()=>{if(!freeFlow)manualUntil=performance.now()+1800;},{passive:true});
-  track.addEventListener('scroll',normalize,{passive:true});
-  track.addEventListener('keydown',event=>{
-   if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();move(event.key==='ArrowRight'?1:-1);}
-  });
-  new ResizeObserver(measure).observe(track);
-  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;sync();}).observe(section);
-  document.addEventListener('visibilitychange',()=>{if(document.hidden){drag=null;track.classList.remove('is-dragging');}sync();});
-  reduced.addEventListener('change',sync);measure();
- });
 })();

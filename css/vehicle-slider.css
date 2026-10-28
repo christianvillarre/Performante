@@ -19,3 +19,23 @@
  .pw-vehicles__card{flex-basis:86vw}
  .pw-vehicles__copy{padding:8px 20px 24px}
 }
+
+/* Fixed viewport with independently positioned card groups. */
+.pw-vehicles__track{
+ position:relative;
+ display:block;
+ width:100%;
+ overflow:hidden;
+ padding:0;
+ margin-left:0;
+ touch-action:pan-y;
+}
+.pw-vehicles__group{position:absolute;left:0;top:0;display:flex;width:max-content;flex:none;will-change:transform}
+.pw-vehicles__track.is-dragging{cursor:grabbing;user-select:none}
+@media(max-width:600px){
+ .pw-vehicles__group{will-change:auto}
+ .pw-vehicles__card img{filter:none;transition:none}
+ .pw-vehicles.is-mobile-loop .pw-vehicles__track{display:flex;overflow-x:auto;overflow-y:hidden;touch-action:pan-x pan-y;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+ .pw-vehicles.is-mobile-loop .pw-vehicles__track::-webkit-scrollbar{display:none}
+ .pw-vehicles.is-mobile-loop .pw-vehicles__group{position:relative;left:auto!important;top:auto;transform:none!important;flex:0 0 auto}
+}
