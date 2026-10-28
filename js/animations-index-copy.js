@@ -17,6 +17,10 @@
 /* Three.js — animated terrain background */
 import * as THREE from "three";
 
+// Give scrolling priority over the decorative canvases while the page moves.
+let lastScrollActivity = -Infinity;
+window.addEventListener("scroll", () => { lastScrollActivity = performance.now(); }, { passive: true });
+
 /* =====================================================
    TERRAIN CONTAINER
 ===================================================== */
@@ -1320,8 +1324,9 @@ if (terrainContainer) {
     );
 
     if(document.hidden || !terrainVisible){terrainClock.getDelta();lastTerrainFrame=0;return;}
-    // The slow background needs fewer frames than the interactive logo.
-    if(lastTerrainFrame && now-lastTerrainFrame<1000/30-.5)return;
+    // The slow background can render less often while the page is moving.
+    const terrainFps = now-lastScrollActivity<250 ? 20 : 30;
+    if(lastTerrainFrame && now-lastTerrainFrame<1000/terrainFps-.5)return;
     lastTerrainFrame=now;
     const deltaTime =
       Math.min(
@@ -2568,22 +2573,17 @@ if (symbolContainer) {
 
   const symbolClock=new THREE.Clock();
   let lastSymbolFrame=0;
-  let lastOffscreenFrame=0;
   function animateSymbol(now=performance.now()){
     requestAnimationFrame(animateSymbol);
-    // Avoid rendering the expensive glass scene at 120/144/240 Hz.
-    if(lastSymbolFrame && now-lastSymbolFrame<1000/60-2)return;
+    const symbolFps = now-lastScrollActivity<250 ? 30 : 60;
+    if(lastSymbolFrame && now-lastSymbolFrame<1000/symbolFps-2)return;
     lastSymbolFrame=now;
     const symbolTime=symbolClock.getElapsedTime();
     const dt=Math.min(Math.max(symbolTime-previousSymbolTime,0),.04);
     previousSymbolTime=symbolTime;
     if(document.hidden || heroWarming || (window.pwBoot && !window.pwBoot.released))return;
-    // A restored scroll position can leave the sticky hero visible while its
-    // intersection observer reports false. Keep its scroll state in sync.
-    if(!sceneVisible){
-      if(now-lastOffscreenFrame<100)return;
-      lastOffscreenFrame=now;
-    }
+    // Keep the restored top-of-page view safe if its observer is late.
+    if(!sceneVisible && window.scrollY>window.innerHeight*.6)return;
     updateHover(performance.now());
     if(!heroMotion.matches)automaticRotation+=dt*.22*(1-openAmount*.5);
     updateSymbolLighting(dt);
@@ -3538,7 +3538,8 @@ function drawArc(arc, now){
   function render(now){
     lineFrame=0;
     if(!lineVisible || document.hidden)return;
-    if(previousLineTime && now-previousLineTime<1000/60-.5){
+    const lineFps = now-lastScrollActivity<250 ? 30 : 60;
+    if(previousLineTime && now-previousLineTime<1000/lineFps-.5){
       lineFrame=requestAnimationFrame(render);return;
     }
     const dt=previousLineTime?Math.min((now-previousLineTime)/1000,.05):1/60;

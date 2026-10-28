@@ -1948,7 +1948,8 @@ window.addEventListener("load", () => {
       item.last=progress;item.timeline.progress(progress);
     });
   }
-  gsap.ticker.add(updateWorkDepth);
+  selectedWorksTimeline.eventCallback("onUpdate", updateWorkDepth);
+  ScrollTrigger.addEventListener("refresh", updateWorkDepth);
   updateWorkDepth();
 
   window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
@@ -2529,6 +2530,8 @@ document.addEventListener("DOMContentLoaded", () => {
      headings at and below Wraps & Branding. getBoundingClientRect() gives the
      element's real rendered position every frame. */
   const manualTitleReveals = new Map();
+  let lastRevealScroll = window.scrollY;
+  let lastRevealMotion = performance.now();
 
   function queueManualTitleReveal(title, chars, lead = 1.14) {
     gsap.set(chars, { autoAlpha: 0, y: mobileMotion ? 10 : 20, filter: mobileMotion ? "none" : "blur(9px)" });
@@ -2537,6 +2540,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function runManualViewportReveals() {
     if (!manualTitleReveals.size) return;
+    if (!mobileMotion) {
+      const scroll = window.scrollY;
+      if (scroll !== lastRevealScroll) {
+        lastRevealScroll = scroll;
+        lastRevealMotion = performance.now();
+      }
+      // Scrubbed sections can keep moving briefly after wheel input ends.
+      if (performance.now() - lastRevealMotion > 1200) return;
+    }
 
     manualTitleReveals.forEach((item, title) => {
       const rect = title.getBoundingClientRect();
@@ -2827,18 +2839,32 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  let processFrame = 0;
+  function requestProcessLine() {
+    if (processFrame) return;
+    processFrame = requestAnimationFrame(() => {
+      processFrame = 0;
+      updateProcessLine();
+    });
+  }
+
   measureThresholds();
-  gsap.ticker.add(updateProcessLine);
   updateProcessLine();
+  window.addEventListener("scroll", requestProcessLine, { passive: true });
+  window.lenis?.on?.("scroll", requestProcessLine);
+  window.ScrollTrigger?.addEventListener("refresh", () => {
+    measureThresholds();
+    requestProcessLine();
+  });
 
   window.addEventListener("resize", () => {
     measureThresholds();
-    updateProcessLine();
+    requestProcessLine();
   }, { passive: true });
 
   window.addEventListener("load", () => {
     measureThresholds();
-    updateProcessLine();
+    requestProcessLine();
   }, { once: true });
 })();
 

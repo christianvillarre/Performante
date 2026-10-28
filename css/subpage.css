@@ -5842,7 +5842,8 @@ html{
 }
 
 .vw-hero__copy{
-  max-width:54ch;
+  width:100%;
+  max-width:760px;
 }
 
 .vw-hero__eyebrow{
@@ -5857,9 +5858,9 @@ html{
 .vw-hero__title{
   margin:0 0 20px;
   color:#fff;
-  font-size:clamp(1.8rem,3.2vw,3rem);
-  line-height:1.08;
-  letter-spacing:-.03em;
+  font-size:clamp(2.4rem,3vw,4.6rem);
+  line-height:.95;
+  letter-spacing:-.04em;
   font-weight:500;
   max-width:26ch;
 }
@@ -5900,7 +5901,7 @@ html{
 .vw-hero__cta .hero-project-link__underline{position:absolute;left:0;right:0;bottom:0;height:1px;background:#fff;transform-origin:right center;pointer-events:none}
 .vw-hero__cta:focus-visible{outline:2px solid #fff;outline-offset:5px}
 
-/* --- Rotating white stripe of service names, bottom-aligned in the
+/* --- Rotating service names, bottom-aligned in the
        copy column only — a decorative ticker, not a nav element. --- */
 .vw-hero__marquee{
   position:absolute;
@@ -5908,15 +5909,16 @@ html{
   right:0;
   bottom:2rem;
   overflow:hidden;
-  background:#fff;
-  box-shadow:0 6px 20px rgba(0,0,0,.4);
+  background:transparent;
+  box-shadow:none;
 }
 
 .vw-hero__marquee-track{
   display:flex;
   width:max-content;
-  animation:vw-hero-marquee 14s linear infinite;
+  animation:none;
 }
+.vw-hero__marquee-track.is-ready{animation:vw-hero-marquee var(--marquee-duration,14s) linear infinite}
 
 .vw-hero__marquee-group{
   display:flex;
@@ -5926,7 +5928,7 @@ html{
 
 .vw-hero__marquee-item{
   padding:.6rem 0;
-  color:#111;
+  color:#fff;
   font-size:.72rem;
   font-weight:700;
   letter-spacing:.14em;
@@ -5936,7 +5938,7 @@ html{
 
 .vw-hero__marquee-dot{
   margin:0 1.1rem;
-  color:rgba(17,17,17,.35);
+  color:#fff;
   font-size:.6rem;
 }
 
@@ -5946,7 +5948,7 @@ html{
 }
 
 @media (prefers-reduced-motion: reduce){
-  .vw-hero__marquee-track{ animation:none; }
+  .vw-hero__marquee-track.is-ready{ animation:none; }
 }
 
 /* --- right half: image carousel, kept clear of the nav bar, with a
@@ -6044,7 +6046,7 @@ html{
   .vw-hero__copy{
     max-width:none;
   }
-  .vw-hero__title{ font-size:clamp(1.6rem,7vw,2.1rem); max-width:18ch; }
+  .vw-hero__title{ font-size:clamp(2.1rem,9vw,3.4rem); max-width:none; }
   .vw-hero__desc{ margin-bottom:24px; }
   .vw-hero__marquee{
     position:static;
@@ -6335,6 +6337,56 @@ html{
   .vw-faq-list{ width:100%; }
 }
 
+/* The three wraps FAQs share the centered desktop layout and a compact,
+   left-aligned mobile layout. The first question has no rule above it. */
+@media(max-width:760px){
+  .vw-faq-section{border-top:0}
+  .vw-faq-section .wrap-light-section__inner{
+    box-sizing:border-box;
+    display:grid;
+    grid-template-columns:1fr;
+    align-items:start;
+    gap:44px;
+    width:calc(100% - 42px);
+    max-width:1320px;
+    margin:0 auto;
+    padding:clamp(88px,10vw,150px) 0;
+  }
+  .vw-faq-section .wrap-branding-intro{
+    display:block;
+    width:100%;
+    max-width:none;
+    margin:0;
+    text-align:left;
+    position:static;
+  }
+  .vw-faq-section .wrap-branding-intro h2{
+    font-size:clamp(2.2rem,3vw,3.4rem);
+    font-weight:500;
+    letter-spacing:-.03em;
+    line-height:1.04;
+    margin:0 0 24px;
+    max-width:14ch;
+  }
+  .vw-faq-section .wrap-branding-intro p{
+    max-width:34ch;
+    margin-left:0;
+    text-align:left;
+    line-height:1.6;
+    color:#c9c9c9;
+    font-size:clamp(14px,1vw,16px);
+  }
+  .vw-faq-section .vw-faq-list{
+    width:100%;
+    min-width:0;
+    margin:0;
+    border-top:0;
+  }
+}
+
+.vw-faq-section :focus-visible{outline:2px solid #c65b5b;outline-offset:5px}
+@media(prefers-reduced-motion:reduce){.vw-faq-section *{transition:none!important}}
+
 /* ============================================================================
    VEHICLE WRAP SERVICES — stacking cards
    An intro card followed by one card per service. On desktop each card
@@ -6419,7 +6471,7 @@ html{
 
 .vws-intro-list__title{
   flex:1 1 auto;
-  font-size:clamp(.95rem,1vw,1.05rem);
+  font-size:clamp(1.05rem,1.15vw,1.2rem);
   font-weight:500;
   letter-spacing:-.01em;
   color:rgba(255,255,255,.85);
@@ -6505,10 +6557,10 @@ html{
 
 .vws-title{
   margin:0;
-  font-size:clamp(1.3rem,1.8vw,1.8rem);
+  font-size:clamp(1.55rem,2vw,2.2rem);
   line-height:1.05;
   letter-spacing:-.02em;
-  font-weight:400;
+  font-weight:500;
   color:#fff;
   max-width:15ch;
 }
@@ -6608,6 +6660,7 @@ html{
 .vws-card:nth-of-type(5){ z-index:5; }
 
 @media(max-width:1100px){
+  .vw-hero__title{ font-size:clamp(2.1rem,9vw,3.4rem); }
   .vws-card{
     position:relative;
     top:auto;
