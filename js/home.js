@@ -1637,9 +1637,9 @@ if (
 
   gsap.set(firstLightSection, {
     marginTop: -mobileWrapsLead,
-    // Pull the section into the longer mobile pin while preserving the
-    // combined spacing before the following section.
-    marginBottom: mobileLightTransition ? firstSectionMoveAmount + mobileWrapsLead : 0
+    // Keep the original bottom overlap so the next section follows the
+    // visible Wraps content instead of leaving extra space below it.
+    marginBottom: mobileLightTransition ? firstSectionMoveAmount : 0
   });
 
   const transitionTimeline = gsap.timeline({
