@@ -1645,7 +1645,7 @@ if (
   const transitionTimeline = gsap.timeline({
     scrollTrigger: {
       trigger: marqueePinGroup,
-      start: "top 30%",
+      start: () => isTabletTouchDevice() ? "top 24%" : mobileLightTransition ? "top 33%" : "top 30%",
       end: () => "+=" + (window.innerWidth <= 760
         ? Math.round(transitionViewportHeight * 2.5)
         : isTabletTouchDevice() ? Math.round(window.innerHeight * 1.35) : 1800),
@@ -2667,15 +2667,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const brandingGrid=document.querySelector(".wrap-branding-grid");
   const brandingCards=brandingGrid?gsap.utils.toArray(brandingGrid.querySelectorAll(".wrap-branding-card")):[];
   if(brandingGrid && brandingCards.length){
-    if(mobileMotion){
-      // Native touch scrolling stays smooth when the three large cards do not
-      // run perspective and opacity updates on every animation frame.
-      gsap.set(brandingCards,{autoAlpha:1,clearProps:"transform,filter"});
-    }else{
     const motion=window.matchMedia("(prefers-reduced-motion: reduce) and (max-width: 760px)");
-    gsap.set(brandingGrid,{perspective:1400});
+    gsap.set(brandingGrid,{perspective:mobileMotion?900:1400});
     const folds=brandingCards.map(card=>gsap.fromTo(card,
-      {autoAlpha:0,rotateX:-72,transformOrigin:"50% 0%",transformPerspective:1400},
+      {autoAlpha:0,rotateX:mobileMotion?-42:-72,transformOrigin:"50% 0%",transformPerspective:mobileMotion?900:1400},
       {autoAlpha:1,rotateX:0,duration:1,ease:"none",paused:true}
     ));
     const previous=brandingCards.map(()=>-1);
@@ -2699,7 +2694,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     gsap.ticker.add(updateBrandingScroll);
     updateBrandingScroll();
-    }
   }
 
   window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
@@ -2941,6 +2935,23 @@ document.addEventListener("DOMContentLoaded", () => {
 /* ========================================================================== */
 /* js\index-copy-trucks.js */
 /* ========================================================================== */
+document.addEventListener('DOMContentLoaded',()=>{
+  const section=document.querySelector('.wrap-brand-logos');
+  const grid=section?.querySelector('.wrap-brand-logos__grid');
+  if(!grid||!window.gsap||!window.ScrollTrigger||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  gsap.registerPlugin(ScrollTrigger);
+  const items=[...grid.querySelectorAll('.wrap-brand-logos__item')];
+  const media=gsap.matchMedia();
+  const animateRows=columns=>{
+    for(let index=0;index<items.length;index+=columns){
+      const row=items.slice(index,index+columns);
+      gsap.fromTo(row,{autoAlpha:0},{autoAlpha:1,ease:'none',scrollTrigger:{trigger:row[0],start:'top 78%',end:'top 48%',scrub:0.6,invalidateOnRefresh:true}});
+    }
+  };
+  media.add('(min-width: 761px)',()=>animateRows(5));
+  media.add('(max-width: 760px)',()=>animateRows(3));
+});
+
 document.addEventListener('DOMContentLoaded',()=>{
   const section=document.querySelector('.pw-truck-roll');
   if(!section||!window.gsap||!window.ScrollTrigger||window.matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)').matches)return;

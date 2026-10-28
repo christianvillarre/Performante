@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-<link rel="stylesheet" href="css/home.css?v=tablet-truck-text-2">
+<link rel="stylesheet" href="css/home.css?v=client-row-reveal-1">
 <link rel="stylesheet" href="css/navbar.css?v=menu-unified-1">
 <script>
 /* Page transitions: run before the page is parsed. */
@@ -187,7 +187,7 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://unpkg.com/lenis@1.3.18/dist/lenis.min.js" defer></script>
 <!-- Keep this after GSAP: Selected Work and Process initialize inside home.js. -->
-<script src="./js/home.js?v=tablet-logo-pin-3" defer></script>
+<script src="./js/home.js?v=mobile-branding-fold-1" defer></script>
 <script src="./js/reviews-drag.js?v=1" defer></script>
 <script src="./js/navbar-black.js?v=menu-colors-2" defer></script>
 
@@ -1165,43 +1165,6 @@
 
 
 <!-- ============================================================================
-     NEW SECTION — FULL-WIDTH INFINITE IMAGE GALLERY (added by Claude)
-     Self-contained: markup below, CSS at the very end of styles.css, and
-     JS at the very end of js/gsap.js — all three are tagged with matching
-     "PW INFINITE GALLERY" comment banners so they're easy to find and pull
-     out later if needed.
-     ============================================================================ -->
-<section class="pw-infinite-gallery" id="pwInfiniteGallery" aria-label="Featured work gallery">
-  <div class="pw-infinite-gallery__head">
-    <div class="pw-infinite-gallery__heading">
-      <!--<p class="pw-infinite-gallery__kicker">Gallery</p>-->
-      <h2 class="pw-infinite-gallery__title">Our Work in Motion</h2>
-      <!--<p class="pw-infinite-gallery__desc">A rolling look at recent wraps, tint, PPF, and branding installs — browse with the arrows.</p>-->
-    </div>
-    <div class="pw-infinite-gallery__arrows">
-      <button class="pw-infinite-gallery__arrow pw-infinite-gallery__arrow--prev" type="button" aria-label="Previous image">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 4L7 12L15 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <button class="pw-infinite-gallery__arrow pw-infinite-gallery__arrow--next" type="button" aria-label="Next image">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 4L17 12L9 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <div class="pw-infinite-gallery__viewport" id="pwInfiniteGalleryViewport">
-    <div class="pw-infinite-gallery__track" id="pwInfiniteGalleryTrack">
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Full body gloss and matte vehicle wrap"><img src="/images/IMG_1800.jpg" alt="Full body gloss and matte vehicle wrap" loading="lazy" decoding="async" fetchpriority="low"></figure>
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Branded commercial fleet wrap"><img src="/images/IMG_5067.jpg" alt="Branded commercial fleet wrap" loading="lazy" decoding="async" fetchpriority="low"></figure>
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Architectural building wrap"><img src="/images/IMG_6870.jpg" alt="Architectural building wrap" loading="lazy" decoding="async" fetchpriority="low"></figure>
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Paint protection film install"><img src="/images/IMG_7650.jpg" alt="Paint protection film install" loading="lazy" decoding="async" fetchpriority="low"></figure>
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Branded commercial fleet wrap"><img src="/images/IMG_8517.jpg" alt="Branded commercial fleet wrap" loading="lazy" decoding="async" fetchpriority="low"></figure>
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Architectural building wrap"><img src="/images/IMG_8910.jpg" alt="Architectural building wrap" loading="lazy" decoding="async" fetchpriority="low"></figure>
-      <figure class="pw-infinite-gallery__slide" tabindex="0" role="button" aria-label="Open full image: Paint protection film install"><img src="/images/IMG_9143.jpg" alt="Paint protection film install" loading="lazy" decoding="async" fetchpriority="low"></figure>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================================
      BLACK7 — CLOSING CTA + FOOTER (combined)
      ============================================================================ -->
 <section class="pw6-final-cta" aria-labelledby="pw6FinalCtaTitle">
@@ -1300,26 +1263,6 @@
 </section>
 <!-- ============================================================================
      END BLACK5 — CLOSING PROJECT CTA
-     ============================================================================ -->
-
-<!-- Lightbox for the gallery above — reuses the site's existing (previously
-     unwired) .pw-lightbox styles from styles.css. -->
-<div class="pw-lightbox" id="pwGalleryLightbox" aria-hidden="true">
-  <button class="pw-lightbox__close" id="pwGalleryLightboxClose" type="button" aria-label="Close">
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-  </button>
-  <button class="pw-lightbox__arrow pw-lightbox__arrow--prev" id="pwGalleryLightboxPrev" type="button" aria-label="Previous image">
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 4L7 12L15 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
-  <div class="pw-lightbox__frame" id="pwGalleryLightboxFrame">
-    <img class="pw-lightbox__img" id="pwGalleryLightboxImg" src="" alt="" loading="lazy" decoding="async" fetchpriority="low">
-  </div>
-  <button class="pw-lightbox__arrow pw-lightbox__arrow--next" id="pwGalleryLightboxNext" type="button" aria-label="Next image">
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 4L17 12L9 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
-</div>
-<!-- ============================================================================
-     END NEW SECTION — FULL-WIDTH INFINITE IMAGE GALLERY
      ============================================================================ -->
 
 </main>
