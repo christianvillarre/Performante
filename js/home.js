@@ -1652,7 +1652,7 @@ if (
       pin: marqueePinGroup,
       pinSpacing: true,
       scrub: mobileLightTransition ? 1 : 0.7,
-      anticipatePin: 1,
+      anticipatePin: isTabletTouchDevice() ? 0 : 1,
       invalidateOnRefresh: true,
 
       onEnter() {

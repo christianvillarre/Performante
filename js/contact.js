@@ -16,6 +16,42 @@
   const year = document.getElementById('pwFooterYear');
   if (year) year.textContent = new Date().getFullYear();
 
+  const submitLink = document.querySelector('.ct-form__submit-link');
+  if (submitLink && window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)').matches) {
+    const label = submitLink.querySelector('.index2-text-link__label');
+    const name = label.textContent.trim();
+    label.textContent = '';
+    const letters = [...name].map(char => {
+      const letter = document.createElement('span');
+      letter.className = 'index2-text-link__letter';
+      letter.textContent = char;
+      letter.setAttribute('aria-hidden', 'true');
+      label.appendChild(letter);
+      return letter;
+    });
+    const rightArrow = submitLink.querySelector('.hero-project-link__arrow-window--right svg');
+    const leftWindow = submitLink.querySelector('.hero-project-link__arrow-window--left');
+    const leftArrow = leftWindow.querySelector('svg');
+    const underline = submitLink.querySelector('.hero-project-link__underline');
+    gsap.set(leftArrow, {x: -24});
+    const sweep = gsap.timeline({paused: true})
+      .set(underline, {transformOrigin: 'right center', scaleX: 1})
+      .to(underline, {scaleX: 0, duration: .24, ease: 'power2.inOut'})
+      .set(underline, {transformOrigin: 'left center'})
+      .to(underline, {scaleX: 1, duration: .28, ease: 'power2.out'});
+    const motion = gsap.timeline({paused: true, defaults: {ease: 'power2.inOut'}})
+      .to(rightArrow, {x: 24, duration: .24}, 0)
+      .to(letters, {x: 48, duration: .23, stagger: {each: .018, from: 'end'}}, .04)
+      .to(leftWindow, {opacity: 1, duration: .01}, .56)
+      .to(leftArrow, {x: 0, duration: .24}, .57);
+    submitLink.addEventListener('pointerenter', () => {motion.play(); sweep.restart();});
+    submitLink.addEventListener('pointerleave', () => motion.reverse());
+    submitLink.addEventListener('pointerup', event => {if (event.pointerType === 'touch') motion.reverse();});
+    submitLink.addEventListener('pointercancel', () => motion.reverse());
+    submitLink.addEventListener('focus', () => {motion.play(); sweep.restart();});
+    submitLink.addEventListener('blur', () => motion.reverse());
+  }
+
   if (!window.gsap || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const reviewLink = document.querySelector('.ct-reviews__link');
   if (reviewLink) {

@@ -1,5 +1,6 @@
 /* About: typography-led narrative; shared navigation and footer remain sitewide. */
-#site > #hero,#site > #what-we-do,#site > #story,#site > #excellence,#site > #values,#site > #process{display:block!important}
+#site > #hero,#site > #what-we-do,#site > #story,#site > #excellence,#site > #values,#site > #process,#site > .at-statement{display:block!important}
+#site > #standard.at-statement{display:block!important}
 #site > #hero{display:grid!important;align-content:center}
 #site > #excellence{display:grid!important}
 .at-section{--at-ink:#f2f0ed;--at-muted:#969593;position:relative;box-sizing:border-box;background:#0a0a0a;color:var(--at-ink);padding:clamp(80px,9vw,140px) clamp(24px,4vw,64px);font-family:'Zalando Sans',sans-serif;overflow:clip}
@@ -9,7 +10,7 @@
 .at-kicker{font-size:14px;letter-spacing:.2em}
 .at-intro{min-height:100svh;display:flex!important;flex-direction:column;align-items:stretch;justify-content:center;padding-top:clamp(100px,12vh,140px);padding-bottom:clamp(56px,8vh,100px);text-align:left}
 .at-intro__media{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:clamp(10px,1.4vw,22px);width:100%;height:clamp(300px,49svh,570px)}
-.at-intro__photo{min-width:0;height:100%;overflow:hidden;pointer-events:none;background:#171a1c;box-shadow:0 25px 70px rgba(0,0,0,.38)}
+.at-intro__photo{min-width:0;height:100%;overflow:hidden;pointer-events:none;background:#0a0a0a;box-shadow:0 25px 70px rgba(0,0,0,.38)}
 .at-intro__photo img{display:block;width:100%;height:120%;object-fit:cover;filter:brightness(.78) saturate(.82);will-change:transform}
 .at-intro__photo--wide img{object-position:50% 55%}
 .at-intro__photo--narrow img{object-position:center 39%}
@@ -34,13 +35,13 @@
 @media(hover:hover) and (pointer:fine){.at-service:hover .at-service__arrow{transform:translate(4px,-4px)}}
 .at-service:hover h3{color:#c6c3bd}
 .at-service:focus-visible,.at-scroll:focus-visible{outline:2px solid #eee;outline-offset:6px}
-.at-ambition{background:#101010;display:grid!important;grid-template-columns:minmax(140px,.42fr) minmax(0,1.58fr);gap:40px clamp(28px,5vw,100px)}
+.at-ambition{background:#0a0a0a;display:grid!important;grid-template-columns:minmax(140px,.42fr) minmax(0,1.58fr);gap:40px clamp(28px,5vw,100px)}
 #site > #story{display:grid!important}
 .at-ambition > .at-kicker{padding-top:10px}
 .at-manifesto{font-size:clamp(2.25rem,3.5vw,4.4rem);line-height:1.08;letter-spacing:-.055em;font-weight:400;max-width:30ch;margin:0!important}
 .at-ambition__foot{grid-column:2;display:flex;justify-content:space-between;gap:50px;border-top:1px solid #ffffff24;padding-top:30px}
 .at-ambition__foot .at-copy{max-width:43ch}
-.ab-values{background:#101010}
+.ab-values{background:#0a0a0a}
 .ab-values__stage{width:min(1200px,100%);margin:auto}
 .ab-values .at-heading{margin-top:30px}
 .ab-values__sequence{position:relative;margin-top:70px}
@@ -100,7 +101,7 @@
 .at-lightfields{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
 
 #site > #excellence{display:block!important}
-.at-photo-break{padding:0 4vw 70px;background:#101010;overflow:hidden}
+.at-photo-break{padding:0 4vw 70px;background:#0a0a0a;overflow:hidden}
 .at-photo-break__frame{height:clamp(320px,62vw,760px);max-height:85svh;overflow:hidden}
 .at-photo-break__frame img{width:100%;height:120%;object-fit:cover;display:block;position:relative;top:-10%}
 .at-photo-break__caption{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#969593;margin-top:18px!important;text-align:right}
@@ -145,7 +146,7 @@
 
 /* Founder biography follows the same editorial grid as the preceding chapters. */
 #site > #founder{display:block!important}
-.at-founder{background:#101010;border-top:1px solid #ffffff12}
+.at-founder{background:#0a0a0a;border-top:1px solid #ffffff12}
 .at-founder__role{margin-top:16px!important;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#969593}
 .at-founder__bio{margin-top:36px;max-width:62ch}
 .at-founder__bio p{font-size:clamp(14px,1.05vw,17px);line-height:1.8;color:#aaa8a5}
@@ -188,65 +189,17 @@
 @media(max-width:760px){#values .at-section-head{top:-48px}}
 
 /* Keep the eyebrow above a single full-width title and paragraph column. */
-#site > #story.at-ambition{display:block!important;padding-top:clamp(115px,11vw,175px)}
+#site > .at-opening > #story.at-ambition{display:block!important;padding-top:clamp(115px,11vw,175px)}
 #story > .at-kicker{position:absolute;top:clamp(42px,4vw,64px);left:clamp(24px,4vw,64px);padding:0}
-#story .at-manifesto{display:block;width:100%;max-width:none;text-align:left}
-#story .at-ambition__foot{display:flex;width:100%;max-width:none;justify-content:space-between;gap:clamp(30px,6vw,100px);margin-top:clamp(34px,4vw,64px);padding-top:30px;border-top:1px solid #ffffff24}
+#story .at-manifesto{display:block;width:100%;max-width:none;text-align:center}
+#story .at-ambition__foot{display:flex;width:100%;max-width:none;justify-content:center;gap:clamp(30px,6vw,100px);margin-top:clamp(34px,4vw,64px);padding-top:30px;border-top:1px solid #ffffff24}
 #story .at-ambition__foot .at-small{flex:0 0 30%;text-align:right}
-#story .at-ambition__foot .at-copy{flex:1;display:block;width:auto;max-width:55ch;text-align:left}
+#story .at-ambition__foot .at-copy{flex:0 1 55ch;display:block;width:100%;max-width:55ch;text-align:center}
 @media(max-width:760px){
- #story .at-ambition__foot{flex-direction:column;gap:22px}
+ #story .at-ambition__foot{flex-direction:column;align-items:center;gap:22px}
  #story .at-ambition__foot .at-small{flex:0 0 auto;text-align:left}
- #story .at-ambition__foot .at-copy{width:100%;max-width:none}
+ #story .at-ambition__foot .at-copy{flex:none;width:100%;max-width:55ch}
 }
-
-/* The services and story chapters switch together at the story trigger. */
-#site > .at-opening > #what-we-do{transition:background-color .65s ease,color .65s ease}
-#site :is(#story,#excellence,#values,#process,#founder){transition:background-color .65s ease,color .65s ease}
-#site > #story{background:#0a0a0a}
-body.at-light-chapter #site > .at-opening > #what-we-do{
- --at-ink:#111;
- --at-muted:#555;
- background:#fff;
- color:#111;
-}
-body.at-light-chapter #what-we-do .at-kicker{color:#555}
-body.at-light-chapter #what-we-do .at-service{border-color:#00000024}
-body.at-light-chapter #what-we-do .at-service:hover h3{color:#444}
-body.at-light-chapter #site :is(#story,#excellence,#values,#process,#founder){
- --at-ink:#111;
- --at-muted:#555;
- background:#fff;
- color:#111;
-}
-body.at-light-chapter #site :is(#story,#excellence,#values,#process,#founder) :is(.at-kicker,.at-small,.at-photo-break__caption,.at-founder__role){color:#555}
-body.at-light-chapter #site :is(#story,#values,#process,#founder) :is(.at-copy,.ab-values__point p,.at-step p,.at-founder__bio p){color:#333}
-body.at-light-chapter #site #story .at-manifesto .at-word{color:#111!important}
-body.at-light-chapter #site #story .at-ambition__foot,
-body.at-light-chapter #site #founder,
-body.at-light-chapter #site #process .at-step{border-color:#00000024}
-body.at-light-chapter #site #values .ab-values__line-track{background:#00000024}
-body.at-light-chapter #site #values .ab-values__line{background:#111}
-body.at-light-chapter #site #values .ab-values__dot{background:#111}
-body.at-light-chapter #site #process .at-process__closing{color:#555}
-body.at-light-chapter #site #process .at-process__closing span{color:#111}
-
-/* ScrollTrigger wraps the pinned values section in a spacer. */
-body.at-light-chapter #site .pin-spacer:has(#values){background:#fff}
-
-/* Return to the dark palette as the closing statement arrives. */
-body.at-dark-finale #site :is(#process,#founder){
- --at-ink:#f2f0ed;
- --at-muted:#969593;
- background:#0a0a0a;
- color:#f2f0ed;
-}
-body.at-dark-finale #site :is(#process,#founder) :is(.at-kicker,.at-founder__role){color:#969593}
-body.at-dark-finale #site :is(#process,#founder) :is(.at-step p,.at-founder__bio p){color:#aaa8a5}
-body.at-dark-finale #site #process .at-step,
-body.at-dark-finale #site #founder{border-color:#ffffff24}
-body.at-dark-finale #site #process .at-process__closing{color:#f2f0ed}
-body.at-dark-finale #site #process .at-process__closing span{color:#eeece7}
 
 @media(max-width:760px){
  #excellence .at-photo-break__frame{height:clamp(300px,72vw,440px);min-height:0}
@@ -257,7 +210,7 @@ body.at-dark-finale #site #process .at-process__closing span{color:#eeece7}
 #process .at-process__closing{max-width:24ch;margin:0;padding-top:clamp(90px,10vw,150px);text-align:left;font-size:clamp(2.4rem,4.2vw,4.2rem);font-weight:500;line-height:1.08;letter-spacing:-.04em}
 #process .at-process__closing span{color:inherit}
 .at-process__gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(10px,1.5vw,22px);margin-top:clamp(36px,5vw,72px)}
-.at-process__gallery figure{min-width:0;aspect-ratio:4/5;margin:0;overflow:hidden;background:#191919}
+.at-process__gallery figure{min-width:0;aspect-ratio:4/5;margin:0;overflow:hidden;background:#0a0a0a}
 .at-process__gallery img{display:block;width:100%;height:100%;object-fit:cover}
 @media(max-width:760px){
  #process .at-process__closing{font-size:clamp(32px,7.5vw,46px);padding-top:80px}
@@ -295,6 +248,11 @@ body.at-light-chapter #values::before{opacity:.38}
 #process .at-section-head{display:block;text-align:center}
 #process .at-section-head .at-heading{width:100%;max-width:none}
 
+.at-statement{background:#0a0a0a}
+.at-statement .at-process__closing{max-width:24ch;margin:0;padding-top:0;text-align:left;font-size:clamp(2.4rem,4.2vw,4.2rem);font-weight:500;line-height:1.08;letter-spacing:-.04em;color:#f2f0ed}
+.at-statement .at-process__closing span{color:#eeece7}
+@media(max-width:760px){.at-statement .at-process__closing{font-size:clamp(32px,7.5vw,46px);padding-top:0}}
+
 /* Dark navigation controls and menu over the light About chapters. */
 body.at-light-chapter:not(.at-dark-finale) #pwNav{background:transparent;box-shadow:none}
 body.at-light-chapter:not(.at-dark-finale) #pwNav .pw-nav__logo img{filter:brightness(0)!important}
@@ -313,7 +271,7 @@ body.at-dark-finale #pwNav .pw-nav__toggle{color:#fff!important}
 
 /* Give the opening statement a little more room on every viewport. */
 #hero .at-title{font-size:clamp(2.5rem,3.7vw,4.25rem)}
-@media(max-width:760px){#hero .at-title{font-size:clamp(30px,7.2vw,44px)}}
+@media(max-width:760px){#hero .at-title{font-size:clamp(36px,8.8vw,52px)}}
 #hero .at-intro__description{font-size:clamp(13px,.9vw,15px)}
 @media(max-width:760px){#hero .at-intro__description{font-size:13px}}
 @media(max-width:760px){

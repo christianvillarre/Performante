@@ -1,24 +1,11 @@
 /* Typography-led About. Animation is enhancement; static content stays complete. */
 (() => {
-  const story = document.getElementById('story');
-  if (story) {
-    const closing = document.querySelector('.at-process__closing');
-    const updateChapterTheme = () => {
-      document.body.classList.toggle('at-light-chapter', story.getBoundingClientRect().top <= window.innerHeight * .65);
-      document.body.classList.toggle('at-dark-finale', !!closing && closing.getBoundingClientRect().top <= window.innerHeight * .65);
-    };
-    window.addEventListener('scroll', updateChapterTheme, {passive: true});
-    window.addEventListener('resize', updateChapterTheme, {passive: true});
-    updateChapterTheme();
-  }
   if (!window.gsap || !window.ScrollTrigger) return;
   gsap.registerPlugin(ScrollTrigger);
   const media = gsap.matchMedia();
   // Remote desktop sessions can report reduced motion even when the visitor
   // expects the page animations. Keep the About story active on all devices.
-  media.add({motion: '(prefers-reduced-motion: no-preference)', desktop: '(min-width:761px) and (min-height:650px)', wide: '(min-width:761px)'}, context => {
-    const desktop = context.conditions.desktop;
-    const horizontal = context.conditions.wide;
+  media.add({motion: '(prefers-reduced-motion: no-preference)'}, () => {
     const restore = [];
     const split = heading => {
       const original = heading.innerHTML;
@@ -57,19 +44,16 @@
       }
     });
     gsap.from('.at-intro__description, .at-scroll', {opacity: 0, y: 15, stagger: .12, duration: 1, delay: .45});
+    gsap.from('.at-intro__photo', {
+      y: 70, opacity: 0, clipPath: 'inset(0% 0% 100% 0%)',
+      duration: 1, stagger: .32, ease: 'power2.out', delay: .15
+    });
     gsap.to('.at-intro__inner', {y: -55, opacity: .2, ease: 'none', scrollTrigger: {trigger: '.at-intro', start: 'top top', end: 'bottom 20%', scrub: .5}});
     gsap.utils.toArray('.at-intro__photo img').forEach((photo, index) => {
       gsap.fromTo(photo, {yPercent: 0}, {
         yPercent: index === 0 ? -10 : -16,
         ease: 'none',
         scrollTrigger: {trigger: '.at-intro', start: 'top top', end: 'bottom top', scrub: .6}
-      });
-    });
-    gsap.utils.toArray('.at-service').forEach((row, i) => {
-      // Keep all arrows fixed on the same right edge while the row copy enters.
-      gsap.from(row.querySelectorAll('h3, p, .at-index'), {
-        x: i % 2 ? 20 : -20, opacity: 0, stagger: .05, ease: 'none',
-        scrollTrigger: {trigger: row, start: 'top 90%', end: 'top 62%', scrub: .4}
       });
     });
     const photo = document.querySelector('.at-photo-break__frame');
@@ -85,35 +69,13 @@
         }
       });
     }
+    gsap.from('.at-photo-break__caption', {
+      y: 18, opacity: 0, duration: .9, ease: 'power2.out',
+      scrollTrigger: {trigger: '.at-photo-break__caption', start: 'top 92%', toggleActions: 'play none none reverse'}
+    });
     gsap.from('.at-ambition__foot', {y: 35, opacity: 0, ease: 'none', scrollTrigger: {
       trigger: '.at-ambition__foot', start: 'top 92%', end: 'top 62%', scrub: .4
     }});
-    const points = gsap.utils.toArray('.ab-values__point');
-    const dots = gsap.utils.toArray('.ab-values__dot');
-    const track = document.querySelector('.ab-values__line-track');
-    const fractions = [];
-    const measure = () => {
-      const length = horizontal ? track.offsetWidth : track.offsetHeight;
-      points.forEach((point, i) => {
-        const position = horizontal ? point.offsetLeft + 4 : point.offsetTop + 4;
-        fractions[i] = Math.min(.99, position / Math.max(1, length));
-        gsap.set(dots[i], horizontal ? {left: position, top: 0} : {left: 0, top: position});
-      });
-    };
-    measure(); ScrollTrigger.addEventListener('refreshInit', measure);
-    const axis = horizontal ? 'scaleX' : 'scaleY';
-    gsap.set('.ab-values__line', {[axis]: 0});
-    gsap.set(dots, {opacity: 0, scale: .5});
-    gsap.set(points, {opacity: 0, y: 24});
-    const values = gsap.timeline({scrollTrigger: {trigger: '.ab-values', start: desktop ? 'top top' : 'top bottom',
-      end: desktop ? '+=1000' : 'bottom 35%', pin: desktop, scrub: desktop ? .35 : .8, invalidateOnRefresh: true}});
-    values.to({}, {duration: .25});
-    points.forEach((point, i) => {
-      values.to('.ab-values__line', {[axis]: () => fractions[i], duration: i ? 1 : .15, ease: 'none'})
-        .to(dots[i], {opacity: 1, scale: 1, duration: .12})
-        .to(point, {opacity: 1, y: 0, duration: .5, ease: 'power2.out'});
-    });
-    values.to('.ab-values__line', {[axis]: 1, duration: .5, ease: 'none'}).to({}, {duration: .2});
     gsap.utils.toArray('.at-step').forEach(step => {
       const sequence = gsap.timeline({scrollTrigger: {trigger: step, start: 'top 88%', end: 'top 40%', scrub: .5}});
       sequence.from(step.querySelector('h3'), {yPercent: 65, opacity: 0, clipPath: 'inset(0% 0% 100% 0%)', duration: 1, ease: 'power2.out'})
@@ -123,17 +85,15 @@
           {clipPath: 'inset(0% 0% 0% 0%)', y: 0, duration: 1.1, ease: 'power2.out'}, .15)
         .fromTo(step.querySelector('img'), {scale: 1.16}, {scale: 1, duration: 1.1, ease: 'none'}, .15);
     });
-    gsap.from('.at-process__closing', {y: 30, opacity: 0, duration: 1, scrollTrigger: {trigger: '.at-process__closing', start: 'top 88%', toggleActions: 'play none none reverse'}});
+    gsap.from('.at-process__closing', {y: 30, opacity: 0, duration: 1, scrollTrigger: {trigger: '.at-process__closing', start: () => window.innerWidth <= 760 ? 'top 98%' : 'top 88%', toggleActions: 'play none none reverse'}});
     const galleryImages = gsap.utils.toArray('.at-process__gallery figure');
-    if (horizontal) {
+    if (window.innerWidth > 760) {
       gsap.from(galleryImages, {y: 70, opacity: 0, clipPath: 'inset(0% 0% 100% 0%)', duration: 1, stagger: .32, ease: 'power2.out',
         scrollTrigger: {trigger: '.at-process__gallery', start: 'top 82%', toggleActions: 'play none none reverse'}});
     } else {
       galleryImages.forEach(image => gsap.from(image, {y: 45, opacity: 0, clipPath: 'inset(0% 0% 100% 0%)', duration: .9, ease: 'power2.out',
-        scrollTrigger: {trigger: image, start: 'top 86%', toggleActions: 'play none none reverse'}}));
+        scrollTrigger: {trigger: image, start: 'top 94%', toggleActions: 'play none none reverse'}}));
     }
-    gsap.from('.at-founder__role, .at-founder__bio p', {y: 22, opacity: 0, stagger: .14, duration: .9, ease: 'power2.out',
-      scrollTrigger: {trigger: '.at-founder__content', start: 'top 82%', toggleActions: 'play none none reverse'}});
     let lenis;
     const tick = time => lenis.raf(time * 1000);
     if (window.Lenis) {
@@ -141,7 +101,6 @@
     }
     return () => {
       if (lenis) {gsap.ticker.remove(tick); lenis.destroy();}
-      ScrollTrigger.removeEventListener('refreshInit', measure);
       restore.forEach(fn => fn());
     };
   });

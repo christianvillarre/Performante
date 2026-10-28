@@ -6682,3 +6682,16 @@ html{
   .vws-card-image.small{ display:none; }
 }
 
+/* Keep the service heroes in one viewport on tablets. */
+@media (min-width:761px) and (max-width:1100px), (min-width:1101px) and (max-width:1400px) and (pointer:coarse){
+  .vw-hero{box-sizing:border-box;height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);flex-direction:row}
+  .vw-hero__col{width:50%;flex:1 1 50%}
+  .vw-hero__divider{width:1px;height:auto;flex:0 0 1px}
+  .vw-hero__col--copy{justify-content:center;padding:clamp(100px,12vh,130px) clamp(20px,2.8vw,34px) 80px}
+  .vw-hero__title{font-size:clamp(1.9rem,3.4vw,2.5rem);line-height:1.05;max-width:18ch}
+  .vw-hero__desc{font-size:13px;line-height:1.45;margin-bottom:20px}
+  .vw-hero__marquee{position:absolute;left:0;right:0;bottom:20px;margin-top:0}
+  .vw-hero__col--media{padding:clamp(105px,12vh,130px) 22px 24px;gap:12px}
+  .vw-hero__media-caption{font-size:12px;line-height:1.4}
+}
+
