@@ -130,14 +130,20 @@
     el.style.transform = "none";
     const wrapRect = wrap.getBoundingClientRect();
     const textRect = el.getBoundingClientRect();
-    if (wrapRect.width > 0 && textRect.width > 0) {
-      const scale = wrapRect.width / textRect.width;
-      // Correct for any residual left offset (whitespace, font side-bearing,
-      // etc.) so the visible glyphs — not just the box — touch the left edge.
-      const leftOffset = textRect.left - wrapRect.left;
-      el.style.transform =
-        "translateX(" + -leftOffset + "px) scaleX(" + scale + ")";
-    }
+    const style = getComputedStyle(el);
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    if (!context || wrapRect.width <= 0 || textRect.width <= 0) return;
+    context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    const ink = context.measureText(el.textContent.trim());
+    const inkWidth = ink.actualBoundingBoxLeft + ink.actualBoundingBoxRight;
+    if (inkWidth <= 0) return;
+    const mobile = window.matchMedia("(max-width: 700px)").matches;
+    const bleed = mobile ? 3 : 0;
+    const bottomOffset = mobile ? 4 : 9;
+    const scale = (wrapRect.width + bleed * 2 - (mobile ? 0 : 13)) / inkWidth;
+    const left = wrapRect.left - textRect.left - bleed - ink.actualBoundingBoxLeft * scale - (mobile ? 0 : 17);
+    el.style.transform = `translate(${left}px, ${bottomOffset}px) scaleX(${scale})`;
   }
 
   fitWordmark();

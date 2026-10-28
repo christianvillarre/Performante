@@ -34,11 +34,12 @@
 
 <script>
 (function(){
-  if (typeof Lenis === 'undefined') return;
+  if (typeof Lenis === 'undefined' || !window.matchMedia('(min-width: 761px) and (prefers-reduced-motion: no-preference)').matches) return;
 
   var lenis = new Lenis({
     autoRaf: false
   });
+  window.serviceLenis = lenis;
 
   if (window.gsap && window.ScrollTrigger) {
     lenis.on('scroll', ScrollTrigger.update);
@@ -252,15 +253,15 @@
           </div>
 
           <ul class="vws-intro-list">
-            <li><a href="#"><span class="vws-intro-list__num">01</span><span class="vws-intro-list__title">Fleet Wraps</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-            <li><a href="#"><span class="vws-intro-list__num">02</span><span class="vws-intro-list__title">Trailers</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-            <li><a href="#"><span class="vws-intro-list__num">03</span><span class="vws-intro-list__title">Vans</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-            <li><a href="#"><span class="vws-intro-list__num">04</span><span class="vws-intro-list__title">Commercial Graphics</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+            <li><a href="#fleet-wraps"><span class="vws-intro-list__num">01</span><span class="vws-intro-list__title">Fleet Wraps</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+            <li><a href="#trailers"><span class="vws-intro-list__num">02</span><span class="vws-intro-list__title">Trailers</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+            <li><a href="#vans"><span class="vws-intro-list__num">03</span><span class="vws-intro-list__title">Vans</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+            <li><a href="#commercial-graphics"><span class="vws-intro-list__num">04</span><span class="vws-intro-list__title">Commercial Graphics</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
           </ul>
         </div>
       </article>
 
-      <article class="vws-card">
+      <article class="vws-card" id="fleet-wraps">
         <div class="vws-card-inner">
           <div class="vws-card-image main">
             <img src="/images/_DSC6569.jpg" alt="Full fleet vehicle wrap">
@@ -297,7 +298,7 @@
         </div>
       </article>
 
-      <article class="vws-card">
+      <article class="vws-card" id="trailers">
         <div class="vws-card-inner">
           <div class="vws-card-image main">
             <img src="/images/IMG_7648.jpg" alt="Trailer wrap">
@@ -334,7 +335,7 @@
         </div>
       </article>
 
-      <article class="vws-card">
+      <article class="vws-card" id="vans">
         <div class="vws-card-inner">
           <div class="vws-card-image main">
             <img src="/images/IMG_0231.jpg" alt="Service van wrap">
@@ -371,7 +372,7 @@
         </div>
       </article>
 
-      <article class="vws-card">
+      <article class="vws-card" id="commercial-graphics">
         <div class="vws-card-inner">
           <div class="vws-card-image main">
             <img src="/images/graphics_1.jpg" alt="Commercial graphic design layout">
@@ -684,9 +685,10 @@
 
 
 
-<script src="js/vehicle-slider.js?v=mobile-native-10" defer></script>
+<script src="js/vehicle-slider.js?v=mobile-native-11" defer></script>
 <script src="js/hero-marquee.js?v=1" defer></script>
 <script src="js/service-hero-cta.js?v=1" defer></script>
-<script src="js/commercial-footer.js?v=12" defer></script>
+<script src="js/service-anchors.js?v=1" defer></script>
+<script src="js/commercial-footer.js?v=22" defer></script>
 </body>
 </html>

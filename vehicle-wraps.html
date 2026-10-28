@@ -32,11 +32,12 @@
 
 <script>
 (function(){
-  if (typeof Lenis === 'undefined') return;
+  if (typeof Lenis === 'undefined' || !window.matchMedia('(min-width: 761px) and (prefers-reduced-motion: no-preference)').matches) return;
 
   var lenis = new Lenis({
     autoRaf: false
   });
+  window.serviceLenis = lenis;
 
   // Keep GSAP ScrollTrigger (used by the sticky service cards) in sync
   // with Lenis's smoothed scroll position instead of running two
@@ -238,15 +239,15 @@
           </div>
 
           <ul class="vws-intro-list">
-            <li><a href="#"><span class="vws-intro-list__num">01</span><span class="vws-intro-list__title">Color Change</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-            <li><a href="/paint-protection-film.html"><span class="vws-intro-list__num">02</span><span class="vws-intro-list__title">Paint Protection Film</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-            <li><a href="#"><span class="vws-intro-list__num">03</span><span class="vws-intro-list__title">Stripes &amp; Accents</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
-            <li><a href="#"><span class="vws-intro-list__num">04</span><span class="vws-intro-list__title">Custom Designs</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+            <li><a href="#color-change"><span class="vws-intro-list__num">01</span><span class="vws-intro-list__title">Color Change</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+            <li><a href="#paint-protection-film"><span class="vws-intro-list__num">02</span><span class="vws-intro-list__title">Paint Protection Film</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+            <li><a href="#stripes-accents"><span class="vws-intro-list__num">03</span><span class="vws-intro-list__title">Stripes &amp; Accents</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
+            <li><a href="#custom-designs"><span class="vws-intro-list__num">04</span><span class="vws-intro-list__title">Custom Designs</span><svg class="vws-intro-list__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg></a></li>
           </ul>
         </div>
       </article>
 
-      <article class="vws-card">
+      <article class="vws-card" id="color-change">
         <div class="vws-card-inner">
           <div class="vws-card-image main">
             <img src="/images/IMG_0905.jpg" alt="Full color change vehicle wrap">
@@ -283,7 +284,7 @@
         </div>
       </article>
 
-      <article class="vws-card">
+      <article class="vws-card" id="paint-protection-film">
         <div class="vws-card-inner">
           <div class="vws-card-image main">
             <img src="/images/ppf2.jpg" alt="Paint protection film install">
@@ -320,7 +321,7 @@
         </div>
       </article>
 
-      <article class="vws-card">
+      <article class="vws-card" id="stripes-accents">
         <div class="vws-card-inner">
           <div class="vws-card-image main">
             <img src="/images/DSC07534.jpeg" alt="Custom vehicle stripe accents">
@@ -357,7 +358,7 @@
         </div>
       </article>
 
-      <article class="vws-card">
+      <article class="vws-card" id="custom-designs">
         <div class="vws-card-inner">
           <div class="vws-card-image main">
             <img src="/images/customdesigns.jpg" alt="Custom designed vehicle wrap">
@@ -692,10 +693,11 @@
 
 <script src="js/navbar-black.js?v=menu-colors-2" defer></script>
 
-<script src="js/vehicle-slider.js?v=mobile-native-10" defer></script>
+<script src="js/vehicle-slider.js?v=mobile-native-11" defer></script>
 <script src="js/hero-marquee.js?v=1" defer></script>
 <script src="js/service-hero-cta.js?v=1" defer></script>
-<script src="js/commercial-footer.js?v=12" defer></script>
+<script src="js/service-anchors.js?v=1" defer></script>
+<script src="js/commercial-footer.js?v=22" defer></script>
 
 
 <!-- FAQ accordion — self-contained, no dependency on gsap.js -->

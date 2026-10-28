@@ -38,6 +38,7 @@
       let userScrolling = false;
       let manualUntil = 0;
       let lastFrame = 0;
+      let scrollRemainder = 0;
       let settleTimer = 0;
       let lastVisibilityCheck = 0;
       let nearScreen = false;
@@ -111,7 +112,10 @@
           lastVisibilityCheck = now;
         }
         if (nearScreen && groupWidth && !paused && !touching && !userScrolling && !reduced.matches && !document.hidden && now >= manualUntil) {
-          setScroll(track.scrollLeft + dt * Math.max(36, groupWidth / 110));
+          const distance = scrollRemainder + dt * Math.max(36, groupWidth / 110);
+          const wholePixels = Math.floor(distance);
+          scrollRemainder = distance - wholePixels;
+          if (wholePixels) setScroll(track.scrollLeft + wholePixels);
           recenterMobile(false);
         } else if (groupWidth && (track.scrollLeft < groupWidth * .25 || track.scrollLeft > groupWidth * 4.5)) {
           recenterMobile(true);
