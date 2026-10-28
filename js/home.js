@@ -2954,7 +2954,45 @@ document.addEventListener('DOMContentLoaded',()=>{
       gsap.fromTo(row,{autoAlpha:0},{autoAlpha:1,ease:'none',scrollTrigger:{trigger:row[0],start:'top 78%',end:'top 48%',scrub:0.6,invalidateOnRefresh:true}});
     }
   };
-  media.add('(min-width: 761px)',()=>animateRows(6));
+  media.add('(min-width: 761px)',()=>{
+    const rows=[];
+    for(let index=0;index<items.length;index+=6){
+      const row=items.slice(index,index+6);
+      rows.push(row);
+      gsap.fromTo(row,{autoAlpha:0},{autoAlpha:1,ease:'none',scrollTrigger:{
+        trigger:row[0],start:'top 90%',end:'top 60%',scrub:0.6,invalidateOnRefresh:true
+      }});
+    }
+
+    if(!window.IntersectionObserver)return;
+    let loaderObserver;
+    const refreshRows=()=>{
+      section.querySelectorAll('img[loading="lazy"]').forEach(image=>{image.loading='eager';});
+      ScrollTrigger.refresh();
+      const navigation=performance.getEntriesByType('navigation')[0];
+      if(navigation?.type!=='reload')return;
+      rows.forEach(row=>{
+        const rect=row[0].getBoundingClientRect();
+        if(rect.top>=window.innerHeight || rect.bottom<=0)return;
+        const opacity=Number(gsap.getProperty(row[0],'opacity'));
+        if(opacity>0)gsap.fromTo(row,{opacity:0},{opacity,duration:.65,ease:'power2.out'});
+      });
+    };
+    const observer=new IntersectionObserver(entries=>{
+      if(!entries[0].isIntersecting)return;
+      observer.disconnect();
+      if(document.documentElement.classList.contains('pw-loading')){
+        loaderObserver=new MutationObserver(()=>{
+          if(document.documentElement.classList.contains('pw-loading'))return;
+          loaderObserver.disconnect();
+          refreshRows();
+        });
+        loaderObserver.observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+      }else refreshRows();
+    },{rootMargin:'0px 0px 1000px 0px'});
+    observer.observe(section);
+    return ()=>{observer.disconnect();loaderObserver?.disconnect();};
+  });
   media.add('(max-width: 760px)',()=>animateRows(3));
 });
 
