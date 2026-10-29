@@ -1,8 +1,54 @@
 (() => {
   const form = document.getElementById('contactForm');
+  const services = [...document.querySelectorAll('.ct-service input')];
+  const requiredFields = ['ctName', 'ctEmail', 'ctDetails'].map(id => document.getElementById(id));
+  const validEmail = value => /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)*\.[a-zA-Z]{2,}$/.test(value.trim());
+  const markField = (field, invalid) => {
+    field.closest('.ct-field')?.classList.toggle('is-invalid', invalid);
+    field.setAttribute('aria-invalid', String(invalid));
+  };
+  requiredFields.forEach(field => {
+    if (!field) return;
+    if (field.type === 'email') {
+      field.addEventListener('input', () => markField(field, false));
+      field.addEventListener('blur', () => markField(field, Boolean(field.value.trim()) && !validEmail(field.value)));
+    } else {
+      field.addEventListener('input', () => markField(field, !field.value.trim()));
+    }
+  });
+  services.forEach(input => input.addEventListener('change', () => {
+    document.querySelector('.ct-services')?.classList.remove('is-invalid');
+    services.forEach(service => service.setAttribute('aria-invalid', 'false'));
+  }));
+  const phone = document.getElementById('ctPhone');
+  if (phone) {
+    phone.addEventListener('input', () => {
+      const digits = phone.value.replace(/\D/g, '').slice(0, 10);
+      phone.value = digits.length > 6
+        ? `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
+        : digits.length > 3
+          ? `(${digits.slice(0, 3)}) ${digits.slice(3)}`
+          : digits.length ? `(${digits}` : '';
+    });
+  }
   const captchaError = document.getElementById('ctCaptchaError');
   if (form && captchaError) {
     form.addEventListener('submit', event => {
+      let invalid = false;
+      requiredFields.forEach(field => {
+        const fieldInvalid = !field.value.trim() || (field.type === 'email' ? !validEmail(field.value) : !field.validity.valid);
+        markField(field, fieldInvalid);
+        invalid ||= fieldInvalid;
+      });
+      const servicesInvalid = !services.some(input => input.checked);
+      document.querySelector('.ct-services')?.classList.toggle('is-invalid', servicesInvalid);
+      services.forEach(service => service.setAttribute('aria-invalid', String(servicesInvalid)));
+      invalid ||= servicesInvalid;
+      if (invalid) {
+        event.preventDefault();
+        captchaError.hidden = true;
+        return;
+      }
       const token = form.querySelector('[name="g-recaptcha-response"]')?.value.trim()
         || window.grecaptcha?.getResponse?.()?.trim();
       if (token) {

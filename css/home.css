@@ -2855,7 +2855,7 @@ html{
 .wrap-blinds span:nth-child(8){ top:calc(87.5% - 2px); }
 
 
-#site > section:not(.intro-wrap):not(.wrap-light-section):not(.wrap-media-gallery):not(.pw-infinite-gallery):not(.pw5-why):not(.pw5-process):not(.pw5-proof):not(.pw5-closing-cta):not(.pw6-final-cta),
+#site > section:not(.intro-wrap):not(.wrap-light-section):not(.wrap-media-gallery):not(.pw-infinite-gallery):not(.pw5-why):not(.pw5-process):not(.pw5-proof):not(.pw-gallery):not(.pw5-closing-cta):not(.pw6-final-cta),
 #site > .contact-section,
 #site > footer{ display:none !important; }
 

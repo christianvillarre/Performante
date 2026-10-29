@@ -1,0 +1,11 @@
+/* Shared rotating project photo gallery */
+.pw-gallery{box-sizing:border-box;display:block!important;position:relative;z-index:80;width:100%;padding:clamp(36px,5vw,72px) 0;background:#0a0a0a;overflow:hidden}
+.pw-gallery__viewport{width:100%;overflow:hidden;cursor:grab;touch-action:pan-y}
+.pw-gallery__viewport.is-dragging{cursor:grabbing;user-select:none}
+.pw-gallery__track{display:flex;width:max-content;animation:pw-gallery-scroll 56s linear infinite reverse;will-change:transform}
+@media(hover:hover){.pw-gallery__viewport:hover .pw-gallery__track{animation-play-state:paused}}
+.pw-gallery__set{display:flex;flex:none;gap:clamp(10px,1.2vw,18px);padding-right:clamp(10px,1.2vw,18px)}
+.pw-gallery__set img{display:block;flex:none;width:clamp(220px,24vw,390px);height:clamp(270px,29vw,460px);object-fit:cover;pointer-events:none;user-select:none;-webkit-user-drag:none}
+@keyframes pw-gallery-scroll{to{transform:translateX(-50%)}}
+@media(max-width:600px){.pw-gallery{padding:32px 0}.pw-gallery__set img{width:68vw;height:78vw;max-height:450px}}
+@media(prefers-reduced-motion:reduce){.pw-gallery__viewport{overflow-x:auto}.pw-gallery__track{animation:none;will-change:auto}}

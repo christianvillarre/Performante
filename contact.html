@@ -14,7 +14,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/subpage.css">
   <link rel="stylesheet" href="/css/navbar.css?v=menu-unified-1">
-  <link rel="stylesheet" href="/css/contact.css?v=form-black-side-2">
+  <link rel="stylesheet" href="/css/contact.css?v=contact-redesign-23">
+  <link rel="stylesheet" href="/css/gallery.css?v=1">
   <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
@@ -101,11 +102,41 @@
 <div id="scroll-container">
 <main id="site">
 <div class="ct-page">
-  <section class="ct-inquiry" id="inquiry" aria-labelledby="inquiryTitle">
-    <div class="ct-inquiry__intro ct-reveal">
-      <!--<span class="ct-eyebrow">YOUR INQUIRY</span>-->
+  <section class="ct-contact-hero" aria-labelledby="inquiryTitle">
+    <div class="ct-contact-hero__body">
       <h1 id="inquiryTitle">Contact us for a <em>Free Quote.</em></h1>
-      <p>Our turn around after recieving inquiries is usually 1-2 business days. please include all relevant information and vehicle details.</p>
+    </div>
+    <div class="ct-inquiry" id="inquiry">
+    <form class="ct-form ct-reveal" id="contactForm" name="contact" method="POST" action="/contact-success.html" data-netlify="true" data-netlify-recaptcha="true" novalidate>
+      <input type="hidden" name="form-name" value="contact">
+      <div class="ct-form__main">
+      <div class="ct-form__left">
+      <div class="ct-form__row">
+        <div class="ct-field ct-field--name"><label for="ctName">Your name</label><input id="ctName" name="name" type="text" autocomplete="name" placeholder="Your full name" required></div>
+        <div class="ct-field"><label for="ctPhone">Phone number</label><input id="ctPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="14" placeholder="(000) 000-0000"></div>
+      </div>
+      <div class="ct-field ct-field--email"><label for="ctEmail">Email address</label><input id="ctEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></div>
+      <fieldset class="ct-services"><legend>What can we help with?</legend><div class="ct-services__grid">
+        <label class="ct-service"><input type="checkbox" name="project" value="Vehicle Wraps"><span><img src="/images/stock5.jpeg" alt="" loading="lazy"><b>Vehicle Wraps</b></span></label>
+        <label class="ct-service"><input type="checkbox" name="project" value="Commercial &amp; Fleet Wraps"><span><img src="/images/IMG_1800.jpg" alt="" loading="lazy"><b>Commercial &amp; Fleet</b></span></label>
+        <label class="ct-service"><input type="checkbox" name="project" value="Architectural Wraps"><span><img src="/images/aw_window_film.jpeg" alt="" loading="lazy"><b>Architectural Wraps</b></span></label>
+        <label class="ct-service"><input type="checkbox" name="project" value="Paint Protection Film"><span><img src="/images/ppf2.jpg" alt="" loading="lazy"><b>Paint Protection Film</b></span></label>
+        <label class="ct-service"><input type="checkbox" name="project" value="Color Change"><span><img src="/images/IMG_0905.jpg" alt="" loading="lazy"><b>Color Change</b></span></label>
+        <label class="ct-service"><input type="checkbox" name="project" value="Something Else"><span><img src="/images/stock9.jpeg" alt="" loading="lazy"><b>Something Else</b></span></label>
+      </div></fieldset>
+      </div>
+      <div class="ct-form__right">
+      <div class="ct-field ct-field--message"><label for="ctDetails">Tell us about your project</label><textarea id="ctDetails" name="details" rows="5" placeholder="Your vehicle, space, timeline, ideas—anything that helps us understand the project." required></textarea></div>
+      <div class="ct-form__bottom"><div class="ct-captcha" data-netlify-recaptcha="true"></div><button class="pw6-final-cta__button--index-link ct-form__submit-link" type="submit" aria-label="Send My Inquiry"><span class="hero-project-link__arrow-window hero-project-link__arrow-window--left" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></span><span class="index2-text-link__label">SEND MY INQUIRY</span><span class="hero-project-link__arrow-window hero-project-link__arrow-window--right" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></span><span class="hero-project-link__underline" aria-hidden="true"></span></button></div>
+      <p class="ct-captcha-error" id="ctCaptchaError" role="alert" aria-live="assertive" hidden>Please click on captcha before submitting</p>
+      </div>
+      </div>
+    </form>
+    </div>
+  </section>
+
+  <section class="ct-after" aria-label="More ways to connect and client reviews">
+    <div class="ct-after__details"><h2>Let's talk <em>directly.</em></h2><p>Have a question before you send the brief? Reach out anytime.</p>
       <div class="ct-contact-info">
         <div class="ct-contact-info__group">
           <span>BUSINESS INQUIRY</span>
@@ -127,26 +158,7 @@
         </div>
       </div>
     </div>
-
-    <form class="ct-form ct-reveal" id="contactForm" name="contact" method="POST" action="/contact-success.html" data-netlify="true" data-netlify-recaptcha="true">
-      <input type="hidden" name="form-name" value="contact">
-      <div class="ct-form__head"><span>PROJECT INQUIRY</span><span>PERFORMANTE WRAPS</span></div>
-      <div class="ct-form__row">
-        <div class="ct-field"><label for="ctName">Your name <span>*</span></label><input id="ctName" name="name" type="text" autocomplete="name" placeholder="How should we address you?" required></div>
-        <div class="ct-field"><label for="ctEmail">Email address <span>*</span></label><input id="ctEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></div>
-      </div>
-      <div class="ct-form__row">
-        <div class="ct-field"><label for="ctPhone">Phone number <small>OPTIONAL</small></label><input id="ctPhone" name="phone" type="tel" autocomplete="tel" placeholder="(000) 000-0000"></div>
-        <div class="ct-field"><label for="ctProject">Project type <span>*</span></label><select id="ctProject" name="project" required><option value="" disabled selected>Select a service</option><option>Vehicle Wraps</option><option>Commercial &amp; Fleet Wraps</option><option>Architectural Wraps</option><option>Paint Protection Film</option><option>Something Else</option></select></div>
-      </div>
-      <div class="ct-field ct-field--message"><label for="ctDetails">Tell us about your project <span>*</span></label><textarea id="ctDetails" name="details" rows="5" placeholder="What are you looking to create? Include your vehicle, space, timing, or any ideas you already have." required></textarea></div>
-      <p class="ct-form__note">We’ll review your inquiry and get back to you soon.</p>
-      <div class="ct-form__bottom"><div class="ct-captcha" data-netlify-recaptcha="true"></div><button class="pw6-final-cta__button--index-link ct-form__submit-link" type="submit" aria-label="Send My Inquiry"><span class="hero-project-link__arrow-window hero-project-link__arrow-window--left" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></span><span class="index2-text-link__label">SEND MY INQUIRY</span><span class="hero-project-link__arrow-window hero-project-link__arrow-window--right" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></span><span class="hero-project-link__underline" aria-hidden="true"></span></button></div>
-      <p class="ct-captcha-error" id="ctCaptchaError" role="alert" aria-live="assertive" hidden>Please click on captcha before submitting</p>
-    </form>
-  </section>
-
-  <section class="ct-reviews" aria-labelledby="ctReviewsTitle">
+  <div class="ct-reviews" aria-labelledby="ctReviewsTitle">
     <div class="ct-reviews__head">
       <div><h2 id="ctReviewsTitle">Kind words from our clients.</h2></div>
     </div>
@@ -156,10 +168,35 @@
       <article class="ct-review"><div class="ct-review__stars" aria-label="5 out of 5 stars">★★★★★</div><blockquote>“Absolutely an amazing job on my 2025 Gsxr1000, exceeded my expectations!! 10/10 fast and amazing quality!”</blockquote><p>Joey Muñiz <span>GOOGLE REVIEW</span></p></article>
     </div>
     <a class="ct-reviews__link" href="https://www.google.com/maps/search/?api=1&amp;query=Performante%20Wraps%20Porter%20TX" target="_blank" rel="noopener noreferrer" aria-label="View Google reviews"><span class="ct-reviews__arrow-window ct-reviews__arrow-window--left" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></span><span class="ct-reviews__link-label">VIEW GOOGLE REVIEWS</span><span class="ct-reviews__arrow-window ct-reviews__arrow-window--right" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></span><span class="ct-reviews__underline" aria-hidden="true"></span></a>
-  </section>
+  </div></section>
 
-  <section class="ct-outro" aria-label="Start a project"><div class="ct-outro__image" aria-hidden="true"></div><div class="ct-outro__marquee" aria-hidden="true"><span>MAKE IT UNMISTAKABLE&nbsp; / &nbsp;MAKE IT UNMISTAKABLE&nbsp; / &nbsp;</span><span>MAKE IT UNMISTAKABLE&nbsp; / &nbsp;MAKE IT UNMISTAKABLE&nbsp; / &nbsp;</span></div><div class="ct-outro__content"><span class="ct-eyebrow">FROM IDEA TO IMPACT</span><p>Bring us the brief.<br><em>We’ll make it unmistakable.</em></p><a href="#inquiry">TELL US WHAT YOU HAVE IN MIND <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></div></section>
 </div>
+<section class="pw-gallery" aria-label="Performante Wraps photo gallery">
+  <div class="pw-gallery__viewport" id="pwGallery">
+    <div class="pw-gallery__track">
+      <div class="pw-gallery__set">
+        <img src="/images/_DSC6430.jpg" alt="Performante Wraps project photo" loading="lazy" draggable="false">
+        <img src="/images/_DSC6411.jpg" alt="Performante Wraps project photo" loading="lazy" draggable="false">
+        <img src="/images/_DSC6404.jpg" alt="Performante Wraps project photo" loading="lazy" draggable="false">
+        <img src="/images/_DSC6439.jpg" alt="Performante Wraps project photo" loading="lazy" draggable="false">
+        <img src="/images/_DSC6714.jpg" alt="Performante Wraps project photo" loading="lazy" draggable="false">
+        <img src="/images/enrico.jpg" alt="Enrico at Performante Wraps" loading="lazy" draggable="false">
+        <img src="/images/ramheavyduty.jpg" alt="Wrapped Ram heavy duty truck" loading="lazy" draggable="false">
+        <img src="/images/enrico2.jpg" alt="Enrico at Performante Wraps" loading="lazy" draggable="false">
+      </div>
+      <div class="pw-gallery__set" aria-hidden="true">
+        <img src="/images/_DSC6430.jpg" alt="" loading="lazy" draggable="false">
+        <img src="/images/_DSC6411.jpg" alt="" loading="lazy" draggable="false">
+        <img src="/images/_DSC6404.jpg" alt="" loading="lazy" draggable="false">
+        <img src="/images/_DSC6439.jpg" alt="" loading="lazy" draggable="false">
+        <img src="/images/_DSC6714.jpg" alt="" loading="lazy" draggable="false">
+        <img src="/images/enrico.jpg" alt="" loading="lazy" draggable="false">
+        <img src="/images/ramheavyduty.jpg" alt="" loading="lazy" draggable="false">
+        <img src="/images/enrico2.jpg" alt="" loading="lazy" draggable="false">
+      </div>
+    </div>
+  </div>
+</section>
 <section class="pw6-final-cta" aria-labelledby="pw6FinalCtaTitle">
   <div class="pw6-final-cta__inner">
 
@@ -252,6 +289,7 @@
 </div>
 <script src="/js/navbar-black.js?v=menu-colors-2" defer></script>
 <script src="/js/commercial-footer.js?v=22" defer></script>
-<script src="/js/contact.js?v=submit-motion-1" defer></script>
+<script src="/js/contact.js?v=contact-redesign-13" defer></script>
+<script src="/js/gallery-drag.js?v=2" defer></script>
 </body>
 </html>
