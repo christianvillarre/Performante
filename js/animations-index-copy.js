@@ -1859,9 +1859,10 @@ if (symbolContainer) {
   const inverseRoot=new THREE.Matrix4();
   const orbitWorldRotation=new THREE.Quaternion();
   const orbitInverseRotation=new THREE.Quaternion();
-  const solidColor=new THREE.Color(0x16191d);
-  const shellColor=new THREE.Color(0x101820);
-  const smokeAbsorption=new THREE.Color(0x263541);
+  const solidColor=new THREE.Color(0x0b0e12);
+  const shellColor=new THREE.Color(0x070b10);
+  const smokeAbsorption=new THREE.Color(0x111a24);
+  const mutedGray=new THREE.Color(0x6c737a);
   const hoverPadding=48; // CSS pixels beyond the assembled icon, not its orbit.
 
   // Soft reflection strips give transparent layers something to reflect even
@@ -1912,8 +1913,8 @@ if (symbolContainer) {
   function updateOrbitLights(dt){
     if(!heroMotion.matches)lightTime+=dt;
     orbitLights.forEach(({light,softbox,core,glow,index})=>{
-      const angle=lightTime*(.17+index*.035)*(index%2?-1:1)+index*Math.PI*.5;
-      const radius=modelSpan*.78;
+      const angle=lightTime*(.10+index*.02)*(index%2?-1:1)+index*Math.PI*.5;
+      const radius=modelSpan*.65;
       light.position.set(Math.cos(angle)*radius*1.35,
         Math.sin(angle*.79+index)*radius*.6,
         Math.sin(angle)*radius*.72+.35*modelSpan);
@@ -1935,13 +1936,13 @@ if (symbolContainer) {
   // transparency cannot wash away the reflected highlights. No central-shell
   // material changes and no billboard/sprite substitutes for panel lighting.
   const panelLightStrength={value:new Float32Array(4)};
-  function addPanelReflections(mesh,isStrip=false){
+  function addPanelReflections(mesh,isStrip=false,muted=false){
     const material=new THREE.ShaderMaterial({
       uniforms:{
         pwLightPositions:{value:orbitLights.map(item=>item.light.position)},
         pwLightColors:{value:orbitLights.map(item=>item.light.color)},
         pwLightStrength:panelLightStrength,
-        pwSpan:{value:modelSpan},pwFade:{value:0},pwGain:{value:isStrip?.8:.65}
+        pwSpan:{value:modelSpan},pwFade:{value:0},pwGain:{value:isStrip?.7:.58}
       },
       vertexShader:`
         varying vec3 pwViewPosition;
@@ -1973,7 +1974,7 @@ if (symbolContainer) {
             float aligned=clamp(abs(dot(N,H)),0.0,1.0);
             float falloff=1.0/(1.0+pow(distanceToLight/pwSpan,2.0)*0.45);
             // Broad softbox reflection plus a crisp moving glint on each face.
-            float reflection=pow(aligned,10.0)*0.24+pow(aligned,90.0)*2.4;
+            float reflection=pow(aligned,10.0)*0.24+pow(aligned,90.0)*2.0;
             reflection+=rim*abs(dot(N,L))*0.06;
             shine+=pwLightColors[i]*pwLightStrength[i]*falloff*reflection;
           }
@@ -1992,7 +1993,10 @@ if (symbolContainer) {
     reflection.name='Detached surface reflection';
     reflection.renderOrder=20;reflection.raycast=()=>{};
     reflection.onBeforeRender=()=>{
-      material.uniforms.pwFade.value=Math.min(1,mesh.material.opacity/(isStrip?.52:.42));
+      material.uniforms.pwFade.value=Math.min(1,mesh.material.opacity/(isStrip?.52:.36));
+      material.uniforms.pwGain.value=muted
+        ?THREE.MathUtils.lerp(.58,.08,mesh.userData.spreadAmount||0)
+        :isStrip?.7:.58;
     };
     mesh.add(reflection);
     return reflection;
@@ -2022,7 +2026,7 @@ if (symbolContainer) {
   function createOrbitLines(){
     for(let index=0;index<3;index++){
       const points=[];
-      const radius=modelSpan*(.7+index*.12);
+      const radius=modelSpan*(.55+index*.09);
       for(let step=0;step<=96;step++){
         const angle=step/96*Math.PI*1.45;
         points.push(new THREE.Vector3(Math.cos(angle)*radius,Math.sin(angle)*radius*.7,0));
@@ -2035,10 +2039,11 @@ if (symbolContainer) {
         vertexShader:`attribute float lineProgress; varying float vProgress;
           void main(){vProgress=lineProgress;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
         fragmentShader:`uniform float uTime,uOpacity;uniform vec3 uColor;varying float vProgress;
-          void main(){float travel=fract(uTime);float distanceToPulse=abs(vProgress-travel);
+          void main(){float phase=fract(uTime);float travel=clamp(phase/0.24,0.0,1.0);
+            float distanceToPulse=abs(vProgress-travel);
             float pulse=exp(-distanceToPulse*distanceToPulse*320.0);
             float trail=exp(-distanceToPulse*distanceToPulse*32.0)*0.18;
-            float fade=smoothstep(0.0,0.16,travel)*(1.0-smoothstep(0.82,1.0,travel));
+            float fade=smoothstep(0.0,0.025,phase)*(1.0-smoothstep(0.215,0.24,phase));
             gl_FragColor=vec4(uColor,uOpacity*fade*(pulse*0.85+trail));
             #include <tonemapping_fragment>
             #include <colorspace_fragment>
@@ -2059,7 +2064,8 @@ if (symbolContainer) {
       line.rotation.set(.35+index*.45,.2+index*.6,
         index*2.1+orbitTime*(index%2?-.18:.14));
       line.material.uniforms.uOpacity.value=amount;
-      line.material.uniforms.uTime.value=lightTime*(.17+index*.035)+index*.31;
+      // Equal slots keep the three faster pulses separate, with a short gap.
+      line.material.uniforms.uTime.value=lightTime*.18+index/3+.96;
     });
   }
 
@@ -2193,14 +2199,14 @@ if (symbolContainer) {
     originals.forEach((child,index)=>{
       const source=Array.isArray(child.material)?child.material[0]:child.material;
       child.material=new THREE.MeshPhysicalMaterial({
-        color:0x16191d,metalness:.32,roughness:.12,clearcoat:1,clearcoatRoughness:.055,
-        ior:1.52,specularIntensity:1,envMapIntensity:.8,side:THREE.DoubleSide,
+        color:0x0b0e12,metalness:.32,roughness:.07,clearcoat:1,clearcoatRoughness:.025,
+        ior:1.52,specularIntensity:1,envMapIntensity:1.1,side:THREE.DoubleSide,
         // Keep transmission enabled so fading to the shell does not recompile
         // the shader during hover. At .001 the resting icon remains solid.
         transparent:true,opacity:1,transmission:.001,thickness:modelSpan*.008,
         // Match the original closed logo throughout hover, scroll and return.
         depthWrite:true,polygonOffset:false,
-        emissive:0x08090b,emissiveIntensity:.2,map:source?.map || null
+        emissive:0x08090b,emissiveIntensity:.08,map:source?.map || null
       });
       if(!child.geometry.boundingBox)child.geometry.computeBoundingBox();
       const localCenter=child.geometry.boundingBox.getCenter(new THREE.Vector3());
@@ -2248,13 +2254,15 @@ if (symbolContainer) {
       }
     }
     selected.forEach(({group,landingNormal},index)=>{
+      const muted=index%4===2;
       const {geometry,homeRoot}=makeSurfaceGeometry(group);
       const seams=makeSeamGeometry(geometry,group.normal);
       const material=new THREE.MeshPhysicalMaterial({
-        color:0x16191d,metalness:.32,roughness:.12,transmission:.001,
+        color:0x0b0e12,metalness:.32,roughness:.07,transmission:.001,
         thickness:modelSpan*.008,ior:1.52,transparent:true,opacity:0,
-        clearcoat:1,clearcoatRoughness:.055,envMapIntensity:.8,specularIntensity:1,
-        emissive:0x08090b,emissiveIntensity:.2,
+        clearcoat:1,clearcoatRoughness:.025,envMapIntensity:1.1,specularIntensity:1,
+        attenuationColor:smokeAbsorption,attenuationDistance:modelSpan*.15,
+        emissive:0x08090b,emissiveIntensity:.08,
         side:THREE.DoubleSide,depthWrite:false,
         // Keep attached faces in front of the coincident source shell.
         polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1
@@ -2265,26 +2273,22 @@ if (symbolContainer) {
       edges.visible=false;
       edges.position.copy(group.normal).multiplyScalar(modelSpan*.0002);
       mesh.add(edges);model.add(mesh);
-      addPanelReflections(mesh);
+      addPanelReflections(mesh,false,muted);
       const outward=homeRoot.clone().sub(closedCenter);
       if(outward.lengthSq()<modelSpan*modelSpan*1e-8)outward.copy(group.normal);
       outward.normalize();
       const tangent=new THREE.Vector3().crossVectors(outward,new THREE.Vector3(0,0,1));
       if(tangent.lengthSq()<1e-8)tangent.crossVectors(outward,new THREE.Vector3(0,1,0));
       tangent.normalize();
-      // Fan away from each home position, tangential to its safe exterior plane.
-      const lateral=homeRoot.clone().sub(closedCenter);
-      lateral.addScaledVector(landingNormal,-lateral.dot(landingNormal));
-      if(lateral.lengthSq()<modelSpan*modelSpan*1e-8){
-        lateral.copy(tangent);
-        if(lateral.lengthSq()<1e-8)lateral.set(1,0,0).cross(landingNormal);
-        if(lateral.lengthSq()<1e-8)lateral.set(0,1,0).cross(landingNormal);
-      }
-      lateral.normalize();
-      const flightOffset=landingNormal.clone().multiplyScalar(modelSpan*(.9+(index%3)*.14))
-        .addScaledVector(lateral,modelSpan*1.35);
-      flightOffset.z=Math.min(flightOffset.z,modelSpan*.12);
-      glassLayers.push({mesh,edges,isStrip:false,homeRoot:homeRoot.clone(),outward,tangent,
+      // Give neighboring panels distinct radial paths around a wide, shallow ring.
+      const angle=index*Math.PI*(3-Math.sqrt(5));
+      const radius=modelSpan*(1.2+(index%4)*.14);
+      const flightOffset=new THREE.Vector3(
+        closedCenter.x+Math.cos(angle)*radius*1.2-homeRoot.x,
+        closedCenter.y+Math.sin(angle)*radius*.65-homeRoot.y,
+        landingNormal.z*modelSpan*.08
+      );
+      glassLayers.push({mesh,edges,isStrip:false,muted,homeRoot:homeRoot.clone(),outward,tangent,
         leaveDelay:((index*7)%11)/11*.38,returnDelay:((index*5+3)%11)/11*.38,
         landingNormal,flightOffset,landingVertex:new THREE.Vector3(),orbit:makeOrbit(true,index),
         targetPosition:new THREE.Vector3(),targetQuaternion:new THREE.Quaternion()});
@@ -2295,7 +2299,7 @@ if (symbolContainer) {
     for(let pass=0;pass<12;pass++)for(let a=0;a<glassLayers.length;a++)for(let b=a+1;b<glassLayers.length;b++){
       const first=glassLayers[a],second=glassLayers[b];
       const delta=first.homeRoot.clone().add(first.flightOffset).sub(second.homeRoot).sub(second.flightOffset);
-      const distance=delta.length(),spacing=modelSpan*.7;
+      const distance=delta.length(),spacing=modelSpan*.65;
       if(distance>=spacing)continue;
       if(distance<1e-8)delta.copy(first.tangent).normalize();else delta.divideScalar(distance);
       const firstShift=delta.clone().addScaledVector(first.landingNormal,-delta.dot(first.landingNormal));
@@ -2303,11 +2307,6 @@ if (symbolContainer) {
       first.flightOffset.addScaledVector(firstShift,(spacing-distance)*.55);
       second.flightOffset.addScaledVector(secondShift,-(spacing-distance)*.55);
     }
-    glassLayers.forEach(layer=>{
-      layer.flightOffset.x*=1.28;
-      layer.flightOffset.y*=.68;
-      layer.flightOffset.z=Math.min(layer.flightOffset.z,modelSpan*.12);
-    });
     createOrbitLines();
     // Compile and render both glass and reflection materials behind the loader.
     // First hover should not pay for shader compilation / texture upload.
@@ -2426,7 +2425,7 @@ if (symbolContainer) {
       // Capture the current hover opening once, so starting to scroll while
       // hovering cannot snap the pieces closed. Thereafter scroll owns spread.
       openAmount=THREE.MathUtils.lerp(scrollOrbitOrigin,1,scrollState.growth)*(1-scrollState.returning);
-      scrollOrbitSpread=1+.22*scrollState.growth*(1-scrollState.returning);
+      scrollOrbitSpread=1+.1*scrollState.growth*(1-scrollState.returning);
     }else{
       scrollOrbitActive=false;scrollOrbitSpread=1;
       const target=hovered && !heroMotion.matches?1:0;
@@ -2451,6 +2450,8 @@ if (symbolContainer) {
       const delay=returning?layer.returnDelay:layer.leaveDelay;
       const localAmount=THREE.MathUtils.smoothstep(THREE.MathUtils.clamp((amount-delay)/(1-delay),0,1),0,1);
       const flight=THREE.MathUtils.smoothstep(localAmount,.18,.65);
+      const pieceScale=THREE.MathUtils.lerp(1,.62,flight);
+      layer.mesh.scale.setScalar(pieceScale);
       // Follow the same straight path out and back; align before docking.
       layer.targetPosition.sub(layer.homeRoot).multiplyScalar(localAmount);
       layer.mesh.position.copy(layer.targetPosition);
@@ -2468,7 +2469,7 @@ if (symbolContainer) {
       for(let vertex=0;vertex<vertices.count;vertex++){
         layer.landingVertex.fromBufferAttribute(vertices,vertex);
         const homeDepth=layer.landingVertex.dot(layer.landingNormal);
-        layer.landingVertex.applyQuaternion(layer.targetQuaternion);
+        layer.landingVertex.multiplyScalar(pieceScale).applyQuaternion(layer.targetQuaternion);
         clearance=Math.max(clearance,homeDepth-layer.landingVertex.dot(layer.landingNormal));
       }
       const approachDepth=layer.mesh.position.dot(layer.landingNormal);
@@ -2477,10 +2478,20 @@ if (symbolContainer) {
       layer.mesh.position.z=Math.min(layer.mesh.position.z,layer.homeRoot.z+modelSpan*.16);
       // Keep the same finish and reflection pass in flight and at rest.
       // Docking changes only the transform, never visibility or material.
-      // Slightly denser at full spread; preserve the established docked finish.
+      // Open into smoked glass while keeping the established docked finish.
       const spreadOpacity=THREE.MathUtils.smoothstep(localAmount,.35,.9);
-      layer.mesh.material.opacity=THREE.MathUtils.lerp(layer.isStrip?.58:.48,layer.isStrip?.68:.60,spreadOpacity);
-      if(layer.edges)layer.edges.material.opacity=THREE.MathUtils.lerp(.58,.68,spreadOpacity);
+      layer.mesh.userData.spreadAmount=spreadOpacity;
+      const glass=layer.mesh.material;
+      glass.color.copy(solidColor).lerp(layer.muted?mutedGray:shellColor,spreadOpacity);
+      glass.metalness=THREE.MathUtils.lerp(.32,layer.muted?.02:.08,spreadOpacity);
+      glass.roughness=THREE.MathUtils.lerp(.07,layer.muted?.3:.13,spreadOpacity);
+      glass.transmission=THREE.MathUtils.lerp(.001,layer.muted?.05:.64,spreadOpacity);
+      glass.thickness=modelSpan*THREE.MathUtils.lerp(.008,.024,spreadOpacity);
+      glass.envMapIntensity=THREE.MathUtils.lerp(1.1,layer.muted?.25:.95,spreadOpacity);
+      glass.clearcoat=THREE.MathUtils.lerp(1,layer.muted?.2:1,spreadOpacity);
+      glass.specularIntensity=THREE.MathUtils.lerp(1,layer.muted?.25:.8,spreadOpacity);
+      glass.opacity=THREE.MathUtils.lerp(layer.isStrip?.58:.48,layer.muted?.18:.42,spreadOpacity);
+      if(layer.edges)layer.edges.material.opacity=THREE.MathUtils.lerp(.58,layer.muted?.18:.42,spreadOpacity);
     });
   }
 
