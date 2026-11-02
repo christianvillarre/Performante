@@ -493,13 +493,13 @@ body{margin:0;background:#0a0a0a;color:#f2f0ed;font-family:'Zalando Sans',sans-s
  .ct-contact-hero .ct-form__bottom button.ct-form__submit-link{align-self:flex-end}
 }
 
-@media(min-width:901px){
- .ct-contact-hero .ct-form__right{box-sizing:border-box;padding-bottom:55px}
- .ct-contact-hero .ct-field--message{margin-bottom:0}
+@media(min-width:1101px){
+ .ct-contact-hero .ct-form__main{grid-template-columns:minmax(0,1fr) minmax(570px,.9fr)}
+ .ct-contact-hero .ct-field--message{margin-bottom:18px}
  .ct-contact-hero .ct-field--message textarea{flex:1 1 auto;height:auto;min-height:0}
- .ct-contact-hero .ct-form__bottom{position:relative;margin-top:0}
- .ct-contact-hero .ct-form__bottom button.ct-form__submit-link{position:absolute;right:0;bottom:100%;margin-left:0}
+ .ct-contact-hero .ct-form__bottom{flex-wrap:nowrap;margin-top:auto}
 }
-@media(max-width:900px){
+@media(max-width:1100px){
+ .ct-contact-hero .ct-form__main{grid-template-columns:1fr}
  .ct-contact-hero .ct-field--message textarea{height:clamp(130px,28vh,220px);min-height:130px}
 }
