@@ -2014,13 +2014,19 @@ if (symbolContainer) {
       spin:(next()-.5)*(glass?1.2:.55)};
   }
   function randomizeOrbits(){
-    // Preserve the same outward route on every opening and page load.
+    // Preserve the same orbit phase on every opening and page load.
     orbitTime=0;
   }
   function orbitPosition(layer,out){
-    // Travel on one straight axis from the attachment face, with no upward
-    // drift or curved transition into a second flight direction.
-    return out.copy(layer.flightOffset).multiplyScalar(scrollOrbitSpread).add(layer.homeRoot);
+    // Rotate each destination around a tilted axis on the same sphere.
+    out.copy(layer.orbitDirection)
+      .applyAxisAngle(layer.orbit.axis,orbitTime*layer.orbit.speed*.42);
+    const latitude=THREE.MathUtils.clamp(out.y,-.75,.75);
+    const side=Math.hypot(out.x,out.z);
+    const ring=Math.sqrt(1-latitude*latitude);
+    return side>1e-6
+      ?out.set(out.x/side*ring,latitude,out.z/side*ring)
+      :out.set(ring,latitude,0);
   }
 
   function createOrbitLines(){
@@ -2274,39 +2280,45 @@ if (symbolContainer) {
       edges.position.copy(group.normal).multiplyScalar(modelSpan*.0002);
       mesh.add(edges);model.add(mesh);
       addPanelReflections(mesh,false,muted);
-      const outward=homeRoot.clone().sub(closedCenter);
-      if(outward.lengthSq()<modelSpan*modelSpan*1e-8)outward.copy(group.normal);
-      outward.normalize();
-      const tangent=new THREE.Vector3().crossVectors(outward,new THREE.Vector3(0,0,1));
-      if(tangent.lengthSq()<1e-8)tangent.crossVectors(outward,new THREE.Vector3(0,1,0));
-      tangent.normalize();
-      // Give neighboring panels distinct radial paths around a wide, shallow ring.
+      // Fibonacci directions distribute the panels above, below, beside,
+      // in front of, and behind the logo without exact symmetry.
+      const latitude=(1-2*(index+.5)/selected.length)*.65;
       const angle=index*Math.PI*(3-Math.sqrt(5));
-      const radius=modelSpan*(1.2+(index%4)*.14);
-      const flightOffset=new THREE.Vector3(
-        closedCenter.x+Math.cos(angle)*radius*1.2-homeRoot.x,
-        closedCenter.y+Math.sin(angle)*radius*.65-homeRoot.y,
-        landingNormal.z*modelSpan*.08
-      );
-      glassLayers.push({mesh,edges,isStrip:false,muted,homeRoot:homeRoot.clone(),outward,tangent,
+      const ring=Math.sqrt(1-latitude*latitude);
+      const orbitDirection=new THREE.Vector3(Math.cos(angle)*ring,latitude,Math.sin(angle)*ring);
+      const homeDirection=homeRoot.clone().sub(closedCenter);
+      const homeRadius=homeDirection.length();
+      if(homeRadius<1e-6)homeDirection.copy(landingNormal).normalize();
+      else homeDirection.divideScalar(homeRadius);
+      const pathAxis=new THREE.Vector3().crossVectors(homeDirection,new THREE.Vector3(0,1,0));
+      if(pathAxis.lengthSq()<1e-6)pathAxis.crossVectors(homeDirection,new THREE.Vector3(1,0,0));
+      pathAxis.normalize();
+      glassLayers.push({mesh,edges,isStrip:false,muted,homeRoot:homeRoot.clone(),
         leaveDelay:((index*7)%11)/11*.38,returnDelay:((index*5+3)%11)/11*.38,
-        landingNormal,flightOffset,landingVertex:new THREE.Vector3(),orbit:makeOrbit(true,index),
-        targetPosition:new THREE.Vector3(),targetQuaternion:new THREE.Quaternion()});
+        landingNormal,homeDirection,homeRadius,pathAxis,orbitDirection,
+        landingVertex:new THREE.Vector3(),orbit:makeOrbit(true,index),
+        orbitTarget:new THREE.Vector3(),targetPosition:new THREE.Vector3(),targetQuaternion:new THREE.Quaternion()});
       // One filled glass panel and its attached lit outline per source face.
       // Avoid a second overlapping copy competing for the same visual space.
     });
-    // Separate crowded destinations along the exterior plane, never inward.
-    for(let pass=0;pass<12;pass++)for(let a=0;a<glassLayers.length;a++)for(let b=a+1;b<glassLayers.length;b++){
-      const first=glassLayers[a],second=glassLayers[b];
-      const delta=first.homeRoot.clone().add(first.flightOffset).sub(second.homeRoot).sub(second.flightOffset);
-      const distance=delta.length(),spacing=modelSpan*.65;
-      if(distance>=spacing)continue;
-      if(distance<1e-8)delta.copy(first.tangent).normalize();else delta.divideScalar(distance);
-      const firstShift=delta.clone().addScaledVector(first.landingNormal,-delta.dot(first.landingNormal));
-      const secondShift=delta.clone().addScaledVector(second.landingNormal,-delta.dot(second.landingNormal));
-      first.flightOffset.addScaledVector(firstShift,(spacing-distance)*.55);
-      second.flightOffset.addScaledVector(secondShift,-(spacing-distance)*.55);
-    }
+    // Pair each spherical destination with a nearby source face. Keeping the
+    // full set of destinations preserves the 360-degree orbit with gentler paths.
+    const orbitDirections=glassLayers.map(layer=>layer.orbitDirection);
+    const preferredDirections=glassLayers.map(layer=>layer.homeDirection.clone()
+      .addScaledVector(layer.landingNormal,.3).normalize());
+    const pairings=[];
+    preferredDirections.forEach((preferred,layerIndex)=>{
+      orbitDirections.forEach((direction,directionIndex)=>{
+        pairings.push({layerIndex,directionIndex,score:preferred.dot(direction)});
+      });
+    });
+    pairings.sort((a,b)=>b.score-a.score);
+    const assignedLayers=new Set(),assignedDirections=new Set();
+    pairings.forEach(({layerIndex,directionIndex})=>{
+      if(assignedLayers.has(layerIndex)||assignedDirections.has(directionIndex))return;
+      glassLayers[layerIndex].orbitDirection=orbitDirections[directionIndex];
+      assignedLayers.add(layerIndex);assignedDirections.add(directionIndex);
+    });
     createOrbitLines();
     // Compile and render both glass and reflection materials behind the loader.
     // First hover should not pay for shader compilation / texture upload.
@@ -2425,7 +2437,7 @@ if (symbolContainer) {
       // Capture the current hover opening once, so starting to scroll while
       // hovering cannot snap the pieces closed. Thereafter scroll owns spread.
       openAmount=THREE.MathUtils.lerp(scrollOrbitOrigin,1,scrollState.growth)*(1-scrollState.returning);
-      scrollOrbitSpread=1+.1*scrollState.growth*(1-scrollState.returning);
+      scrollOrbitSpread=1+.04*scrollState.growth*(1-scrollState.returning);
     }else{
       scrollOrbitActive=false;scrollOrbitSpread=1;
       const target=hovered && !heroMotion.matches?1:0;
@@ -2434,7 +2446,7 @@ if (symbolContainer) {
       if(!target && openAmount<.001)openAmount=0;
       if(heroMotion.matches)openAmount=0;
     }
-    if(openAmount>.001 && !heroMotion.matches)orbitTime+=dt*openAmount;
+    if(openAmount>.8 && !heroMotion.matches)orbitTime+=dt*(openAmount-.8)/.2;
     const amount=openAmount*openAmount*(3-2*openAmount);
     updateShellMaterial(amount);
     updateOrbitLines(amount);
@@ -2445,15 +2457,28 @@ if (symbolContainer) {
     glassLayers.forEach((layer,index)=>{
       layer.mesh.visible=true;
       // At zero spread these exact faces stay attached, with the same lighting.
-      orbitPosition(layer,layer.targetPosition);
+      orbitPosition(layer,layer.orbitTarget);
       const returning=scrollState.active?scrollState.returning>0:!hovered;
       const delay=returning?layer.returnDelay:layer.leaveDelay;
       const localAmount=THREE.MathUtils.smoothstep(THREE.MathUtils.clamp((amount-delay)/(1-delay),0,1),0,1);
       const flight=THREE.MathUtils.smoothstep(localAmount,.18,.65);
       const pieceScale=THREE.MathUtils.lerp(1,.62,flight);
       layer.mesh.scale.setScalar(pieceScale);
-      // Follow the same straight path out and back; align before docking.
-      layer.targetPosition.sub(layer.homeRoot).multiplyScalar(localAmount);
+      // Sweep around the logo's center while growing to the orbit radius.
+      const dot=THREE.MathUtils.clamp(layer.homeDirection.dot(layer.orbitTarget),-1,1);
+      if(dot>.9995){
+        layer.targetPosition.copy(layer.homeDirection).lerp(layer.orbitTarget,localAmount).normalize();
+      }else if(dot<-.9995){
+        layer.targetPosition.copy(layer.homeDirection).applyAxisAngle(layer.pathAxis,Math.PI*localAmount);
+      }else{
+        const turn=Math.acos(dot),sinTurn=Math.sin(turn);
+        layer.targetPosition.copy(layer.homeDirection)
+          .multiplyScalar(Math.sin((1-localAmount)*turn)/sinTurn)
+          .addScaledVector(layer.orbitTarget,Math.sin(localAmount*turn)/sinTurn);
+      }
+      const orbitRadius=modelSpan*.94*scrollOrbitSpread;
+      layer.targetPosition.multiplyScalar(THREE.MathUtils.lerp(layer.homeRadius,orbitRadius,localAmount))
+        .add(closedCenter).sub(layer.homeRoot);
       layer.mesh.position.copy(layer.targetPosition);
       // Keep the floating tilt bounded. Accumulated full turns would unwind
       // rapidly as the docking envelope shrinks, causing visible flips.
@@ -2473,9 +2498,9 @@ if (symbolContainer) {
         clearance=Math.max(clearance,homeDepth-layer.landingVertex.dot(layer.landingNormal));
       }
       const approachDepth=layer.mesh.position.dot(layer.landingNormal);
-      layer.mesh.position.addScaledVector(layer.landingNormal,Math.max(0,clearance-approachDepth))
+      const clearanceFade=1-THREE.MathUtils.smoothstep(localAmount,.55,.9);
+      layer.mesh.position.addScaledVector(layer.landingNormal,Math.max(0,clearance-approachDepth)*clearanceFade)
         .add(layer.homeRoot);
-      layer.mesh.position.z=Math.min(layer.mesh.position.z,layer.homeRoot.z+modelSpan*.16);
       // Keep the same finish and reflection pass in flight and at rest.
       // Docking changes only the transform, never visibility or material.
       // Open into smoked glass while keeping the established docked finish.
