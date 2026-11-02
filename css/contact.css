@@ -488,9 +488,10 @@ body{margin:0;background:#0a0a0a;color:#f2f0ed;font-family:'Zalando Sans',sans-s
 .ct-contact-hero .ct-form__bottom button.ct-form__submit-link{align-self:auto;margin-left:auto}
 .ct-contact-hero .ct-captcha-error{text-align:left}
 @media(max-width:600px){
- .ct-contact-hero .ct-form__bottom{flex-direction:column;align-items:stretch}
- .ct-contact-hero .ct-form__bottom .ct-captcha{align-self:flex-start}
- .ct-contact-hero .ct-form__bottom button.ct-form__submit-link{align-self:flex-end}
+ .ct-contact-hero .ct-form__bottom{flex-direction:column;align-items:center}
+ .ct-contact-hero .ct-form__bottom .ct-captcha{align-self:center}
+ .ct-contact-hero .ct-form__bottom button.ct-form__submit-link{align-self:center;margin-left:0}
+ .ct-contact-hero .ct-captcha-error{text-align:center}
 }
 
 @media(min-width:1101px){

@@ -1,7 +1,7 @@
 (() => {
   const form = document.getElementById('contactForm');
   const services = [...document.querySelectorAll('.ct-service input')];
-  const requiredFields = ['ctName', 'ctEmail', 'ctDetails'].map(id => document.getElementById(id));
+  const requiredFields = ['ctName', 'ctPhone', 'ctEmail', 'ctDetails'].map(id => document.getElementById(id));
   const validEmail = value => /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)*\.[a-zA-Z]{2,}$/.test(value.trim());
   const markField = (field, invalid) => {
     field.closest('.ct-field')?.classList.toggle('is-invalid', invalid);

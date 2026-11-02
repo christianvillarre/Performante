@@ -14,7 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/subpage.css">
   <link rel="stylesheet" href="/css/navbar.css?v=menu-unified-1">
-  <link rel="stylesheet" href="/css/contact.css?v=contact-redesign-28">
+  <link rel="stylesheet" href="/css/contact.css?v=contact-redesign-29">
   <link rel="stylesheet" href="/css/gallery.css?v=1">
   <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.18/dist/lenis.css">
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
@@ -113,7 +113,7 @@
       <div class="ct-form__left">
       <div class="ct-form__row">
         <div class="ct-field ct-field--name"><label for="ctName">Your name</label><input id="ctName" name="name" type="text" autocomplete="name" placeholder="Your full name" required></div>
-        <div class="ct-field"><label for="ctPhone">Phone number</label><input id="ctPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="14" placeholder="(000) 000-0000"></div>
+        <div class="ct-field"><label for="ctPhone">Phone number</label><input id="ctPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="14" pattern="\(\d{3}\) \d{3}-\d{4}" placeholder="(000) 000-0000" required></div>
       </div>
       <div class="ct-field ct-field--email"><label for="ctEmail">Email address</label><input id="ctEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></div>
       <fieldset class="ct-services"><legend>What can we help with?</legend><div class="ct-services__grid">
@@ -291,7 +291,7 @@
 </div>
 <script src="/js/navbar-black.js?v=menu-colors-2" defer></script>
 <script src="/js/commercial-footer.js?v=22" defer></script>
-<script src="/js/contact.js?v=contact-redesign-13" defer></script>
+<script src="/js/contact.js?v=contact-redesign-14" defer></script>
 <script src="/js/gallery-drag.js?v=2" defer></script>
 </body>
 </html>
