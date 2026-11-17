@@ -2667,12 +2667,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const brandingGrid=document.querySelector(".wrap-branding-grid");
   const brandingCards=brandingGrid?gsap.utils.toArray(brandingGrid.querySelectorAll(".wrap-branding-card")):[];
   if(brandingGrid && brandingCards.length){
+    const mobileBranding=window.matchMedia("(max-width: 760px)").matches;
     const motion=window.matchMedia("(prefers-reduced-motion: reduce) and (max-width: 760px)");
-    gsap.set(brandingGrid,{perspective:mobileMotion?900:1400});
-    const folds=brandingCards.map(card=>gsap.fromTo(card,
-      {autoAlpha:0,rotateX:mobileMotion?-42:-72,transformOrigin:"50% 0%",transformPerspective:mobileMotion?900:1400},
-      {autoAlpha:1,rotateX:0,duration:1,ease:"none",paused:true}
-    ));
+    gsap.set(brandingGrid,{perspective:mobileBranding?'none':1400});
+    const folds=brandingCards.map(card=>mobileBranding
+      ?gsap.fromTo(card,{autoAlpha:0,y:54,force3D:true},
+        {autoAlpha:1,y:0,duration:1,ease:"none",paused:true})
+      :gsap.fromTo(card,
+        {autoAlpha:0,rotateX:-72,transformOrigin:"50% 0%",transformPerspective:1400},
+        {autoAlpha:1,rotateX:0,duration:1,ease:"none",paused:true}));
+    const smoothProgress=mobileBranding?folds.map(fold=>gsap.quickTo(fold,"progress",{duration:.22,ease:"power1.out"})):[];
     const previous=brandingCards.map(()=>-1);
     let lastScroll=NaN,lastWidth=0,lastHeight=0,lastReduced=null;
     ScrollTrigger.addEventListener("refresh",()=>{lastScroll=NaN;});
@@ -2689,7 +2693,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const fraction=(height*.98-cardTop)/(height*.60);
         const progress=motion.matches?1:gsap.utils.clamp(0,1,(fraction-index*.055)/.89);
         if(progress===previous[index])return;
-        previous[index]=progress;folds[index].progress(progress);
+        previous[index]=progress;
+        if(mobileBranding && !motion.matches)smoothProgress[index](progress);
+        else folds[index].progress(progress);
       });
     }
     gsap.ticker.add(updateBrandingScroll);
@@ -2944,7 +2950,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener('DOMContentLoaded',()=>{
   const section=document.querySelector('.wrap-brand-logos');
   const grid=section?.querySelector('.wrap-brand-logos__grid');
-  if(!grid||!window.gsap||!window.ScrollTrigger||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(!grid||!window.gsap||!window.ScrollTrigger||window.matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)').matches)return;
   gsap.registerPlugin(ScrollTrigger);
   const items=[...grid.querySelectorAll('.wrap-brand-logos__item')];
   const media=gsap.matchMedia();
@@ -2998,23 +3004,80 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 document.addEventListener('DOMContentLoaded',()=>{
   const section=document.querySelector('.pw-truck-roll');
-  if(!section||!window.gsap||!window.ScrollTrigger||window.matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)').matches)return;
+  if(!section||!window.gsap||!window.ScrollTrigger)return;
   gsap.registerPlugin(ScrollTrigger);
-  const trucks=gsap.utils.toArray('.pw-truck-roll__truck');
-  const caption=section.querySelector('.pw-truck-roll__caption');
-  const description=section.querySelector('.pw-truck-roll__description');
-  let activeIndex=-1;
-  const showTruck=index=>{
-    if(index===activeIndex)return;
-    activeIndex=index;
-    caption.textContent=`0${index+1} / 03  —  ${trucks[index].dataset.title}`;
-    description.textContent=trucks[index].dataset.copy;
-  };
-  const timeline=gsap.timeline({scrollTrigger:{trigger:section,start:'top top',end:'bottom bottom',scrub:1,invalidateOnRefresh:true,onUpdate:self=>showTruck(Math.min(trucks.length-1,Math.floor(self.animation.time()/1.45)))}});
-  trucks.forEach((truck,index)=>{
-    const start=index*1.45;
-    timeline.fromTo(truck,{x:()=>-truck.offsetWidth-40,opacity:0,scale:.9,rotationY:-22},{x:()=>(innerWidth-truck.offsetWidth)/2,opacity:1,scale:1,rotationY:0,duration:.52,ease:'power2.out',onStart:()=>showTruck(index),onReverseComplete:()=>showTruck(Math.max(0,index-1))},start);
-    timeline.to(truck,{x:()=>innerWidth+40,opacity:0,scale:.9,rotationY:22,duration:.6,ease:'power2.in'},start+.78);
+  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)',()=>{
+    const titles=[...section.querySelectorAll('.pw-truck-roll__title')];
+    const originals=titles.map(title=>title.textContent);
+    titles.forEach(title=>{
+      title.setAttribute('aria-label',title.textContent);
+      const words=title.textContent.split(' ');
+      title.replaceChildren();
+      words.forEach((word,index)=>{
+        if(index)title.append(' ');
+        const group=document.createElement('span');
+        group.className='pw-truck-roll__word';
+        group.setAttribute('aria-hidden','true');
+        [...word].forEach(character=>{
+          const letter=document.createElement('span');
+          letter.className='pw-truck-roll__letter';
+          const glyph=document.createElement('span');
+          glyph.className='pw-truck-roll__glyph';
+          glyph.textContent=character;
+          const halo=document.createElement('span');
+          halo.className='pw-truck-roll__halo';
+          halo.textContent=character;
+          halo.setAttribute('aria-hidden','true');
+          // Rasterize the blurred glow once; only its opacity changes on scroll.
+          halo.style.setProperty('--glow-radius',`${26+Math.random()*16}px`);
+          letter.append(glyph,halo);
+          group.append(letter);
+        });
+        title.append(group);
+      });
+    });
+    section.classList.add('is-animated');
+    const letters=section.querySelectorAll('.pw-truck-roll__letter');
+    gsap.set(letters,{opacity:0,y:90,force3D:true});
+    // The sticky stage releases during the last exit; the remaining scroll
+    // continues the same timeline so reversing always retraces every letter.
+    const timeline=gsap.timeline({scrollTrigger:{
+      trigger:section,start:'top top',
+      end:()=>'+='+(section.offsetHeight-innerHeight+innerHeight*.32),
+      scrub:.18,invalidateOnRefresh:true
+    }});
+    // Choose timing once, so refreshes and reverse scrolling retrace the same glow.
+    const randomOffsets=(count,amount)=>{
+      const values=Array.from({length:count},()=>Math.random());
+      const min=Math.min(...values);
+      const range=Math.max(...values)-min||1;
+      return values.map(value=>(value-min)/range*amount);
+    };
+    gsap.set(section.querySelectorAll('.pw-truck-roll__halo'),{opacity:0});
+    titles.forEach((title,index)=>{
+      const chars=[...title.querySelectorAll('.pw-truck-roll__letter')];
+      const arrivals=randomOffsets(chars.length,.19);
+      const departures=randomOffsets(chars.length,.19);
+      const start=index*.88;
+      chars.forEach((letter,letterIndex)=>{
+        const glyph=letter.querySelector('.pw-truck-roll__glyph');
+        const halo=letter.querySelector('.pw-truck-roll__halo');
+        const arrival=start+arrivals[letterIndex];
+        const departure=start+.70+departures[letterIndex];
+        timeline.to(letter,{opacity:1,y:0,duration:.29,ease:'power2.out'},arrival);
+        timeline.fromTo(glyph,{opacity:0},{opacity:1,duration:.20,ease:'sine.out'},arrival+.09);
+        timeline.to(halo,{opacity:1,duration:.09,ease:'sine.out'},arrival);
+        timeline.to(halo,{opacity:0,duration:.23,ease:'sine.in'},arrival+.16);
+        timeline.to(letter,{opacity:0,y:-100,duration:.30,ease:'power2.in'},departure);
+        timeline.to(glyph,{opacity:0,duration:.20,ease:'sine.in'},departure);
+        timeline.to(halo,{opacity:1,duration:.08,ease:'sine.out'},departure);
+        timeline.to(halo,{opacity:0,duration:.16,ease:'sine.in'},departure+.14);
+      });
+    });
+    return ()=>{
+      section.classList.remove('is-animated');
+      titles.forEach((title,index)=>{title.textContent=originals[index];title.removeAttribute('aria-label');});
+    };
   });
 });
 

@@ -31,8 +31,8 @@
   .wrap-about-panel__philosophy{padding-top:24px;font-size:14px;max-width:32ch}
   .wrap-light-section--intro{min-height:0}
   .wrap-light-section--intro .wrap-light-section__inner{width:calc(100% - 24px);padding:48px 0!important}
-  .wrap-branding-grid{grid-template-columns:1fr;width:100vw;max-width:none;margin-left:calc(50% - 50vw);margin-right:0;gap:18px;padding:0}
-  .wrap-branding-card{aspect-ratio:1/1;min-height:0;border-radius:0}
+  .wrap-branding-grid{grid-template-columns:1fr;width:calc(100vw - 32px);max-width:none;margin-left:calc(50% - 50vw + 16px);margin-right:0;gap:20px;padding:0}
+  .wrap-branding-card{aspect-ratio:5/6;min-height:0;border-radius:18px}
   .wrap-branding-card__title{font-size:clamp(20px,5.5vw,28px);line-height:1.15;max-width:24ch}
   .wrap-branding-card__desc{font-size:15px;line-height:1.4;max-width:30ch;-webkit-line-clamp:unset;line-clamp:unset}
   .wrap-branding-card__overlay{padding:22px 20px}

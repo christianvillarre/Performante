@@ -2282,12 +2282,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const brandingGrid=document.querySelector(".wrap-branding-grid");
   const brandingCards=brandingGrid?gsap.utils.toArray(brandingGrid.querySelectorAll(".wrap-branding-card")):[];
   if(brandingGrid && brandingCards.length){
+    const mobileBranding=window.matchMedia("(max-width: 760px)").matches;
     const motion=window.matchMedia("(prefers-reduced-motion: reduce) and (max-width: 760px)");
-    gsap.set(brandingGrid,{perspective:1400});
-    const folds=brandingCards.map(card=>gsap.fromTo(card,
-      {autoAlpha:0,rotateX:-72,transformOrigin:"50% 0%",transformPerspective:1400},
-      {autoAlpha:1,rotateX:0,duration:1,ease:"none",paused:true}
-    ));
+    gsap.set(brandingGrid,{perspective:mobileBranding?'none':1400});
+    const folds=brandingCards.map(card=>mobileBranding
+      ?gsap.fromTo(card,{autoAlpha:0,y:54,force3D:true},
+        {autoAlpha:1,y:0,duration:1,ease:"none",paused:true})
+      :gsap.fromTo(card,
+        {autoAlpha:0,rotateX:-72,transformOrigin:"50% 0%",transformPerspective:1400},
+        {autoAlpha:1,rotateX:0,duration:1,ease:"none",paused:true}));
+    const smoothProgress=mobileBranding?folds.map(fold=>gsap.quickTo(fold,"progress",{duration:.22,ease:"power1.out"})):[];
     const previous=brandingCards.map(()=>-1);
     let lastScroll=NaN,lastWidth=0,lastHeight=0,lastReduced=null;
     ScrollTrigger.addEventListener("refresh",()=>{lastScroll=NaN;});
@@ -2304,7 +2308,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const fraction=(height*.98-cardTop)/(height*.60);
         const progress=motion.matches?1:gsap.utils.clamp(0,1,(fraction-index*.055)/.89);
         if(progress===previous[index])return;
-        previous[index]=progress;folds[index].progress(progress);
+        previous[index]=progress;
+        if(mobileBranding && !motion.matches)smoothProgress[index](progress);
+        else folds[index].progress(progress);
       });
     }
     gsap.ticker.add(updateBrandingScroll);

@@ -5850,18 +5850,17 @@ a.wrap-testimonials__role:focus-visible{
 /* css\index-copy-trucks.css */
 /* ========================================================================== */
 .pw-truck-roll{position:relative;z-index:23;height:320vh;background:transparent;color:#fff;pointer-events:auto}
-.pw-truck-roll__stage{position:sticky;top:0;height:100vh;overflow:hidden;background:transparent;perspective:1200px}
-.pw-truck-roll__truck{position:absolute;left:0;bottom:15%;width:min(72vw,1000px);height:auto;object-fit:contain;object-position:bottom;opacity:0;transform:translate3d(-120vw,0,0);transform-origin:center bottom;will-change:transform,opacity}
-.pw-truck-roll__details{position:absolute;z-index:2;left:clamp(24px,5vw,90px);bottom:clamp(24px,5vh,70px);max-width:min(310px,42vw);color:#fff;text-shadow:0 2px 15px rgba(0,0,0,.7)}
-.pw-truck-roll__description{margin:0 0 16px;font-size:clamp(13px,1.2vw,16px);line-height:1.45}
-.pw-truck-roll__project{display:inline-flex;align-items:center;gap:14px;padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,.8);color:#fff;text-decoration:none;text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.13em;transition:opacity .2s ease}
-.pw-truck-roll__project svg{width:17px;height:17px;transition:transform .2s ease}
-.pw-truck-roll__project:hover{opacity:.75}.pw-truck-roll__project:hover svg{transform:translateX(4px)}
-.pw-truck-roll__project:focus-visible{outline:2px solid #fff;outline-offset:5px}
-.pw-truck-roll__caption{position:absolute;z-index:2;right:clamp(24px,5vw,90px);bottom:clamp(24px,5vh,70px);margin:0;color:#fff;font-size:clamp(16px,2vw,26px);font-weight:500;letter-spacing:-.025em;text-align:right;text-shadow:0 2px 15px rgba(0,0,0,.65)}
-@media (min-width:761px) and (max-width:1400px){.pw-truck-roll__details,.pw-truck-roll__caption{bottom:clamp(70px,12vh,130px)}}
-@media(max-width:760px){.pw-truck-roll{height:280vh}.pw-truck-roll__truck{width:98vw;max-width:none;bottom:28%}.pw-truck-roll__caption{top:13%;bottom:auto;font-size:18px}.pw-truck-roll__details{left:24px;bottom:5%;max-width:min(300px,80vw)}}
-@media(prefers-reduced-motion:reduce) and (max-width:760px){.pw-truck-roll{height:auto;min-height:100vh}.pw-truck-roll__stage{position:relative;min-height:100vh}.pw-truck-roll__truck{display:none}.pw-truck-roll__truck:nth-of-type(1){display:block;opacity:1;transform:translateX(-10%);bottom:24%}}
+.pw-truck-roll__stage{position:sticky;top:0;height:100vh;display:grid;place-items:center;overflow:hidden;background:transparent}
+.pw-truck-roll__title{grid-area:1/1;margin:0;padding:0 5vw;width:100%;text-align:center;font-family:'Zalando Sans',Arial,sans-serif;font-size:clamp(30px,4vw,64px);font-weight:500;line-height:1.15;letter-spacing:-.055em}
+.pw-truck-roll__word{display:inline-block;white-space:nowrap}
+/* Keep blur and shadows fixed: scroll updates transform and opacity only. */
+.pw-truck-roll__letter{position:relative;display:inline-block;will-change:transform,opacity}
+.pw-truck-roll__glyph{display:inline-block}
+.pw-truck-roll__halo{position:absolute;inset:0;pointer-events:none;filter:blur(4px);text-shadow:0 0 3px #fff,0 0 12px #fff,0 0 var(--glow-radius,32px) #fff,0 0 64px rgba(185,211,255,1);transform:translateZ(0)}
+.pw-truck-roll:not(.is-animated) .pw-truck-roll__title:not(:first-child){display:none}
+@media(max-width:760px){.pw-truck-roll{height:280vh}.pw-truck-roll__title{font-size:clamp(32px,8vw,60px)}}
+@media(prefers-reduced-motion:reduce){.pw-truck-roll{height:auto;min-height:100vh}.pw-truck-roll__stage{position:relative;min-height:100vh;height:auto;gap:32px;padding:15vh 5vw}.pw-truck-roll .pw-truck-roll__title{display:block!important;grid-area:auto;padding:0}}
+
 
 /* Match the Contact page's restrained review layout. */
 .wrap-light-section--testimonials{background:#0a0a0a;color:#f2f0ed}
@@ -5985,8 +5984,8 @@ a.wrap-testimonials__role:focus-visible{
   .wrap-about-panel__philosophy{padding-top:24px;font-size:14px;max-width:32ch}
   .wrap-light-section--intro{min-height:0}
   .wrap-light-section--intro .wrap-light-section__inner{width:calc(100% - 24px);padding:48px 0!important}
-  .wrap-branding-grid{grid-template-columns:1fr;width:100vw;max-width:none;margin-left:calc(50% - 50vw);margin-right:0;gap:18px;padding:0}
-  .wrap-branding-card{aspect-ratio:1/1;min-height:0;border-radius:0;transform-style:flat;will-change:auto}
+  .wrap-branding-grid{grid-template-columns:1fr;width:calc(100vw - 32px);max-width:none;margin-left:calc(50% - 50vw + 16px);margin-right:0;gap:20px;padding:0}
+  .wrap-branding-card{aspect-ratio:5/6;min-height:0;border-radius:18px;transform-style:flat;will-change:transform,opacity}
   .wrap-branding-grid{perspective:none}
   .wrap-branding-card__title{font-size:clamp(20px,5.5vw,28px);line-height:1.15;max-width:24ch}
   .wrap-branding-card__desc{font-size:15px;line-height:1.4;max-width:30ch;-webkit-line-clamp:unset;line-clamp:unset}
