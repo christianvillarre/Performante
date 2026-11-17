@@ -5800,6 +5800,16 @@ a.wrap-testimonials__role:focus-visible{
   will-change:transform;
   box-shadow:none !important;
 }
+/* The moving fill carries its own soft tip; it becomes solid at completion. */
+.pw5-process-line{-webkit-mask-image:none;mask-image:none}
+.pw5-process-line__fill{
+  --process-solid:0;
+  background:linear-gradient(to bottom,#fff 0%,#fff 86%,rgba(255,255,255,.65) 93%,transparent 100%) !important;
+}
+.pw5-process-line__fill::after{
+  content:"";position:absolute;inset:0;background:#fff;
+  opacity:var(--process-solid);pointer-events:none;
+}
 /* ============================================================================
    END BLACK5 — PROCESS TIMELINE V4
    ============================================================================ */
@@ -6033,4 +6043,43 @@ a.wrap-testimonials__role:focus-visible{
 @media (max-width:760px){
   .index2-menu .wrap-scroll-copy__panel--hero{padding-bottom:14px}
   .index2-menu .wrap-hero-note p{margin-bottom:0}
+}
+
+/* Footer brand signature: compact hierarchy and aligned copy. */
+.pw6-final-cta__brand{
+  display:grid;grid-template-columns:40px minmax(0,1fr);
+  align-items:start;column-gap:18px;row-gap:26px;
+  width:100%;max-width:410px;
+}
+.pw6-final-cta__brand .pw6-final-cta__logo{
+  display:block;width:40px;height:auto;margin:3px 0 0;
+}
+.pw6-final-cta__brand .pw6-final-cta__bio{min-width:0;margin:0}
+.pw6-final-cta__brand .pw6-final-cta__bio-name{
+  margin:0 0 9px;font-size:22px;font-weight:500;
+  line-height:1.15;letter-spacing:-.035em;color:#f5f5f5;
+}
+.pw6-final-cta__brand .pw6-final-cta__bio-title{
+  margin:0 0 16px;max-width:30ch;font-size:10px;
+  font-weight:500;line-height:1.7;letter-spacing:.12em;
+  color:#969696;text-wrap:balance;
+}
+.pw6-final-cta__brand .pw6-final-cta__bio-desc{
+  margin:0;max-width:34ch;font-size:13px;line-height:1.65;
+  letter-spacing:0;color:#aaa;text-wrap:pretty;
+}
+.pw6-final-cta__brand .pw6-final-cta__copyright{
+  grid-column:1/-1;order:initial;margin:0;padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.12);
+  font-size:10px;line-height:1.6;letter-spacing:.025em;color:#858585;
+}
+@media(max-width:760px){
+  .pw6-final-cta__bottom .pw6-final-cta__brand{
+    display:grid;max-width:none;grid-template-columns:32px minmax(0,1fr);
+    column-gap:16px;row-gap:24px;
+  }
+  .pw6-final-cta__brand .pw6-final-cta__logo{width:32px}
+  .pw6-final-cta__brand .pw6-final-cta__bio-name{font-size:21px}
+  .pw6-final-cta__brand .pw6-final-cta__bio-title{font-size:9px;letter-spacing:.11em}
+  .pw6-final-cta__brand .pw6-final-cta__copyright{font-size:10px}
 }

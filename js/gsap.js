@@ -2415,15 +2415,37 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!timeline || !fill || !milestones.length) return;
 
   if (window.matchMedia("(prefers-reduced-motion: reduce) and (max-width: 760px)").matches) {
-    gsap.set(fill, { scaleY: 1, transformOrigin: "top center" });
+    gsap.set(fill, { scaleY: 1, transformOrigin: "top center", "--process-solid": 1 });
     milestones.forEach((m) => m.classList.add("is-active"));
     return;
   }
 
-  gsap.set(fill, { scaleY: 0, transformOrigin: "top center" });
+  gsap.set(fill, { scaleY: 0, transformOrigin: "top center", force3D: true });
   const setScale = gsap.quickSetter(fill, "scaleY");
 
+  const setSolid = gsap.quickSetter(fill, "--process-solid");
   let thresholds = [];
+  const mobileLine = window.matchMedia("(max-width: 760px)");
+  const lineState = { progress: 0 };
+  const activeStates = milestones.map(() => null);
+  function renderProcessProgress(progress) {
+    setScale(progress);
+    // Restore a solid tip over the final stretch, reversing with the scroll.
+    setSolid(gsap.utils.clamp(0, 1, (progress - 0.94) / 0.06));
+    milestones.forEach((milestone, index) => {
+      const active = progress >= (thresholds[index] ?? 1) - 0.02;
+      if (activeStates[index] === active) return;
+      activeStates[index] = active;
+      milestone.classList.toggle("is-active", active);
+    });
+  }
+  // Reuse one tween: native touch-scroll updates can arrive unevenly, but the
+  // compositor continues moving the line between them in either direction.
+  const smoothLine = gsap.quickTo(lineState, "progress", {
+    duration: 0.48,
+    ease: "power2.out",
+    onUpdate: () => renderProcessProgress(lineState.progress)
+  });
 
   function measureThresholds() {
     const h = Math.max(1, timeline.offsetHeight);
@@ -2441,17 +2463,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // Finish when the bottom reaches 28% of the viewport.
     // Uses live rendered geometry, so pinning, Lenis and browser zoom do not
     // invalidate the relationship between scroll position and line progress.
-    const startY = vh * 0.72;
-    const endBottomY = vh * 0.28;
+    // On mobile, advance the steps while their copy is still comfortably
+    // inside the viewport instead of waiting for it to approach the top.
+    const startY = vh * (mobileLine.matches ? 0.95 : 0.72);
+    const endBottomY = vh * (mobileLine.matches ? 0.72 : 0.28);
     const travel = Math.max(1, rect.height + startY - endBottomY);
     const progress = gsap.utils.clamp(0, 1, (startY - rect.top) / travel);
 
-    setScale(progress);
-
-    milestones.forEach((milestone, index) => {
-      const threshold = thresholds[index] ?? 1;
-      milestone.classList.toggle("is-active", progress >= threshold - 0.02);
-    });
+    if (mobileLine.matches) smoothLine(progress);
+    else {
+      smoothLine.tween.pause();
+      lineState.progress = progress;
+      renderProcessProgress(progress);
+    }
   }
 
   measureThresholds();
