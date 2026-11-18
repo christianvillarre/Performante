@@ -5613,7 +5613,7 @@ a.wrap-testimonials__role:focus-visible{
   margin-left:clamp(58px,7vw,110px);
 }
 
-@media(max-width:760px){
+@media(max-width:1024px){
   .pw5-process{
     padding:100px 0 150px !important;
   }
@@ -5644,10 +5644,13 @@ a.wrap-testimonials__role:focus-visible{
   }
   .pw5-process-milestone--left .pw5-process-copy p{margin-left:0}
 
-  .pw5-process-media{
+  .pw5-process-milestone--right .pw5-process-media,
+  .pw5-process-milestone--left .pw5-process-media{
+    box-sizing:border-box;
     width:100%;
     max-width:220px;
     margin:18px 0 0 !important;
+    justify-self:start;
     transform:translateY(20px);
   }
 }
@@ -5752,7 +5755,7 @@ a.wrap-testimonials__role:focus-visible{
   margin-right:clamp(58px,7vw,110px) !important;
 }
 
-@media(max-width:760px){
+@media(max-width:1024px){
   .pw5-process-head{width:min(100%,520px)}
   .pw5-process-timeline{margin-top:82px !important}
   .pw5-process-copy{width:100% !important}

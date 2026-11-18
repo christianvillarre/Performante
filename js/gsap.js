@@ -2425,7 +2425,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const setSolid = gsap.quickSetter(fill, "--process-solid");
   let thresholds = [];
-  const mobileLine = window.matchMedia("(max-width: 760px)");
+  const mobileLine = window.matchMedia("(max-width: 1024px)");
   const lineState = { progress: 0 };
   const activeStates = milestones.map(() => null);
   function renderProcessProgress(progress) {
