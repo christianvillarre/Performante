@@ -3196,3 +3196,37 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   }
 });
+
+/* Mobile Selected Work: measure live positions after the moving intro. */
+(() => {
+  if (!window.gsap || !window.ScrollTrigger) return;
+  gsap.matchMedia().add('(max-width: 760px)', () => {
+    const items = [...document.querySelectorAll('#performanteGalleryFlowStage .selected-works-panel--project')].map(panel => {
+      const media = panel.querySelector('.selected-project-card__media');
+      if (!media) return null;
+      gsap.set(media, {y: 36, opacity: 0, force3D: true});
+      return {panel, media, last: -1,
+        move: gsap.quickTo(media, 'y', {duration: .3, ease: 'power1.out'}),
+        fade: gsap.quickTo(media, 'opacity', {duration: .3, ease: 'power1.out'})};
+    }).filter(Boolean);
+    function update() {
+      if (document.hidden || (window.pwBoot && !window.pwBoot.released)) return;
+      const height = Math.max(1, window.innerHeight);
+      // Read all panel positions before writing animated image transforms.
+      const positions = items.map(item => item.panel.getBoundingClientRect().top);
+      items.forEach((item, index) => {
+        const progress = gsap.utils.clamp(0, 1, (height - positions[index]) / (height * .65));
+        if (Math.abs(progress - item.last) < .0001) return;
+        item.last = progress;
+        item.move(36 * (1 - progress));
+        item.fade(progress);
+      });
+    }
+    gsap.ticker.add(update);
+    update();
+    return () => {
+      gsap.ticker.remove(update);
+      items.forEach(item => {item.move.tween.kill(); item.fade.tween.kill();});
+    };
+  });
+})();
