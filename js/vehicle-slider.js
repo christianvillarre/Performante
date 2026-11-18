@@ -2,8 +2,9 @@
 (() => {
   document.querySelectorAll('.pw-vehicles').forEach(section => {
     const track = section.querySelector('.pw-vehicles__track');
+    if (!track) return;
     const cards = [...track.querySelectorAll('.pw-vehicles__card')];
-    if (!track || !cards.length) return;
+    if (!cards.length) return;
 
     cards.forEach(card => card.querySelectorAll('img').forEach(image => { image.loading = 'eager'; }));
     const firstGroup = document.createElement('div');
@@ -39,6 +40,7 @@
       let manualUntil = 0;
       let lastFrame = 0;
       let scrollRemainder = 0;
+      let autoSpeed = 0;
       let settleTimer = 0;
       let lastVisibilityCheck = 0;
       let nearScreen = false;
@@ -81,6 +83,9 @@
         if (userScrolling) scheduleRecenter();
       }, { passive: true });
       track.addEventListener('touchstart', event => {
+        scrollRemainder = 0;
+        autoSpeed = 0;
+        track.style.setProperty('--vehicle-drift', '0px');
         touchStartX = event.touches[0].clientX;
         touchStartY = event.touches[0].clientY;
         dragged = false;
@@ -112,13 +117,18 @@
           lastVisibilityCheck = now;
         }
         if (nearScreen && groupWidth && !paused && !touching && !userScrolling && !reduced.matches && !document.hidden && now >= manualUntil) {
-          const distance = scrollRemainder + dt * Math.max(36, groupWidth / 110);
+          const targetSpeed = Math.max(36, groupWidth / 110);
+          autoSpeed += (targetSpeed - autoSpeed) * (1 - Math.exp(-dt / .25));
+          const distance = scrollRemainder + dt * autoSpeed;
           const wholePixels = Math.floor(distance);
           scrollRemainder = distance - wholePixels;
           if (wholePixels) setScroll(track.scrollLeft + wholePixels);
+          // Composite the fractional pixel instead of waiting for a full pixel.
+          track.style.setProperty('--vehicle-drift', `${-scrollRemainder}px`);
           recenterMobile(false);
-        } else if (groupWidth && (track.scrollLeft < groupWidth * .25 || track.scrollLeft > groupWidth * 4.5)) {
-          recenterMobile(true);
+        } else {
+          autoSpeed = 0;
+          if (groupWidth && (track.scrollLeft < groupWidth * .25 || track.scrollLeft > groupWidth * 4.5)) recenterMobile(true);
         }
         requestAnimationFrame(frameMobile);
       };
@@ -147,7 +157,7 @@
 
     const pause = section.querySelector('[data-vehicle-pause]');
     const status = section.querySelector('[data-vehicle-status]');
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce) and (max-width: 760px)');
     const mobile = matchMedia('(max-width: 600px)');
     let width = 0;
     let positions = [];
@@ -209,12 +219,14 @@
     });
     new IntersectionObserver(entries => { visible = entries[0].isIntersecting; }).observe(section);
 
+    let autoSpeed = 0;
     const frame = now => {
       const dt = lastFrame ? Math.min((now - lastFrame) / 1000, .05) : 0;
       lastFrame = now;
       if (ready && visible && !paused && !reduced.matches && !document.hidden && pointerId === null && now >= manualUntil) {
-        shift(-dt * speed());
-      }
+        autoSpeed += (speed() - autoSpeed) * (1 - Math.exp(-dt / .25));
+        shift(-dt * autoSpeed);
+      } else autoSpeed = 0;
       requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);

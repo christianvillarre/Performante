@@ -37,5 +37,8 @@
  .pw-vehicles__card img{filter:none;transition:none}
  .pw-vehicles.is-mobile-loop .pw-vehicles__track{display:flex;overflow-x:auto;overflow-y:hidden;touch-action:pan-x pan-y;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
  .pw-vehicles.is-mobile-loop .pw-vehicles__track::-webkit-scrollbar{display:none}
- .pw-vehicles.is-mobile-loop .pw-vehicles__group{position:relative;left:auto!important;top:auto;transform:none!important;flex:0 0 auto}
+ .pw-vehicles.is-mobile-loop .pw-vehicles__group{position:relative;left:auto!important;top:auto;transform:translate3d(var(--vehicle-drift,0px),0,0)!important;will-change:transform;flex:0 0 auto}
 }
+
+/* Give each vehicle a little more room inside its existing card. */
+.pw-vehicles[data-vehicle-free-flow] .pw-vehicles__card img{width:90%;margin-inline:auto}

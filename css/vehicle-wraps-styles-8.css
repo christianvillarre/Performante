@@ -6614,6 +6614,7 @@ html{
 .vws-card:nth-of-type(3){ z-index:3; }
 .vws-card:nth-of-type(4){ z-index:4; }
 .vws-card:nth-of-type(5){ z-index:5; }
+.vws-card:nth-of-type(6){ z-index:6; }
 
 @media(max-width:1100px){
   .vws-card{
